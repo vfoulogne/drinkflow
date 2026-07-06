@@ -184,7 +184,10 @@
 <div class="app">
   <header>
     <h1 id="header-label">Parola 1 / 30</h1>
-    <div class="score-pill" id="score-pill">0 / 0</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button id="restart-top-btn" style="font-size:12px;font-weight:600;padding:5px 10px;border-radius:20px;border:none;background:#eceae2;color:#444441;flex:none">&#8635; Ricomincia</button>
+      <div class="score-pill" id="score-pill">0 / 0</div>
+    </div>
   </header>
   <div class="progress-track"><div class="progress-fill" id="progress"></div></div>
 
@@ -492,6 +495,11 @@ document.getElementById('check-btn').addEventListener('click', checkAnswer);
 document.getElementById('dontknow-btn').addEventListener('click', dontKnow);
 document.getElementById('next-btn').addEventListener('click', nextWord);
 document.getElementById('restart-btn').addEventListener('click', pickSession);
+document.getElementById('restart-top-btn').addEventListener('click', function(){
+  if(confirm('Ricominciare da zero? Il progresso attuale andrà perso.')){
+    pickSession();
+  }
+});
 document.getElementById('answer').addEventListener('keydown', function(e){
   if(e.key === 'Enter'){
     if(!document.getElementById('answer').disabled){

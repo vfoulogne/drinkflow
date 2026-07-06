@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Quiz Italiano - 500 parole</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f4f3ee;
+    color: #2c2c2a;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+  }
+  .app {
+    width: 100%;
+    max-width: 480px;
+    min-height: 100vh;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 20px 32px;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  header h1 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+    color: #5f5e5a;
+  }
+  .score-pill {
+    font-size: 13px;
+    background: #eeedfe;
+    color: #3c3489;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  .progress-track {
+    height: 5px;
+    background: #eceae2;
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 14px 0 24px;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #7f77dd;
+    transition: width .25s ease;
+  }
+  .card {
+    background: #faf9f5;
+    border: 1px solid #e5e3d8;
+    border-radius: 18px;
+    padding: 32px 22px;
+    text-align: center;
+    flex-grow: 0;
+  }
+  .direction-badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    padding: 5px 14px;
+    border-radius: 20px;
+    background: #e1f5ee;
+    color: #085041;
+    margin-bottom: 18px;
+  }
+  .word {
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 24px;
+    word-break: break-word;
+  }
+  input#answer {
+    width: 100%;
+    font-size: 17px;
+    padding: 13px 14px;
+    border-radius: 12px;
+    border: 1.5px solid #d3d1c7;
+    outline: none;
+    text-align: center;
+    background: #fff;
+  }
+  input#answer:focus {
+    border-color: #7f77dd;
+  }
+  .feedback {
+    min-height: 22px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 14px;
+  }
+  .feedback.correct { color: #3b6d11; }
+  .feedback.wrong { color: #993c1d; }
+  .feedback.neutral { color: #888780; }
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  button {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 14px 10px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+  }
+  .btn-primary {
+    background: #26215c;
+    color: #fff;
+  }
+  .btn-secondary {
+    background: #eceae2;
+    color: #444441;
+  }
+  .btn-primary:disabled {
+    background: #cecbf6;
+    color: #fff;
+  }
+  .bottom-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .end-screen {
+    text-align: center;
+    padding: 40px 10px;
+  }
+  .end-screen .big {
+    font-size: 40px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #26215c;
+  }
+  .end-screen p {
+    color: #5f5e5a;
+    font-size: 15px;
+    margin-bottom: 28px;
+  }
+  .review-list {
+    text-align: left;
+    background: #faf9f5;
+    border: 1px solid #e5e3d8;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  .review-list div {
+    font-size: 13px;
+    padding: 6px 0;
+    border-bottom: 1px solid #eeeeee;
+    color: #5f5e5a;
+  }
+  .review-list div:last-child { border-bottom: none; }
+  .review-list span.w { color: #2c2c2a; font-weight: 600; }
+  footer {
+    text-align: center;
+    font-size: 12px;
+    color: #b4b2a9;
+    margin-top: auto;
+    padding-top: 24px;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1 id="header-label">Parola 1 / 30</h1>
+    <div class="score-pill" id="score-pill">0 / 0</div>
+  </header>
+  <div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+
+  <div id="quiz-view">
+    <div class="card">
+      <div class="direction-badge" id="direction-badge">italiano &rarr; francese</div>
+      <div class="word" id="word-display">parola</div>
+      <input type="text" id="answer" placeholder="La tua traduzione" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+      <div class="feedback neutral" id="feedback"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-secondary" id="dontknow-btn">Non lo so</button>
+      <button class="btn-primary" id="check-btn">Verifica</button>
+    </div>
+    <div class="bottom-actions">
+      <button class="btn-secondary" id="next-btn" disabled style="flex:1">Avanti &rarr;</button>
+    </div>
+  </div>
+
+  <div id="end-view" class="end-screen" style="display:none">
+    <div class="big" id="final-score">0/30</div>
+    <p>Punteggio finale su questa serie</p>
+    <div class="review-list" id="review-list"></div>
+    <button class="btn-primary" id="restart-btn" style="width:100%">Nuova serie di 30 parole</button>
+  </div>
+
+  <footer>Banca di quasi 600 parole &middot; 30 parole per sessione, tirate a sorte</footer>
+</div>
+
+<script>
+const bank = [
+["la giornata","la journée"],["il pomeriggio","l'après-midi"],["la serata","la soirée"],["la settimana","la semaine"],
+["il mese","le mois"],["l'anno","l'année"],["ieri","hier"],["domani","demain"],["dopodomani","après-demain"],
+["stamattina","ce matin"],["stasera","ce soir"],["adesso","maintenant"],["subito","tout de suite"],["presto","tôt / bientôt"],
+["tardi","tard"],["spesso","souvent"],["raramente","rarement"],["sempre","toujours"],["mai","jamais"],["ancora","encore"],
+["già","déjà"],["di nuovo","de nouveau"],["intanto","pendant ce temps"],["nel frattempo","entre-temps"],
+["il lavoro","le travail"],["l'ufficio","le bureau"],["la riunione","la réunion"],["la scadenza","la date limite"],
+["lo stipendio","le salaire"],["il collega","le collègue"],["il capo","le patron"],["il dipendente","l'employé"],
+["l'orario","l'horaire"],["il turno","le poste / l'équipe (de travail)"],["le ferie","les congés"],
+["il colloquio","l'entretien"],["il curriculum","le CV"],["la carriera","la carrière"],["l'esperienza","l'expérience"],
+["la formazione","la formation"],["il compito","la tâche / le devoir"],["il progetto","le projet"],
+["la scadenza","l'échéance"],["licenziare","licencier"],["assumere","embaucher"],["dimettersi","démissionner"],
+["guadagnare","gagner (de l'argent)"],["risparmiare","économiser"],["spendere","dépenser"],["investire","investir"],
+["il conto","le compte / l'addition"],["la bolletta","la facture"],["l'affitto","le loyer"],["il mutuo","le crédit immobilier"],
+["il debito","la dette"],["il prestito","le prêt"],["lo sconto","la réduction"],["il saldo","les soldes"],
+["il negozio","le magasin"],["il commesso","le vendeur"],["la cassa","la caisse"],["lo scontrino","le ticket de caisse"],
+["il carrello","le caddie"],["fare la spesa","faire les courses"],["comprare","acheter"],["vendere","vendre"],
+["scambiare","échanger"],["restituire","rendre / restituer"],["consegnare","livrer"],["la consegna","la livraison"],
+["il pacco","le colis"],["la casa","la maison"],["l'appartamento","l'appartement"],["il pavimento","le sol"],
+["il soffitto","le plafond"],["la parete","le mur"],["la finestra","la fenêtre"],["il balcone","le balcon"],
+["il quartiere","le quartier"],["il vicino","le voisin"],["il condominio","la copropriété / l'immeuble"],
+["il trasloco","le déménagement"],["traslocare","déménager"],["arredare","meubler / aménager"],["i mobili","les meubles"],
+["riordinare","ranger"],["pulire","nettoyer"],["lavare","laver"],["stirare","repasser"],["cucinare","cuisiner"],
+["la ricetta","la recette"],["l'ingrediente","l'ingrédient"],["la pentola","la casserole"],["la padella","la poêle"],
+["il forno","le four"],["il frigorifero","le réfrigérateur"],["il congelatore","le congélateur"],["il lavandino","l'évier"],
+["assaggiare","goûter"],["condire","assaisonner"],["cuocere","cuire"],["bollire","bouillir"],["friggere","frire"],
+["il sapore","le goût / la saveur"],["l'odore","l'odeur"],["il profumo","le parfum"],["dolce","sucré"],["salato","salé"],
+["amaro","amer"],["piccante","épicé"],["acido","acide"],["insipido","fade"],["la fame","la faim"],["la sete","la soif"],
+["il pasto","le repas"],["la merenda","le goûter"],["l'appetito","l'appétit"],["il corpo","le corps"],["la testa","la tête"],
+["il petto","la poitrine"],["la schiena","le dos"],["il braccio","le bras"],["la gamba","la jambe"],["il ginocchio","le genou"],
+["il dolore","la douleur"],["il malessere","le malaise"],["la febbre","la fièvre"],["la tosse","la toux"],
+["il raffreddore","le rhume"],["guarire","guérir"],["ammalarsi","tomber malade"],["curare","soigner"],
+["la medicina","le médicament"],["la ricetta medica","l'ordonnance"],["il medico","le médecin"],["l'infermiere","l'infirmier"],
+["il pronto soccorso","les urgences"],["la salute","la santé"],["allenarsi","s'entraîner"],["riposarsi","se reposer"],
+["rilassarsi","se détendre"],["stancarsi","se fatiguer"],["la stanchezza","la fatigue"],["il sonno","le sommeil"],
+["addormentarsi","s'endormir"],["svegliarsi","se réveiller"],["il viaggio","le voyage"],["la partenza","le départ"],
+["l'arrivo","l'arrivée"],["il volo","le vol"],["il bagaglio","les bagages"],["la valigia","la valise"],
+["il biglietto","le billet"],["la prenotazione","la réservation"],["prenotare","réserver"],["l'itinerario","l'itinéraire"],
+["la tappa","l'étape"],["il percorso","le parcours"],["la meta","la destination"],["il confine","la frontière"],
+["la dogana","la douane"],["il passaporto","le passeport"],["la carta d'identità","la carte d'identité"],
+["l'autonoleggio","la location de voiture"],["il pedaggio","le péage"],["l'ingorgo","l'embouteillage"],
+["il traffico","la circulation"],["il marciapiede","le trottoir"],["l'incrocio","le carrefour"],["il semaforo","le feu (de circulation)"],
+["la fermata","l'arrêt"],["la stazione","la gare"],["il binario","le quai / la voie"],["l'aeroporto","l'aéroport"],
+["il volante","le volant"],["il parcheggio","le parking"],["fare benzina","faire le plein"],["il guasto","la panne"],
+["il cellulare","le portable"],["la ricarica","la recharge"],["il caricabatterie","le chargeur"],
+["il messaggio","le message"],["la chiamata","l'appel"],["richiamare","rappeler"],["rispondere","répondre"],
+["squillare","sonner"],["digitare","taper (écrire)"],["scaricare","télécharger"],["caricare","charger / uploader"],
+["l'applicazione","l'application"],["l'aggiornamento","la mise à jour"],["la password","le mot de passe"],
+["il collegamento","la connexion / le lien"],["la rete","le réseau"],["l'account","le compte (en ligne)"],
+["condividere","partager"],["pubblicare","publier"],["cancellare","supprimer"],["salvare","sauvegarder"],
+["il file","le fichier"],["lo schermo","l'écran"],["la tastiera","le clavier"],["il mouse","la souris"],
+["la scuola","l'école"],["l'aula","la salle de classe"],["il compito","le devoir"],["l'esame","l'examen"],
+["il voto","la note"],["la pagella","le bulletin de notes"],["bocciare","recaler / échouer (à un examen)"],
+["promuovere","faire passer (à la classe supérieure)"],["l'insegnante","l'enseignant"],["l'alunno","l'élève"],
+["studiare","étudier"],["imparare","apprendre"],["insegnare","enseigner"],["capire","comprendre"],
+["spiegare","expliquer"],["dimenticare","oublier"],["ricordare","se souvenir"],["memorizzare","mémoriser"],
+["l'errore","l'erreur"],["lo sbaglio","la faute"],["correggere","corriger"],["migliorarsi","s'améliorer"],
+["la conoscenza","la connaissance"],["l'ignoranza","l'ignorance"],["la curiosità","la curiosité"],
+["il libro","le livre"],["il capitolo","le chapitre"],["la trama","l'intrigue"],["il personaggio","le personnage"],
+["l'autore","l'auteur"],["il romanzo","le roman"],["la poesia","la poésie"],["la rivista","le magazine"],
+["il giornale","le journal"],["la notizia","la nouvelle / l'information"],["l'articolo","l'article"],
+["l'intervista","l'interview"],["il titolo","le titre"],["il film","le film"],["la trama","le scénario"],
+["il regista","le réalisateur"],["l'attore","l'acteur"],["la scena","la scène"],["la colonna sonora","la bande originale"],
+["il concerto","le concert"],["il palco","la scène (concert/théâtre)"],["il pubblico","le public"],
+["applaudire","applaudir"],["lo spettacolo","le spectacle"],["il biglietto d'ingresso","le billet d'entrée"],
+["il quadro","le tableau (peinture)"],["la mostra","l'exposition"],["il museo","le musée"],["la scultura","la sculpture"],
+["l'artista","l'artiste"],["creare","créer"],["disegnare","dessiner"],["dipingere","peindre"],["fotografare","photographier"],
+["l'amicizia","l'amitié"],["l'amico","l'ami"],["il rapporto","la relation"],["la coppia","le couple"],
+["il fidanzato","le petit ami / fiancé"],["il matrimonio","le mariage"],["sposarsi","se marier"],
+["separarsi","se séparer"],["divorziare","divorcer"],["litigare","se disputer"],["riconciliarsi","se réconcilier"],
+["confidarsi","se confier"],["fidarsi","faire confiance"],["tradire","trahir"],["perdonare","pardonner"],
+["sostenere","soutenir"],["consolare","consoler"],["incoraggiare","encourager"],["deludere","décevoir"],
+["la famiglia","la famille"],["i genitori","les parents"],["il figlio","le fils"],["la figlia","la fille"],
+["il fratello","le frère"],["la sorella","la sœur"],["il nonno","le grand-père"],["il nipote","le petit-fils / neveu"],
+["il parente","le parent (de famille)"],["crescere","grandir"],["educare","éduquer"],["obbedire","obéir"],
+["ribellarsi","se rebeller"],["proteggere","protéger"],["prendersi cura di","prendre soin de"],
+["la società","la société"],["il cittadino","le citoyen"],["il governo","le gouvernement"],["la legge","la loi"],
+["il diritto","le droit"],["il dovere","le devoir"],["votare","voter"],["l'elezione","l'élection"],
+["la giustizia","la justice"],["il tribunale","le tribunal"],["l'avvocato","l'avocat"],["il giudice","le juge"],
+["la libertà","la liberté"],["l'uguaglianza","l'égalité"],["il potere","le pouvoir"],["la manifestazione","la manifestation"],
+["protestare","protester"],["l'opinione","l'opinion"],["il dibattito","le débat"],["l'ambiente","l'environnement"],
+["l'inquinamento","la pollution"],["il riciclaggio","le recyclage"],["riciclare","recycler"],["sostenibile","durable"],
+["l'energia","l'énergie"],["il consumo","la consommation"],["risparmiare energia","économiser l'énergie"],
+["il clima","le climat"],["il riscaldamento globale","le réchauffement climatique"],["la natura","la nature"],
+["il bosco","le bois / la forêt"],["la montagna","la montagne"],["la valle","la vallée"],["il fiume","le fleuve / la rivière"],
+["il lago","le lac"],["la costa","la côte"],["la scogliera","la falaise"],["il tramonto","le coucher de soleil"],
+["l'alba","le lever du soleil"],["il temporale","l'orage"],["il fulmine","l'éclair"],["il tuono","le tonnerre"],
+["la nebbia","le brouillard"],["il vento","le vent"],["la nuvola","le nuage"],["il sereno","le ciel dégagé"],
+["la pioggia","la pluie"],["la neve","la neige"],["il ghiaccio","la glace"],["il gelo","le gel"],
+["l'animale","l'animal"],["il cucciolo","le petit (de l'animal) / le chiot"],["l'uccello","l'oiseau"],
+["il pesce","le poisson"],["l'insetto","l'insecte"],["la pianta","la plante"],["il fiore","la fleur"],
+["la radice","la racine"],["il ramo","la branche"],["la foglia","la feuille"],["il seme","la graine"],
+["seminare","semer"],["coltivare","cultiver"],["raccogliere","récolter / ramasser"],
+["la personalità","la personnalité"],["il carattere","le caractère"],["generoso","généreux"],["avaro","avare"],
+["testardo","têtu"],["timido","timide"],["socievole","sociable"],["riservato","réservé"],
+["sensibile","sensible"],["distratto","distrait"],["ordinato","ordonné"],["disordinato","désordonné"],
+["ambizioso","ambitieux"],["modesto","modeste"],["arrogante","arrogant"],["umile","humble"],
+["onesto","honnête"],["bugiardo","menteur"],["fedele","fidèle"],["geloso","jaloux"],
+["ottimista","optimiste"],["pessimista","pessimiste"],["coraggioso","courageux"],["codardo","lâche"],
+["curioso","curieux"],["annoiato","ennuyé (qui s'ennuie)"],["entusiasta","enthousiaste"],["indifferente","indifférent"],
+["preoccupato","inquiet"],["tranquillo","tranquille"],["nervoso","nerveux"],["calmo","calme"],
+["felice","heureux"],["triste","triste"],["arrabbiato","en colère"],["spaventato","effrayé"],
+["sorpreso","surpris"],["confuso","confus"],["soddisfatto","satisfait"],["frustrato","frustré"],
+["orgoglioso","fier"],["imbarazzato","gêné"],["commosso","ému"],["innamorato","amoureux"],
+["stufo","lassé / en avoir marre"],["esausto","épuisé"],["sollevato","soulagé"],["angosciato","angoissé"],
+["prezioso","précieux"],["inutile","inutile"],["utile","utile"],["necessario","nécessaire"],
+["sufficiente","suffisant"],["eccessivo","excessif"],["adeguato","adéquat"],["opportuno","opportun"],
+["inaspettato","inattendu"],["improvviso","soudain"],["definitivo","définitif"],["temporaneo","temporaire"],
+["permanente","permanent"],["reale","réel"],["immaginario","imaginaire"],["concreto","concret"],
+["astratto","abstrait"],["evidente","évident"],["nascosto","caché"],["segreto","secret"],
+["pubblico","public"],["privato","privé"],["personale","personnel"],["comune","commun"],
+["raro","rare"],["frequente","fréquent"],["abituale","habituel"],["insolito","inhabituel"],
+["semplice","simple"],["complicato","compliqué"],["chiaro","clair"],["confuso","confus"],
+["preciso","précis"],["approssimativo","approximatif"],["esatto","exact"],["sbagliato","faux / erroné"],
+["profondo","profond"],["superficiale","superficiel"],["solido","solide"],["fragile","fragile"],
+["leggero","léger"],["pesante","lourd"],["morbido","doux / mou"],["duro","dur"],
+["ruvido","rugueux"],["liscio","lisse"],["stretto","étroit"],["largo","large"],
+["vuoto","vide"],["pieno","plein"],["denso","dense"],["sottile","fin / mince"],
+["ampio","ample / vaste"],["limitato","limité"],["illimitato","illimité"],["capace","capable"],
+["incapace","incapable"],["abile","habile"],["esperto","expert"],["principiante","débutant"],
+["esperienza","l'expérience"],["dettaglio","le détail"],["l'insieme","l'ensemble"],
+["il particolare","le détail (particulier)"],["il contesto","le contexte"],["la situazione","la situation"],
+["la circostanza","la circonstance"],["il fenomeno","le phénomène"],["la conseguenza","la conséquence"],
+["la causa","la cause"],["l'effetto","l'effet"],["il risultato","le résultat"],["lo scopo","le but"],
+["l'obiettivo","l'objectif"],["il mezzo","le moyen"],["il metodo","la méthode"],["la strategia","la stratégie"],
+["la soluzione","la solution"],["il problema","le problème"],["la difficoltà","la difficulté"],
+["la complessità","la complexité"],["il vantaggio","l'avantage"],["l'inconveniente","l'inconvénient"],
+["il limite","la limite"],["la condizione","la condition"],["l'esigenza","le besoin / l'exigence"],
+["il criterio","le critère"],["la caratteristica","la caractéristique"],["la qualità","la qualité"],
+["la quantità","la quantité"],["il livello","le niveau"],["la misura","la mesure"],
+["il valore","la valeur"],["il significato","le sens / la signification"],["l'importanza","l'importance"],
+["il ruolo","le rôle"],["la funzione","la fonction"],["l'ipotesi","l'hypothèse"],["la teoria","la théorie"],
+["il concetto","le concept"],["l'idea","l'idée"],["il pensiero","la pensée"],["il ragionamento","le raisonnement"],
+["l'argomento","le sujet / l'argument"],["il tema","le thème"],["il punto","le point (l'idée)"],
+["il paragone","la comparaison"],["il contrasto","le contraste"],["la somiglianza","la ressemblance"],
+["la differenza","la différence"],["il cambiamento","le changement"],["la trasformazione","la transformation"],
+["lo sviluppo","le développement"],["il progresso","le progrès"],["il declino","le déclin"],
+["l'evoluzione","l'évolution"],["la crisi","la crise"],["la ripresa","la reprise"],["la stabilità","la stabilité"],
+["l'instabilità","l'instabilité"],["l'equilibrio","l'équilibre"],["il disordine","le désordre"],
+["il caos","le chaos"],["l'armonia","l'harmonie"],["il conflitto","le conflit"],["la tensione","la tension"],
+["la calma","le calme"],["la pace","la paix"],["la guerra","la guerre"],["la violenza","la violence"],
+["la pazienza","la patience"],["lo sforzo","l'effort"],["la fatica","la fatigue / l'effort"],
+["il tentativo","la tentative"],["il progresso","le progrès"],["il fallimento","l'échec"],
+["la vittoria","la victoire"],["la sconfitta","la défaite"],["il traguardo","l'objectif atteint / la ligne d'arrivée"],
+["la ricompensa","la récompense"],["la punizione","la punition"],["il merito","le mérite"],
+["la colpa","la faute"],["la responsabilità","la responsabilité"],["la scusa","l'excuse"],
+["il perdono","le pardon"],["il pentimento","le repentir"],["l'intenzione","l'intention"],
+["il proposito","le propos / l'intention"],["la volontà","la volonté"],["il desiderio","le désir"],
+["il bisogno","le besoin"],["la necessità","la nécessité"],["la mancanza","le manque"],
+["l'abbondanza","l'abondance"],["la scarsità","la pénurie / la rareté"],["la ricchezza","la richesse"],
+["la povertà","la pauvreté"],["il lusso","le luxe"],["l'essenziale","l'essentiel"],
+["il superfluo","le superflu"],["la moderazione","la modération"],["l'eccesso","l'excès"],
+["il compromesso","le compromis"],["l'accordo","l'accord"],["il disaccordo","le désaccord"],
+["il consenso","le consentement / le consensus"],["il rifiuto","le refus"],["la richiesta","la demande"],
+["la proposta","la proposition"],["il suggerimento","la suggestion"],["il consiglio","le conseil"],
+["l'avvertimento","l'avertissement"],["la promessa","la promesse"],["l'impegno","l'engagement"],
+["la garanzia","la garantie"],["la sicurezza","la sécurité"],["il pericolo","le danger"],
+["la minaccia","la menace"],["il rischio","le risque"],["la protezione","la protection"],
+["la difesa","la défense"],["l'attacco","l'attaque"]
+];
+
+let sessionWords = [];
+let current = 0;
+let score = 0;
+let wrongList = [];
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function normalize(s){
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/\([^)]*\)/g,'')
+    .split('/')[0]
+    .replace(/^(il |lo |la |l'|i |gli |le |un |uno |una )/,'')
+    .replace(/^(le |la |l'|les |un |une |des )/,'')
+    .replace(/[.,!?]/g,'')
+    .trim();
+}
+
+function pickSession(){
+  const indices = shuffle([...Array(bank.length).keys()]).slice(0, 30);
+  sessionWords = indices;
+  current = 0;
+  score = 0;
+  wrongList = [];
+  document.getElementById('quiz-view').style.display = 'block';
+  document.getElementById('end-view').style.display = 'none';
+  showWord();
+}
+
+function showWord(){
+  const wIdx = sessionWords[current];
+  const pair = bank[wIdx];
+  document.getElementById('header-label').textContent = 'Parola ' + (current + 1) + ' / 30';
+  document.getElementById('score-pill').textContent = score + ' / ' + current;
+  document.getElementById('progress').style.width = Math.round((current / 30) * 100) + '%';
+  document.getElementById('direction-badge').textContent = 'francese \u2192 italiano';
+  document.getElementById('word-display').textContent = pair[1];
+  const input = document.getElementById('answer');
+  input.value = '';
+  input.disabled = false;
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback neutral';
+  document.getElementById('next-btn').disabled = true;
+  document.getElementById('check-btn').disabled = false;
+  input.focus();
+}
+
+function checkAnswer(){
+  const input = document.getElementById('answer');
+  if(input.disabled) return;
+  const wIdx = sessionWords[current];
+  const pair = bank[wIdx];
+  const expectedRaw = pair[0];
+  const userVal = normalize(input.value);
+  const accepted = expectedRaw.split('/').map(s => normalize(s));
+  const correct = userVal.length > 0 && accepted.includes(userVal);
+  input.disabled = true;
+  document.getElementById('next-btn').disabled = false;
+  document.getElementById('check-btn').disabled = true;
+  const fb = document.getElementById('feedback');
+  if(correct){
+    score++;
+    fb.textContent = 'Corretto!';
+    fb.className = 'feedback correct';
+  } else {
+    fb.textContent = 'Risposta: ' + expectedRaw;
+    fb.className = 'feedback wrong';
+    wrongList.push(pair);
+  }
+  document.getElementById('score-pill').textContent = score + ' / ' + (current + 1);
+}
+
+function dontKnow(){
+  const input = document.getElementById('answer');
+  if(input.disabled) return;
+  const wIdx = sessionWords[current];
+  const pair = bank[wIdx];
+  const expectedRaw = pair[0];
+  input.disabled = true;
+  document.getElementById('next-btn').disabled = false;
+  document.getElementById('check-btn').disabled = true;
+  wrongList.push(pair);
+  const fb = document.getElementById('feedback');
+  fb.textContent = 'Risposta: ' + expectedRaw;
+  fb.className = 'feedback neutral';
+  document.getElementById('score-pill').textContent = score + ' / ' + (current + 1);
+}
+
+function nextWord(){
+  current++;
+  if(current >= 30){
+    document.getElementById('final-score').textContent = score + '/30';
+    const list = document.getElementById('review-list');
+    if(wrongList.length === 0){
+      list.innerHTML = '<div>Tutte corrette, complimenti!</div>';
+    } else {
+      list.innerHTML = wrongList.map(p => '<div><span class="w">' + p[1] + '</span> &mdash; ' + p[0] + '</div>').join('');
+    }
+    document.getElementById('quiz-view').style.display = 'none';
+    document.getElementById('end-view').style.display = 'block';
+  } else {
+    showWord();
+  }
+}
+
+document.getElementById('check-btn').addEventListener('click', checkAnswer);
+document.getElementById('dontknow-btn').addEventListener('click', dontKnow);
+document.getElementById('next-btn').addEventListener('click', nextWord);
+document.getElementById('restart-btn').addEventListener('click', pickSession);
+document.getElementById('answer').addEventListener('keydown', function(e){
+  if(e.key === 'Enter'){
+    if(!document.getElementById('answer').disabled){
+      checkAnswer();
+    } else {
+      nextWord();
+    }
+  }
+});
+
+pickSession();
+</script>
+</body>
+</html>

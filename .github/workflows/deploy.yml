@@ -18,6 +18,7 @@ jobs:
           mkdir -p dist
           cp index.html dist/
           cp quiz-italiano.html dist/
+          cp quiz-espanol.html dist/
 
       - name: Push dist/ to deploy branch
         uses: JamesIves/github-pages-deploy-action@v4

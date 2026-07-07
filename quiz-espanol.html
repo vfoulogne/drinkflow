@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Quiz Español - vocabulario</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f4f3ee;
+    color: #2c2c2a;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+  }
+  .app {
+    width: 100%;
+    max-width: 480px;
+    min-height: 100vh;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 20px 32px;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  header h1 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+    color: #5f5e5a;
+  }
+  .score-pill {
+    font-size: 13px;
+    background: #fdeeee;
+    color: #8c2f2f;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  .progress-track {
+    height: 5px;
+    background: #eceae2;
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 14px 0 24px;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #d96b4f;
+    transition: width .25s ease;
+  }
+  .card {
+    background: #faf9f5;
+    border: 1px solid #e5e3d8;
+    border-radius: 18px;
+    padding: 32px 22px;
+    text-align: center;
+    flex-grow: 0;
+  }
+  .direction-badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    padding: 5px 14px;
+    border-radius: 20px;
+    background: #fdf0e1;
+    color: #7a4a12;
+    margin-bottom: 18px;
+  }
+  .word {
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 24px;
+    word-break: break-word;
+  }
+  input#answer {
+    width: 100%;
+    font-size: 17px;
+    padding: 13px 14px;
+    border-radius: 12px;
+    border: 1.5px solid #d3d1c7;
+    outline: none;
+    text-align: center;
+    background: #fff;
+  }
+  input#answer:focus {
+    border-color: #d96b4f;
+  }
+  .feedback {
+    min-height: 22px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 14px;
+  }
+  .feedback.correct { color: #3b6d11; }
+  .feedback.wrong { color: #993c1d; }
+  .feedback.neutral { color: #888780; }
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  button {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 14px 10px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+  }
+  .btn-primary {
+    background: #8c2f2f;
+    color: #fff;
+  }
+  .btn-secondary {
+    background: #eceae2;
+    color: #444441;
+  }
+  .btn-primary:disabled {
+    background: #e3bcbc;
+    color: #fff;
+  }
+  .bottom-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .end-screen {
+    text-align: center;
+    padding: 40px 10px;
+  }
+  .end-screen .big {
+    font-size: 40px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #8c2f2f;
+  }
+  .end-screen p {
+    color: #5f5e5a;
+    font-size: 15px;
+    margin-bottom: 28px;
+  }
+  .review-list {
+    text-align: left;
+    background: #faf9f5;
+    border: 1px solid #e5e3d8;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  .review-list div {
+    font-size: 13px;
+    padding: 6px 0;
+    border-bottom: 1px solid #eeeeee;
+    color: #5f5e5a;
+  }
+  .review-list div:last-child { border-bottom: none; }
+  .review-list span.w { color: #2c2c2a; font-weight: 600; }
+  footer {
+    text-align: center;
+    font-size: 12px;
+    color: #b4b2a9;
+    margin-top: auto;
+    padding-top: 24px;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1 id="header-label">Palabra 1 / 30</h1>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button id="restart-top-btn" style="font-size:12px;font-weight:600;padding:5px 10px;border-radius:20px;border:none;background:#eceae2;color:#444441;flex:none">&#8635; Reiniciar</button>
+      <div class="score-pill" id="score-pill">0 / 0</div>
+    </div>
+  </header>
+  <div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+
+  <div id="quiz-view">
+    <div class="card">
+      <div class="direction-badge" id="direction-badge">francés &rarr; español</div>
+      <div class="word" id="word-display">palabra</div>
+      <input type="text" id="answer" placeholder="Tu traducción" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+      <div class="feedback neutral" id="feedback"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-secondary" id="dontknow-btn">No lo sé</button>
+      <button class="btn-primary" id="check-btn">Verificar</button>
+    </div>
+    <div class="bottom-actions">
+      <button class="btn-secondary" id="next-btn" disabled style="flex:1">Siguiente &rarr;</button>
+    </div>
+  </div>
+
+  <div id="end-view" class="end-screen" style="display:none">
+    <div class="big" id="final-score">0/30</div>
+    <p>Puntuación final de esta serie</p>
+    <div class="review-list" id="review-list"></div>
+    <button class="btn-primary" id="restart-btn" style="width:100%">Nueva serie de 30 palabras</button>
+  </div>
+
+  <footer>Banco de más de 300 palabras &middot; 30 palabras por sesión, elegidas al azar</footer>
+</div>
+
+<script>
+const bank = [
+["hola","salut / bonjour"],["adiós","au revoir"],["buenos días","bonjour (matin)"],["buenas tardes","bonjour (après-midi)"],
+["buenas noches","bonsoir / bonne nuit"],["por favor","s'il te plaît"],["gracias","merci"],["de nada","de rien"],
+["perdón","pardon"],["lo siento","je suis désolé"],["¿cómo estás?","comment vas-tu ?"],["bien","bien"],
+["mal","mal"],["más o menos","comme ci comme ça"],["sí","oui"],["no","non"],
+["quizás","peut-être"],["me llamo","je m'appelle"],["¿cómo te llamas?","comment tu t'appelles ?"],["tengo ... años","j'ai ... ans"],
+["vivo en","j'habite à"],["la familia","la famille"],["el padre","le père"],["la madre","la mère"],
+["los padres","les parents"],["el hermano","le frère"],["la hermana","la sœur"],["los hermanos","les frères et sœurs"],
+["el hijo","le fils"],["la hija","la fille"],["el abuelo","le grand-père"],["la abuela","la grand-mère"],
+["los abuelos","les grands-parents"],["el tío","l'oncle"],["la tía","la tante"],["el primo","le cousin"],
+["la prima","la cousine"],["el marido","le mari"],["la esposa","l'épouse"],["el bebé","le bébé"],
+["el instituto","le lycée"],["el colegio","le collège"],["el profesor","le professeur"],["la profesora","la professeure"],
+["el alumno","l'élève (garçon)"],["la alumna","l'élève (fille)"],["la clase","la classe"],["el aula","la salle de classe"],
+["el examen","l'examen"],["la nota","la note (scolaire)"],["los deberes","les devoirs"],["el horario","l'emploi du temps"],
+["la asignatura","la matière (scolaire)"],["las matemáticas","les mathématiques"],["la historia","l'histoire"],["la geografía","la géographie"],
+["las ciencias","les sciences"],["el español","l'espagnol"],["el francés","le français"],["el inglés","l'anglais"],
+["la educación física","l'éducation physique"],["el recreo","la récréation"],["la mochila","le sac à dos"],["el libro","le livre"],
+["el cuaderno","le cahier"],["el bolígrafo","le stylo"],["el lápiz","le crayon"],["la goma","la gomme"],
+["la regla","la règle (mesure)"],["las tijeras","les ciseaux"],["la pizarra","le tableau (classe)"],["la biblioteca","la bibliothèque"],
+["uno","un"],["dos","deux"],["tres","trois"],["cuatro","quatre"],
+["cinco","cinq"],["seis","six"],["siete","sept"],["ocho","huit"],
+["nueve","neuf"],["diez","dix"],["once","onze"],["doce","douze"],
+["veinte","vingt"],["treinta","trente"],["cien","cent"],["mil","mille"],
+["lunes","lundi"],["martes","mardi"],["miércoles","mercredi"],["jueves","jeudi"],
+["viernes","vendredi"],["sábado","samedi"],["domingo","dimanche"],["enero","janvier"],
+["febrero","février"],["marzo","mars"],["abril","avril"],["mayo","mai"],
+["junio","juin"],["julio","juillet"],["agosto","août"],["septiembre","septembre"],
+["octubre","octobre"],["noviembre","novembre"],["diciembre","décembre"],["el tiempo","le temps (météo)"],
+["hace sol","il fait soleil"],["hace calor","il fait chaud"],["hace frío","il fait froid"],["llueve","il pleut"],
+["nieva","il neige"],["hace viento","il fait du vent"],["la primavera","le printemps"],["el verano","l'été"],
+["el otoño","l'automne"],["el invierno","l'hiver"],["la nube","le nuage"],["la lluvia","la pluie"],
+["la nieve","la neige"],["rojo","rouge"],["azul","bleu"],["verde","vert"],
+["amarillo","jaune"],["naranja","orange (couleur)"],["morado","violet"],["rosa","rose (couleur)"],
+["marrón","marron"],["gris","gris"],["negro","noir"],["blanco","blanc"],
+["la cabeza","la tête"],["el pelo","les cheveux"],["la cara","le visage"],["los ojos","les yeux"],
+["la nariz","le nez"],["la boca","la bouche"],["las orejas","les oreilles"],["el cuello","le cou"],
+["los brazos","les bras"],["las manos","les mains"],["los dedos","les doigts"],["las piernas","les jambes"],
+["los pies","les pieds"],["la espalda","le dos"],["el estómago","l'estomac / le ventre"],["la ropa","les vêtements"],
+["la camiseta","le tee-shirt"],["los pantalones","le pantalon"],["la falda","la jupe"],["el vestido","la robe"],
+["la chaqueta","la veste"],["el abrigo","le manteau"],["los zapatos","les chaussures"],["los calcetines","les chaussettes"],
+["la gorra","la casquette"],["las gafas","les lunettes"],["la casa","la maison"],["el piso","l'appartement"],
+["la habitación","la chambre / la pièce"],["el dormitorio","la chambre à coucher"],["el salón","le salon"],["la cocina","la cuisine"],
+["el baño","la salle de bain"],["el jardín","le jardin"],["la puerta","la porte"],["la ventana","la fenêtre"],
+["la mesa","la table"],["la silla","la chaise"],["la cama","le lit"],["el armario","l'armoire"],
+["la comida","la nourriture / le repas"],["el desayuno","le petit-déjeuner"],["el almuerzo","le déjeuner"],["la cena","le dîner"],
+["el pan","le pain"],["el agua","l'eau"],["la leche","le lait"],["el zumo","le jus"],
+["el café","le café"],["el té","le thé"],["la fruta","le fruit"],["la manzana","la pomme"],
+["el plátano","la banane"],["la naranja","l'orange (fruit)"],["la fresa","la fraise"],["la verdura","les légumes"],
+["la carne","la viande"],["el pescado","le poisson"],["el pollo","le poulet"],["el arroz","le riz"],
+["la pasta","les pâtes"],["el queso","le fromage"],["el huevo","l'œuf"],["el azúcar","le sucre"],
+["la sal","le sel"],["la ciudad","la ville"],["el pueblo","le village"],["la calle","la rue"],
+["la plaza","la place"],["la tienda","le magasin"],["el mercado","le marché"],["el supermercado","le supermarché"],
+["el parque","le parc"],["el hospital","l'hôpital"],["la estación","la gare"],["el coche","la voiture"],
+["el autobús","le bus"],["el tren","le train"],["la bicicleta","le vélo"],["el avión","l'avion"],
+["el metro","le métro"],["el deporte","le sport"],["el fútbol","le football"],["el baloncesto","le basket"],
+["la natación","la natation"],["la música","la musique"],["la película","le film"],["el cine","le cinéma"],
+["la televisión","la télévision"],["el videojuego","le jeu vidéo"],["bailar","danser"],["cantar","chanter"],
+["jugar","jouer"],["nadar","nager"],["correr","courir"],["viajar","voyager"],
+["dibujar","dessiner"],["grande","grand"],["pequeño","petit"],["bonito","joli"],
+["feo","laid"],["nuevo","neuf / nouveau"],["viejo","vieux"],["fácil","facile"],
+["difícil","difficile"],["rápido","rapide"],["lento","lent"],["alto","grand (taille) / haut"],
+["bajo","petit (taille) / bas"],["gordo","gros"],["delgado","mince"],["feliz","heureux"],
+["triste","triste"],["cansado","fatigué"],["contento","content"],["bueno","bon"],
+["malo","mauvais"],["caro","cher"],["barato","pas cher"],["largo","long"],
+["corto","court"],["limpio","propre"],["sucio","sale"],["ser","être (nature)"],
+["estar","être (état/lieu)"],["tener","avoir"],["hacer","faire"],["ir","aller"],
+["venir","venir"],["poder","pouvoir"],["querer","vouloir"],["saber","savoir"],
+["decir","dire"],["ver","voir"],["hablar","parler"],["comer","manger"],
+["beber","boire"],["vivir","vivre"],["trabajar","travailler"],["estudiar","étudier"],
+["comprar","acheter"],["vender","vendre"],["escuchar","écouter"],["mirar","regarder"],
+["escribir","écrire"],["leer","lire"],["abrir","ouvrir"],["cerrar","fermer"],
+["empezar","commencer"],["terminar","terminer"],["ayudar","aider"],["buscar","chercher"],
+["encontrar","trouver"],["pensar","penser"],["gustar","plaire (aimer)"],["necesitar","avoir besoin de"],
+["llegar","arriver"],["salir","sortir"],["entrar","entrer"],["dormir","dormir"],
+["despertarse","se réveiller"],["levantarse","se lever"],["ducharse","se doucher"],["vestirse","s'habiller"],
+["lavarse","se laver"],["el perro","le chien"],["el gato","le chat"],["el caballo","le cheval"],
+["el pájaro","l'oiseau"],["el pez","le poisson (animal)"],["el ratón","la souris"],["el conejo","le lapin"],
+["la vaca","la vache"],["la oveja","le mouton"],["el león","le lion"],["el elefante","l'éléphant"],
+["y","et"],["o","ou"],["pero","mais"],["porque","parce que"],
+["también","aussi"],["siempre","toujours"],["nunca","jamais"],["a veces","parfois"],
+["ahora","maintenant"],["después","après"],["antes","avant"],["aquí","ici"],
+["allí","là-bas"],["mucho","beaucoup"],["poco","peu"]
+];
+
+let sessionWords = [];
+let current = 0;
+let score = 0;
+let wrongList = [];
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function normalize(s){
+  return s.toLowerCase()
+    .replace(/ñ/g, '')
+    .normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(//g, 'ñ')
+    .replace(/\([^)]*\)/g,'')
+    .split('/')[0]
+    .replace(/^(el |la |los |las |un |una |unos |unas )/,'')
+    .replace(/^(le |la |l'|les |un |une |des )/,'')
+    .replace(/[.,!?¿¡]/g,'')
+    .trim();
+}
+
+function pickSession(){
+  const indices = shuffle([...Array(bank.length).keys()]).slice(0, 30);
+  sessionWords = indices;
+  current = 0;
+  score = 0;
+  wrongList = [];
+  document.getElementById('quiz-view').style.display = 'block';
+  document.getElementById('end-view').style.display = 'none';
+  showWord();
+}
+
+function showWord(){
+  const wIdx = sessionWords[current];
+  const pair = bank[wIdx];
+  document.getElementById('header-label').textContent = 'Palabra ' + (current + 1) + ' / 30';
+  document.getElementById('score-pill').textContent = score + ' / ' + current;
+  document.getElementById('progress').style.width = Math.round((current / 30) * 100) + '%';
+  document.getElementById('direction-badge').textContent = 'francés → español';
+  document.getElementById('word-display').textContent = pair[1];
+  const input = document.getElementById('answer');
+  input.value = '';
+  input.disabled = false;
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback neutral';
+  document.getElementById('next-btn').disabled = true;
+  document.getElementById('check-btn').disabled = false;
+  input.focus();
+}
+
+function checkAnswer(){
+  const input = document.getElementById('answer');
+  if(input.disabled) return;
+  const wIdx = sessionWords[current];
+  const pair = bank[wIdx];
+  const expectedRaw = pair[0];
+  const userVal = normalize(input.value);
+  const accepted = expectedRaw.split('/').map(s => normalize(s));
+  const correct = userVal.length > 0 && accepted.includes(userVal);
+  input.disabled = true;
+  document.getElementById('next-btn').disabled = false;
+  document.getElementById('check-btn').disabled = true;
+  const fb = document.getElementById('feedback');
+  if(correct){
+    score++;
+    fb.textContent = '¡Correcto!';
+    fb.className = 'feedback correct';
+  } else {
+    fb.textContent = 'Respuesta: ' + expectedRaw;
+    fb.className = 'feedback wrong';
+    wrongList.push(pair);
+  }
+  document.getElementById('score-pill').textContent = score + ' / ' + (current + 1);
+}
+
+function dontKnow(){
+  const input = document.getElementById('answer');
+  if(input.disabled) return;
+  const wIdx = sessionWords[current];
+  const pair = bank[wIdx];
+  const expectedRaw = pair[0];
+  input.disabled = true;
+  document.getElementById('next-btn').disabled = false;
+  document.getElementById('check-btn').disabled = true;
+  wrongList.push(pair);
+  const fb = document.getElementById('feedback');
+  fb.textContent = 'Respuesta: ' + expectedRaw;
+  fb.className = 'feedback neutral';
+  document.getElementById('score-pill').textContent = score + ' / ' + (current + 1);
+}
+
+function nextWord(){
+  current++;
+  if(current >= 30){
+    document.getElementById('final-score').textContent = score + '/30';
+    const list = document.getElementById('review-list');
+    if(wrongList.length === 0){
+      list.innerHTML = '<div>¡Todas correctas, enhorabuena!</div>';
+    } else {
+      list.innerHTML = wrongList.map(p => '<div><span class="w">' + p[1] + '</span> &mdash; ' + p[0] + '</div>').join('');
+    }
+    document.getElementById('quiz-view').style.display = 'none';
+    document.getElementById('end-view').style.display = 'block';
+  } else {
+    showWord();
+  }
+}
+
+document.getElementById('check-btn').addEventListener('click', checkAnswer);
+document.getElementById('dontknow-btn').addEventListener('click', dontKnow);
+document.getElementById('next-btn').addEventListener('click', nextWord);
+document.getElementById('restart-btn').addEventListener('click', pickSession);
+document.getElementById('restart-top-btn').addEventListener('click', function(){
+  if(confirm('¿Reiniciar desde cero? Se perderá el progreso actual.')){
+    pickSession();
+  }
+});
+document.getElementById('answer').addEventListener('keydown', function(e){
+  if(e.key === 'Enter'){
+    if(!document.getElementById('answer').disabled){
+      checkAnswer();
+    } else {
+      nextWord();
+    }
+  }
+});
+
+pickSession();
+</script>
+</body>
+</html>

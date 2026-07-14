@@ -19,6 +19,9 @@ jobs:
           cp index.html dist/
           cp quiz-italiano.html dist/
           cp quiz-espanol.html dist/
+          cp apple-touch-icon.png dist/
+          cp icon-192.png dist/
+          cp icon-512.png dist/
 
       - name: Push dist/ to deploy branch
         uses: JamesIves/github-pages-deploy-action@v4

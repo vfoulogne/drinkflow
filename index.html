@@ -183,7 +183,7 @@ body{
 </header>
 
   <div class="searchbar">
-    <input type="text" id="search" placeholder="ex : cointreau, lillet blanc, vermouth dry, chartreuse verte…" autocomplete="off">
+    <input type="text" id="search" placeholder="Ex : Cointreau, Lillet Blanc, Vermouth Dry, Chartreuse Verte…" autocomplete="off">
     <div class="suggestions" id="suggestions"></div>
   </div>
 
@@ -369,7 +369,7 @@ function spiritStyle(b){
   return m[b] || '';
 }
 function capWords(s){
-  return s.replace(/\b\w/g, c => c.toUpperCase());
+  return s.replace(/(^|[\s\-'(\/])(\p{L})/gu, (m, sep, letter) => sep + letter.toUpperCase());
 }
 
 function buildCardHtml(d, q){

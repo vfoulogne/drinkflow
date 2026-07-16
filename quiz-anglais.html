@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Quiz English - vocabulaire A2/B1</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f4f3ee;
+    color: #2c2c2a;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+  }
+  .app {
+    width: 100%;
+    max-width: 480px;
+    min-height: 100vh;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 20px 32px;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  header h1 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+    color: #5f5e5a;
+  }
+  .score-pill {
+    font-size: 13px;
+    background: #e3edf7;
+    color: #1d3557;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  .progress-track {
+    height: 5px;
+    background: #eceae2;
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 14px 0 24px;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #457b9d;
+    transition: width .25s ease;
+  }
+  .card {
+    background: #faf9f5;
+    border: 1px solid #e5e3d8;
+    border-radius: 18px;
+    padding: 32px 22px;
+    text-align: center;
+    flex-grow: 0;
+  }
+  .direction-badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    padding: 5px 14px;
+    border-radius: 20px;
+    background: #fdeceb;
+    color: #a8362b;
+    margin-bottom: 18px;
+  }
+  .word {
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 24px;
+    word-break: break-word;
+  }
+  input#answer {
+    width: 100%;
+    font-size: 17px;
+    padding: 13px 14px;
+    border-radius: 12px;
+    border: 1.5px solid #d3d1c7;
+    outline: none;
+    text-align: center;
+    background: #fff;
+  }
+  input#answer:focus {
+    border-color: #457b9d;
+  }
+  .feedback {
+    min-height: 22px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 14px;
+  }
+  .feedback.correct { color: #3b6d11; }
+  .feedback.wrong { color: #993c1d; }
+  .feedback.neutral { color: #888780; }
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  button {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 14px 10px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+  }
+  .btn-primary {
+    background: #1d3557;
+    color: #fff;
+  }
+  .btn-secondary {
+    background: #eceae2;
+    color: #444441;
+  }
+  .btn-primary:disabled {
+    background: #b7c4d3;
+    color: #fff;
+  }
+  .bottom-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .end-screen {
+    text-align: center;
+    padding: 40px 10px;
+  }
+  .end-screen .big {
+    font-size: 40px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #1d3557;
+  }
+  .end-screen p {
+    color: #5f5e5a;
+    font-size: 15px;
+    margin-bottom: 28px;
+  }
+  .review-list {
+    text-align: left;
+    background: #faf9f5;
+    border: 1px solid #e5e3d8;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  .review-list div {
+    font-size: 13px;
+    padding: 6px 0;
+    border-bottom: 1px solid #eeeeee;
+    color: #5f5e5a;
+  }
+  .review-list div:last-child { border-bottom: none; }
+  .review-list span.w { color: #2c2c2a; font-weight: 600; }
+  footer {
+    text-align: center;
+    font-size: 12px;
+    color: #b4b2a9;
+    margin-top: auto;
+    padding-top: 24px;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1 id="header-label">Word 1 / 30</h1>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button id="restart-top-btn" style="font-size:12px;font-weight:600;padding:5px 10px;border-radius:20px;border:none;background:#eceae2;color:#444441;flex:none">&#8635; Restart</button>
+      <div class="score-pill" id="score-pill">0 / 0</div>
+    </div>
+  </header>
+  <div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+
+  <div id="quiz-view">
+    <div class="card">
+      <div class="direction-badge" id="direction-badge">français &rarr; english</div>
+      <div class="word" id="word-display">word</div>
+      <input type="text" id="answer" placeholder="Your translation" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+      <div class="feedback neutral" id="feedback"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-secondary" id="dontknow-btn">I don't know</button>
+      <button class="btn-primary" id="check-btn">Check</button>
+    </div>
+    <div class="bottom-actions">
+      <button class="btn-secondary" id="next-btn" disabled style="flex:1">Next &rarr;</button>
+    </div>
+  </div>
+
+  <div id="end-view" class="end-screen" style="display:none">
+    <div class="big" id="final-score">0/30</div>
+    <p>Final score for this round</p>
+    <div class="review-list" id="review-list"></div>
+    <button class="btn-primary" id="restart-btn" style="width:100%">New round of 30 words</button>
+  </div>
+
+  <footer>Bank of nearly 400 words &middot; 30 words per session, chosen at random</footer>
+</div>
+
+<script>
+const bank = [
+["hello","bonjour"],["hi","salut"],["goodbye","au revoir"],["see you later","à plus tard"],
+["good morning","bonjour (matin)"],["good afternoon","bonjour (après-midi)"],["good evening","bonsoir"],["good night","bonne nuit"],
+["please","s'il te plaît"],["thank you","merci"],["you're welcome","de rien"],["sorry","désolé"],
+["excuse me","excusez-moi"],["how are you?","comment vas-tu ?"],["fine","bien"],["not bad","pas mal"],
+["yes","oui"],["no","non"],["maybe","peut-être"],["my name is","je m'appelle"],
+["what's your name?","comment tu t'appelles ?"],["I am ... years old","j'ai ... ans"],["I live in","j'habite à"],["nice to meet you","enchanté"],
+["family","la famille"],["father","le père"],["mother","la mère"],["parents","les parents"],
+["brother","le frère"],["sister","la sœur"],["siblings","les frères et sœurs"],["son","le fils"],
+["daughter","la fille"],["grandfather","le grand-père"],["grandmother","la grand-mère"],["grandparents","les grands-parents"],
+["uncle","l'oncle"],["aunt","la tante"],["cousin","le cousin / la cousine"],["husband","le mari"],
+["wife","l'épouse"],["baby","le bébé"],["child","l'enfant"],["friend","l'ami"],
+["school","l'école"],["high school","le lycée"],["teacher","le professeur"],["student","l'élève"],
+["classroom","la salle de classe"],["exam","l'examen"],["grade","la note (scolaire)"],["homework","les devoirs"],
+["timetable","l'emploi du temps"],["subject","la matière (scolaire)"],["maths","les mathématiques"],["history","l'histoire"],
+["geography","la géographie"],["science","les sciences"],["break","la récréation"],["backpack","le sac à dos"],
+["book","le livre"],["notebook","le cahier"],["pen","le stylo"],["pencil","le crayon"],
+["eraser","la gomme"],["ruler","la règle (mesure)"],["scissors","les ciseaux"],["job","le travail / le métier"],
+["office","le bureau"],["meeting","la réunion"],["colleague","le collègue"],["boss","le patron"],
+["salary","le salaire"],["holiday","les vacances"],["one","un"],["two","deux"],
+["three","trois"],["four","quatre"],["five","cinq"],["six","six"],
+["seven","sept"],["eight","huit"],["nine","neuf"],["ten","dix"],
+["twenty","vingt"],["thirty","trente"],["hundred","cent"],["thousand","mille"],
+["Monday","lundi"],["Tuesday","mardi"],["Wednesday","mercredi"],["Thursday","jeudi"],
+["Friday","vendredi"],["Saturday","samedi"],["Sunday","dimanche"],["today","aujourd'hui"],
+["tomorrow","demain"],["yesterday","hier"],["now","maintenant"],["later","plus tard"],
+["early","tôt"],["late","tard"],["often","souvent"],["always","toujours"],
+["never","jamais"],["sometimes","parfois"],["already","déjà"],["weather","le temps (météo)"],
+["it's sunny","il fait soleil"],["it's hot","il fait chaud"],["it's cold","il fait froid"],["it's raining","il pleut"],
+["it's snowing","il neige"],["it's windy","il fait du vent"],["spring","le printemps"],["summer","l'été"],
+["autumn","l'automne"],["winter","l'hiver"],["cloud","le nuage"],["rain","la pluie"],
+["snow","la neige"],["red","rouge"],["blue","bleu"],["green","vert"],
+["yellow","jaune"],["orange","orange (couleur)"],["purple","violet"],["pink","rose (couleur)"],
+["brown","marron"],["grey","gris"],["black","noir"],["white","blanc"],
+["head","la tête"],["hair","les cheveux"],["face","le visage"],["eyes","les yeux"],
+["nose","le nez"],["mouth","la bouche"],["ears","les oreilles"],["neck","le cou"],
+["arms","les bras"],["hands","les mains"],["fingers","les doigts"],["legs","les jambes"],
+["feet","les pieds"],["back","le dos"],["stomach","le ventre"],["clothes","les vêtements"],
+["t-shirt","le tee-shirt"],["trousers","le pantalon"],["skirt","la jupe"],["dress","la robe"],
+["jacket","la veste"],["coat","le manteau"],["shoes","les chaussures"],["socks","les chaussettes"],
+["cap","la casquette"],["glasses","les lunettes"],["house","la maison"],["flat","l'appartement"],
+["room","la pièce / la chambre"],["bedroom","la chambre à coucher"],["living room","le salon"],["kitchen","la cuisine"],
+["bathroom","la salle de bain"],["garden","le jardin"],["door","la porte"],["window","la fenêtre"],
+["table","la table"],["chair","la chaise"],["bed","le lit"],["wardrobe","l'armoire"],
+["food","la nourriture"],["breakfast","le petit-déjeuner"],["lunch","le déjeuner"],["dinner","le dîner"],
+["bread","le pain"],["water","l'eau"],["milk","le lait"],["juice","le jus"],
+["coffee","le café"],["tea","le thé"],["fruit","le fruit"],["apple","la pomme"],
+["banana","la banane"],["orange (fruit)","l'orange (fruit)"],["strawberry","la fraise"],["vegetables","les légumes"],
+["meat","la viande"],["fish","le poisson"],["chicken","le poulet"],["rice","le riz"],
+["pasta","les pâtes"],["cheese","le fromage"],["egg","l'œuf"],["sugar","le sucre"],
+["salt","le sel"],["town","la ville"],["village","le village"],["street","la rue"],
+["square","la place"],["shop","le magasin"],["market","le marché"],["supermarket","le supermarché"],
+["park","le parc"],["hospital","l'hôpital"],["station","la gare"],["car","la voiture"],
+["bus","le bus"],["train","le train"],["bike","le vélo"],["plane","l'avion"],
+["underground","le métro"],["sport","le sport"],["football","le football"],["basketball","le basket"],
+["swimming","la natation"],["music","la musique"],["film","le film"],["cinema","le cinéma"],
+["television","la télévision"],["video game","le jeu vidéo"],["to dance","danser"],["to sing","chanter"],
+["to play","jouer"],["to swim","nager"],["to run","courir"],["to travel","voyager"],
+["to draw","dessiner"],["to read","lire"],["big","grand"],["small","petit"],
+["nice","joli / gentil"],["ugly","laid"],["new","neuf / nouveau"],["old","vieux"],
+["easy","facile"],["difficult","difficile"],["fast","rapide"],["slow","lent"],
+["tall","grand (taille)"],["short","petit (taille) / court"],["fat","gros"],["thin","mince"],
+["happy","heureux"],["sad","triste"],["tired","fatigué"],["good","bon"],
+["bad","mauvais"],["expensive","cher"],["cheap","pas cher"],["long","long"],
+["clean","propre"],["dirty","sale"],["strong","fort"],["weak","faible"],
+["important","important"],["interesting","intéressant"],["boring","ennuyeux"],["dangerous","dangereux"],
+["safe","sûr"],["comfortable","confortable"],["famous","célèbre"],["to be","être"],
+["to have","avoir"],["to do","faire"],["to go","aller"],["to come","venir"],
+["to can","pouvoir"],["must","devoir"],["to want","vouloir"],["to know","savoir / connaître"],
+["to say","dire"],["to see","voir"],["to look at","regarder"],["to listen","écouter"],
+["to speak","parler"],["to eat","manger"],["to drink","boire"],["to live","vivre"],
+["to work","travailler"],["to study","étudier"],["to buy","acheter"],["to sell","vendre"],
+["to write","écrire"],["to open","ouvrir"],["to close","fermer"],["to start","commencer"],
+["to finish","finir"],["to help","aider"],["to look for","chercher"],["to find","trouver"],
+["to lose","perdre"],["to think","penser"],["to need","avoir besoin de"],["to arrive","arriver"],
+["to leave","partir / sortir"],["to enter","entrer"],["to sleep","dormir"],["to wake up","se réveiller"],
+["to get up","se lever"],["to take a shower","se doucher"],["to get dressed","s'habiller"],["to wash","se laver"],
+["to remember","se souvenir"],["to forget","oublier"],["to understand","comprendre"],["to explain","expliquer"],
+["to try","essayer"],["to hope","espérer"],["to choose","choisir"],["to decide","décider"],
+["to agree","être d'accord"],["dog","le chien"],["cat","le chat"],["horse","le cheval"],
+["bird","l'oiseau"],["fish (animal)","le poisson (animal)"],["mouse","la souris"],["rabbit","le lapin"],
+["cow","la vache"],["sheep","le mouton"],["lion","le lion"],["elephant","l'éléphant"],
+["I think that","je pense que"],["in my opinion","à mon avis"],["I agree","je suis d'accord"],["I disagree","je ne suis pas d'accord"],
+["worried","inquiet"],["surprised","surpris"],["excited","enthousiaste"],["disappointed","déçu"],
+["proud","fier"],["scared","effrayé"],["relaxed","détendu"],["stressed","stressé"],
+["price","le prix"],["receipt","le ticket de caisse"],["cash","l'argent liquide"],["credit card","la carte de crédit"],
+["sale","les soldes"],["discount","la réduction"],["to pay","payer"],["to try on","essayer (un vêtement)"],
+["size","la taille (vêtement)"],["customer","le client"],["doctor","le médecin"],["nurse","l'infirmier"],
+["medicine","le médicament"],["ill","malade"],["headache","le mal de tête"],["fever","la fièvre"],
+["cough","la toux"],["to feel better","se sentir mieux"],["appointment","le rendez-vous"],["healthy","en bonne santé"],
+["trip","le voyage"],["journey","le trajet"],["luggage","les bagages"],["passport","le passeport"],
+["ticket","le billet"],["airport","l'aéroport"],["to book","réserver"],["abroad","à l'étranger"],
+["destination","la destination"],["tourist","le touriste"],["computer","l'ordinateur"],["phone","le téléphone"],
+["screen","l'écran"],["password","le mot de passe"],["internet","internet"],["app","l'application"],
+["to download","télécharger"],["to charge","recharger (une batterie)"],["battery","la batterie"],["wifi","le wifi"],
+["and","et"],["or","ou"],["but","mais"],["because","parce que"],
+["so","donc"],["although","bien que"],["however","cependant"],["also","aussi"],
+["therefore","par conséquent"],["for example","par exemple"],["at first","au début"],["finally","finalement"],
+["suddenly","soudainement"],["actually","en fait"]
+];
+
+let sessionWords = [];
+let current = 0;
+let score = 0;
+let wrongList = [];
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function normalize(s){
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/\([^)]*\)/g,'')
+    .split('/')[0]
+    .replace(/^(a |an |the )/,'')
+    .replace(/^(le |la |l'|les |un |une |des )/,'')
+    .replace(/[.,!?¿¡'’]/g,'')
+    .trim();
+}
+
+function pickSession(){
+  const indices = shuffle([...Array(bank.length).keys()]).slice(0, 30);
+  sessionWords = indices;
+  current = 0;
+  score = 0;
+  wrongList = [];
+  document.getElementById('quiz-view').style.display = 'block';
+  document.getElementById('end-view').style.display = 'none';
+  showWord();
+}
+
+function showWord(){
+  const wIdx = sessionWords[current];
+  const pair = bank[wIdx];
+  document.getElementById('header-label').textContent = 'Word ' + (current + 1) + ' / 30';
+  document.getElementById('score-pill').textContent = score + ' / ' + current;
+  document.getElementById('progress').style.width = Math.round((current / 30) * 100) + '%';
+  document.getElementById('direction-badge').textContent = 'français → english';
+  document.getElementById('word-display').textContent = pair[1];
+  const input = document.getElementById('answer');
+  input.value = '';
+  input.disabled = false;
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback neutral';
+  document.getElementById('next-btn').disabled = true;
+  document.getElementById('check-btn').disabled = false;
+  input.focus();
+}
+
+function checkAnswer(){
+  const input = document.getElementById('answer');
+  if(input.disabled) return;
+  const wIdx = sessionWords[current];
+  const pair = bank[wIdx];
+  const expectedRaw = pair[0];
+  const userVal = normalize(input.value);
+  const accepted = expectedRaw.split('/').map(s => normalize(s));
+  const correct = userVal.length > 0 && accepted.includes(userVal);
+  input.disabled = true;
+  document.getElementById('next-btn').disabled = false;
+  document.getElementById('check-btn').disabled = true;
+  const fb = document.getElementById('feedback');
+  if(correct){
+    score++;
+    fb.textContent = 'Correct!';
+    fb.className = 'feedback correct';
+  } else {
+    fb.textContent = 'Answer: ' + expectedRaw;
+    fb.className = 'feedback wrong';
+    wrongList.push(pair);
+  }
+  document.getElementById('score-pill').textContent = score + ' / ' + (current + 1);
+}
+
+function dontKnow(){
+  const input = document.getElementById('answer');
+  if(input.disabled) return;
+  const wIdx = sessionWords[current];
+  const pair = bank[wIdx];
+  const expectedRaw = pair[0];
+  input.disabled = true;
+  document.getElementById('next-btn').disabled = false;
+  document.getElementById('check-btn').disabled = true;
+  wrongList.push(pair);
+  const fb = document.getElementById('feedback');
+  fb.textContent = 'Answer: ' + expectedRaw;
+  fb.className = 'feedback neutral';
+  document.getElementById('score-pill').textContent = score + ' / ' + (current + 1);
+}
+
+function nextWord(){
+  current++;
+  if(current >= 30){
+    document.getElementById('final-score').textContent = score + '/30';
+    const list = document.getElementById('review-list');
+    if(wrongList.length === 0){
+      list.innerHTML = '<div>All correct, well done!</div>';
+    } else {
+      list.innerHTML = wrongList.map(p => '<div><span class="w">' + p[1] + '</span> &mdash; ' + p[0] + '</div>').join('');
+    }
+    document.getElementById('quiz-view').style.display = 'none';
+    document.getElementById('end-view').style.display = 'block';
+  } else {
+    showWord();
+  }
+}
+
+document.getElementById('check-btn').addEventListener('click', checkAnswer);
+document.getElementById('dontknow-btn').addEventListener('click', dontKnow);
+document.getElementById('next-btn').addEventListener('click', nextWord);
+document.getElementById('restart-btn').addEventListener('click', pickSession);
+document.getElementById('restart-top-btn').addEventListener('click', function(){
+  if(confirm('Restart from scratch? Current progress will be lost.')){
+    pickSession();
+  }
+});
+document.getElementById('answer').addEventListener('keydown', function(e){
+  if(e.key === 'Enter'){
+    if(!document.getElementById('answer').disabled){
+      checkAnswer();
+    } else {
+      nextWord();
+    }
+  }
+});
+
+pickSession();
+</script>
+</body>
+</html>

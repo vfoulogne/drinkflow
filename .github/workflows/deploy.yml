@@ -19,6 +19,7 @@ jobs:
           cp index.html dist/
           cp quiz-italiano.html dist/
           cp quiz-espanol.html dist/
+          cp quiz-anglais.html dist/
           cp apple-touch-icon.png dist/
           cp icon-192.png dist/
           cp icon-512.png dist/

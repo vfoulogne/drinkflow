@@ -703,6 +703,13 @@ function replacePanel(card, name, editMode){
   }
 }
 
+searchInput.addEventListener('input', () => render(searchInput.value));
+clearBtn.addEventListener('click', () => {
+  searchInput.value = '';
+  render('');
+  searchInput.focus();
+});
+
 Promise.all([loadEdits(), loadDosageEdits()]).then(() => render(""));
 </script>
 </body>

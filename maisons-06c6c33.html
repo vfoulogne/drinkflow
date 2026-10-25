@@ -96,6 +96,15 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
 .foot { margin-top: 28px; color: var(--muted); font-size: 13px; }
 @media (max-width: 420px) { .specs { grid-template-columns: repeat(2, minmax(0, 1fr)); } .rows div { grid-template-columns: 96px minmax(0, 1fr); } }
 @media (prefers-reduced-motion: no-preference) { .card { transition: border-color .15s; } .card:hover { border-color: var(--accent); } }
+.streets-btn { display: block; margin: 28px auto 0; font: inherit; font-size: 15px; padding: 10px 18px; border-radius: 999px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; }
+.streets-btn:hover { background: var(--accent); color: var(--bg, #fff); }
+.streets-box { margin-top: 14px; border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+.streets-box[hidden] { display: none; }
+.streets-box input { width: 100%; box-sizing: border-box; font: inherit; font-size: 16px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: inherit; }
+.streets-box .res { margin: 10px 0 0; font-size: 14px; min-height: 20px; }
+.streets-box ul { list-style: none; margin: 10px 0 0; padding: 0; columns: 2 220px; column-gap: 20px; font-size: 14px; }
+.streets-box li { padding: 3px 0; break-inside: avoid; }
+.streets-box li.hit { font-weight: 600; color: var(--accent); }
 </style>
 
 </head>
@@ -113,8 +122,16 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     <ol id="journal"></ol>
   </section>
   <p class="foot">Les temps de marche viennent des annonces ou d'une estimation depuis la gare (position des annonces floutée à 50-250 m). La mitoyenneté n'est presque jamais indiquée : à contrôler à la visite.</p>
+  <button type="button" class="streets-btn" id="streetsBtn" aria-expanded="false" aria-controls="streetsBox">Voir les rues à moins de 12 min de la gare</button>
+  <div class="streets-box" id="streetsBox" hidden>
+    <input type="search" id="streetQ" placeholder="Tester une adresse ou un nom de rue…" autocomplete="off">
+    <p class="res" id="streetRes" aria-live="polite"></p>
+    <ul id="streetList"></ul>
+  </div>
+
 </div>
 
+<script type="application/json" id="streets">["Allée Alexis Legrand", "Allée Chilpéric", "Allée des Pavillons", "Allée des Roses", "Allée Louis Delion", "Allée Mon Désir", "Avenue Aimé Auberville", "Avenue Albert Caillou", "Avenue Arthur de Smet", "Avenue Beauséjour", "Avenue Charles Tourel", "Avenue d'Austerlitz", "Avenue de l'Espérance", "Avenue de la Résistance", "Avenue de la Rochelle", "Avenue de Sully", "Avenue de Sylvie", "Avenue de Turenne", "Avenue des Abbesses", "Avenue des Martyrs de Chelles", "Avenue du Docteur Blanchet", "Avenue du Général Leclerc", "Avenue du Maréchal de Lattre de Tassigny", "Avenue du Maréchal Foch", "Avenue Elie", "Avenue Etienne Bourgeois", "Avenue François Mitterrand", "Avenue Gabriel", "Avenue Général de Gaulle", "Avenue Georges Digoy", "Avenue Germaine", "Avenue Hénin", "Avenue Jean de la Fontaine", "Avenue Jehan de Chelles", "Avenue Louis Guérin", "Avenue Madeleine", "Avenue Paul Doumer", "Avenue Robert Magisson", "Avenue Serge", "Boulevard Chilpéric", "Boulevard d'Alsace-Lorraine", "Boulevard Pierre Mendès France", "Cours Jacques Chaban-Delmas", "Impasse de la Goujonnette", "Impasse des Chrysanthemes", "Impasse Elise", "Impasse Emilie", "Impasse Mariey", "Parc du Souvenir Emile Fouchard", "Passage Bazin", "Place Cala", "Place de la République", "Place des Martyrs de Chateaubriant", "Place du Grand Jardin", "Place Gasnier Guy", "Place Georges Guillaume", "Rue Adolphe Besson", "Rue Alice et Jean Lafont", "Rue André Coudert", "Rue Auguste Meunier", "Rue Berteaux", "Rue de Bourgogne", "Rue de l'Agent Schoenfeld", "Rue de l'Ilette", "Rue de l'Independance", "Rue de l'Union", "Rue de la Belle Ile", "Rue de la Bichette", "Rue de la Marne", "Rue de la Paix", "Rue de Lorraine", "Rue de Nieuport", "Rue de Strasbourg", "Rue de Verdun", "Rue des Anémones", "Rue des Chrysanthèmes", "Rue des Cottages", "Rue des Frères Verdeaux", "Rue des Primevères", "Rue des Roches", "Rue des Tilleuls", "Rue des Tournelles", "Rue Docteur Roux", "Rue du 11 Novembre", "Rue du Chemin de Fer", "Rue du Chevalier Bayard", "Rue du Docteur Calmette", "Rue du Docteur Douarre", "Rue du Docteur Johannet", "Rue du Docteur Spadotto", "Rue du Pont de Bois", "Rue du Pont Saint-Martin", "Rue du Révérend Père Chaillet", "Rue du Temple", "Rue du Vieux Moulin", "Rue Duchesne", "Rue Eugène Bire", "Rue Florian", "Rue Franck Hémon", "Rue Gambetta", "Rue Gasnier Guy", "Rue Guy Pierre Fauconnet", "Rue Henri Poincaré", "Rue Henri Rol-Tanguy", "Rue Henri-Joseph et Marie Dégremont", "Rue Hortense", "Rue Jacques Delporte", "Rue Jean Mermoz", "Rue Jean Moulin", "Rue Jeanne d'Arc", "Rue Jonas", "Rue Léon Rimbert", "Rue Louis Eterlet", "Rue Marie Edmée", "Rue Marthe", "Rue Massenet", "Rue Parmentier", "Rue Pasteur", "Rue Perotin", "Rue Poncelet", "Rue Poulain", "Rue Raymond Counil", "Rue Raymond Delasalle", "Rue Rejanne Ruel", "Rue René Sallé", "Rue Saint Hubert", "Rue Sainte-Bathilde", "Rue Sauer", "Rue Victor Hugo"]</script>
 <script type="application/json" id="data">
 {
   "meta": {
@@ -265,6 +282,33 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
   function render() { renderBar(); renderGrid(); }
   render(); renderJournal();
 })();
+
+  (function () {
+    var S = JSON.parse(document.getElementById('streets').textContent);
+    var btn = document.getElementById('streetsBtn'), box = document.getElementById('streetsBox');
+    var q = document.getElementById('streetQ'), res = document.getElementById('streetRes'), ul = document.getElementById('streetList');
+    function norm(x) { return x.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim(); }
+    var N = S.map(norm);
+    function draw() {
+      var t = norm(q.value).replace(/^[0-9]+\s*(bis|ter)?\s*/, '');
+      ul.textContent = ''; var hits = 0;
+      S.forEach(function (name, i) {
+        var hit = t.length > 1 && N[i].indexOf(t) !== -1;
+        if (t.length > 1 && !hit) return;
+        if (hit) hits++;
+        var li = document.createElement('li'); li.textContent = name; if (hit) li.className = 'hit'; ul.appendChild(li);
+      });
+      if (t.length < 2) res.textContent = S.length + ' rues de Chelles à moins de 12 min à pied de la gare.';
+      else if (hits) res.textContent = '✔ Dans la zone : ' + hits + ' rue' + (hits > 1 ? 's' : '') + ' correspondante' + (hits > 1 ? 's' : '') + '.';
+      else res.textContent = '✘ Cette rue n\'est pas dans la liste (plus de 12 min à pied, ou orthographe différente).';
+    }
+    btn.addEventListener('click', function () {
+      var open = box.hidden; box.hidden = !open; btn.setAttribute('aria-expanded', open);
+      btn.textContent = open ? 'Masquer les rues' : 'Voir les rues à moins de 12 min de la gare';
+      if (open) { draw(); q.focus(); }
+    });
+    q.addEventListener('input', draw);
+  })();
 </script>
 
 </body>

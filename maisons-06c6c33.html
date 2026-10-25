@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Maisons Chelles gare</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: en-tête avec critères, puces de filtre par statut, grille de fiches (une par maison), journal des changements en bas */
+:root {
+  --bg: #EEF1EF;
+  --card: #FFFFFF;
+  --ink: #18282A;
+  --muted: #5B6B6B;
+  --line: #D5DCD9;
+  --accent: #A8432B;
+  --accent-ink: #FFFFFF;
+  --ok: #2F6B4F;
+  --warn: #8F6410;
+  --new: #1E5FA8;
+  --chip: #E1E7E4;
+  --display: "Young Serif", Georgia, "Times New Roman", serif;
+  --body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111A1B; --card: #192426; --ink: #E8EFEC; --muted: #93A5A2; --line: #2C3B3C;
+    --accent: #E0836A; --accent-ink: #1A0F0B; --ok: #6FC49A; --warn: #E0B24F; --new: #7DB4F0; --chip: #233133;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111A1B; --card: #192426; --ink: #E8EFEC; --muted: #93A5A2; --line: #2C3B3C;
+  --accent: #E0836A; --accent-ink: #1A0F0B; --ok: #6FC49A; --warn: #E0B24F; --new: #7DB4F0; --chip: #233133;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.5;
+  padding-block: 28px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 1120px; margin: 0 auto; }
+header { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(28px, 6vw, 42px); line-height: 1.1; margin: 0; text-wrap: balance; }
+.crit { display: flex; flex-wrap: wrap; gap: 6px 14px; color: var(--muted); font-size: 14px; }
+.crit b { color: var(--ink); font-weight: 600; }
+.upd { font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
+.bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 20px; }
+.chip {
+  font: inherit; font-size: 13.5px; font-weight: 500; color: var(--ink); background: var(--chip);
+  border: 1px solid transparent; border-radius: 999px; padding: 6px 12px; cursor: pointer;
+}
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.chip:focus-visible, .btn:focus-visible, summary:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.chip .n { font-family: var(--mono); opacity: .75; margin-left: 4px; }
+.sp { flex: 1 1 20px; }
+select { font: inherit; font-size: 13.5px; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 14px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.top { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; flex-wrap: wrap; }
+.pill { font-size: 12px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: var(--chip); color: var(--ink); }
+.pill.retenue { background: var(--ok); color: var(--bg); }
+.pill.etudier { background: var(--accent); color: var(--accent-ink); }
+.pill.verifier { background: var(--warn); color: var(--bg); }
+.badges { display: flex; gap: 6px; flex-wrap: wrap; }
+.badge { font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 6px; border: 1px solid var(--new); color: var(--new); }
+.badge.drop { border-color: var(--ok); color: var(--ok); }
+.badge.up { border-color: var(--accent); color: var(--accent); }
+.badge.gone { border-color: var(--muted); color: var(--muted); }
+h2 { font-family: var(--display); font-weight: 400; font-size: 19px; line-height: 1.25; margin: 0; text-wrap: balance; }
+.price { font-family: var(--mono); font-size: 24px; font-weight: 500; letter-spacing: -.01em; }
+.price small { font-size: 12.5px; color: var(--muted); font-weight: 400; margin-left: 6px; }
+.specs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.spec { background: var(--chip); border-radius: 8px; padding: 7px 9px; min-width: 0; }
+.spec span { display: block; font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.spec b { font-family: var(--mono); font-weight: 500; font-size: 14px; overflow-wrap: anywhere; }
+.rows { display: grid; gap: 4px; font-size: 14px; }
+.rows div { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 8px; }
+.rows dt, .rows .k { color: var(--muted); }
+.links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 4px; }
+.btn { font-size: 13.5px; font-weight: 600; text-decoration: none; color: var(--accent-ink); background: var(--accent); border-radius: 8px; padding: 7px 12px; }
+.btn.alt { background: var(--chip); color: var(--ink); }
+details.hist { font-size: 13.5px; }
+details.hist summary { cursor: pointer; color: var(--muted); }
+details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono); font-size: 12.5px; }
+.empty { color: var(--muted); padding: 24px 0; }
+.journal { margin-top: 36px; }
+.journal h3 { font-family: var(--display); font-weight: 400; font-size: 22px; margin: 0 0 10px; }
+.journal ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.journal li { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 10px; font-size: 14px; border-top: 1px solid var(--line); padding-top: 6px; }
+.journal time { font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
+.foot { margin-top: 28px; color: var(--muted); font-size: 13px; }
+@media (max-width: 420px) { .specs { grid-template-columns: repeat(2, minmax(0, 1fr)); } .rows div { grid-template-columns: 96px minmax(0, 1fr); } }
+@media (prefers-reduced-motion: no-preference) { .card { transition: border-color .15s; } .card:hover { border-color: var(--accent); } }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Maisons à moins de 12 min de la gare de Chelles-Gournay</h1>
+    <div class="crit" id="crit"></div>
+    <div class="upd" id="upd"></div>
+  </header>
+  <div class="bar" id="bar"></div>
+  <div class="grid" id="grid"></div>
+  <section class="journal">
+    <h3>Journal des changements</h3>
+    <ol id="journal"></ol>
+  </section>
+  <p class="foot">Les temps de marche viennent des annonces ou d'une estimation depuis la gare (position des annonces floutée à 50-250 m). La mitoyenneté n'est presque jamais indiquée : à contrôler à la visite.</p>
+</div>
+
+<script type="application/json" id="data">
+{
+  "meta": {
+    "updated": "2026-10-25",
+    "criteria": ["Maison individuelle, sans mitoyenneté", "≥ 100 m² (idéalement 120 m²)", "≥ 4 chambres", "Budget max 510 000 €, travaux déduits du prix", "Terrain > 300 m² idéalement", "≤ 12 min à pied de la gare de Chelles-Gournay"]
+  },
+  "listings": [
+    {"id":"lma-450","status":"retenue","title":"Meulière avec véranda et sous-sol total","price":450000,"surface":197,"surfaceNote":"utiles, habitable à confirmer","bedrooms":"3 décrites, 4 annoncées","land":null,"walk":"≈ 3 min","quartier":"Chelles centre-ville","condition":"Très bon état. Cuisine et chaudière récentes, seul l'atelier de fond de parcelle est à rénover. DPE D.","mitoyen":"Non précisée (maison individuelle)","todo":"Nombre réel de chambres, taille du terrain. Agence LMA Chelloise : 01 84 14 63 97.","links":[{"label":"MeilleursAgents","url":"https://www.meilleursagents.com/annonces/achat/1976520335/"}],"firstSeen":"2026-10-25","lastSeen":"2026-10-25","active":true,"history":[{"d":"2026-10-25","price":450000}]},
+    {"id":"pav-399","status":"retenue","title":"Pavillon base meulière avec garage indépendant","price":399000,"surface":175,"bedrooms":"5 (dont suite parentale)","land":346,"walk":"≈ 8-9 min","quartier":"Chelles Sud, canal et bords de Marne","condition":"Rafraîchissements et finitions à prévoir, ravalement sur un tiers de la façade. DPE E.","mitoyen":"Maison individuelle (non précisée)","todo":"Chiffrer les travaux. Même bien chez plusieurs agences (399 k€) et en direct sur PAP (395 k€).","links":[{"label":"PAP (395 k€)","url":"https://www.pap.fr/annonces/maison-chelles-77500-r441302359"},{"label":"Orpi","url":"https://www.orpi.com/annonce-vente-maison-t8-chelles-77500-92560065-a47d-412e-9b70-6d2af19f00d8/"},{"label":"Bien'ici (iad)","url":"https://www.bienici.com/annonce/iad-france-1778959"},{"label":"Bien'ici (Century 21)","url":"https://www.bienici.com/annonce/century-21-202_3881_10424"}],"firstSeen":"2026-10-25","lastSeen":"2026-10-25","active":true,"history":[{"d":"2026-10-25","price":399000}]},
+    {"id":"iad-440","status":"retenue","title":"Maison familiale avec jardin arboré et atelier","price":440000,"surface":142,"bedrooms":"5 (1 en rez-de-jardin + 4)","land":458,"walk":"≈ 8-10 min","quartier":"Chelles Sud, bords de Marne","condition":"Travaux de rafraîchissement à prévoir. DPE E.","mitoyen":"Non précisée","todo":"Chiffrer les travaux avant offre (marge d'environ 70 k€ sous 510 k€).","links":[{"label":"Bien'ici (iad)","url":"https://www.bienici.com/annonce/iad-france-986158"}],"firstSeen":"2026-10-25","lastSeen":"2026-10-25","active":true,"history":[{"d":"2026-10-25","price":440000}]},
+    {"id":"iad-489","status":"retenue","title":"Maison familiale avec sous-sol, garage et bureau","price":489000,"surface":126,"bedrooms":"4 (+ bureau en sous-sol)","land":486,"walk":"≈ 12 min","quartier":"Chelles, Abbesses (Arcades-Castermant)","condition":"Bon état : cuisine et salle de bains rénovées, chaudière 2022, double vitrage. DPE E.","mitoyen":"Non précisée (jardin sans vis-à-vis)","todo":"Mitoyenneté. En limite de la zone des 12 min.","links":[{"label":"Bien'ici (iad)","url":"https://www.bienici.com/annonce/iad-france-1018160"}],"firstSeen":"2026-10-25","lastSeen":"2026-10-25","active":true,"history":[{"d":"2026-10-25","price":489000}]},
+    {"id":"lma-390","status":"etudier","title":"Maison d'angle avec sous-sol de plain-pied sur jardin","price":390000,"surface":110,"surfaceNote":"habitables, 163 m² utiles","bedrooms":"3 (4 possibles)","land":312,"walk":"≈ 7 min","quartier":"Chelles hyper centre","condition":"Toiture refaite, isolation extérieure, panneaux solaires, double vitrage, chaudière fioul récente. DPE E, énergie chère (3 050 à 4 140 €/an).","mitoyen":"Maison individuelle d'angle","todo":"Créer la 4e chambre. Chiffres contradictoires dans l'annonce. Agence LMA Chelloise : 01 84 14 63 97.","links":[{"label":"MeilleursAgents","url":"https://www.meilleursagents.com/annonces/achat/1976650207/"},{"label":"Bien'ici (iad)","url":"https://www.bienici.com/annonce/iad-france-1035848"}],"firstSeen":"2026-10-25","lastSeen":"2026-10-25","active":true,"history":[{"d":"2026-10-25","price":390000}]},
+    {"id":"sop-431","status":"verifier","title":"Maison de 1965 avec dépendance en fond de jardin","price":431000,"priceNote":"410 000 € hors honoraires","surface":140,"bedrooms":"4","land":307,"walk":"à situer","quartier":"Abbesses selon l'annonce, Noue-Brossard selon Bien'ici","condition":"Très bon état. DPE D.","mitoyen":"Non précisée","todo":"Localisation exacte et distance réelle à la gare. Agence L'Adresse Sopatrim.","links":[{"label":"MeilleursAgents","url":"https://www.meilleursagents.com/annonces/achat/1976686882/"}],"firstSeen":"2026-10-25","lastSeen":"2026-10-25","active":true,"history":[{"d":"2026-10-25","price":431000}]},
+    {"id":"apimo-475","status":"verifier","title":"Maison meulière et brique avec garage de 51 m²","price":475000,"surface":144.88,"bedrooms":"4 (2 + 1 + pièce de 60 m² convertible)","land":699,"walk":"≈ 1 km, limite des 12 min","quartier":"Chelles centre-ville","condition":"Pas de travaux cités. DPE D.","mitoyen":"Non précisée","todo":"Adresse exacte, temps de trajet réel, nombre de chambres.","links":[{"label":"Bien'ici","url":"https://www.bienici.com/annonce/apimo-87150665"}],"firstSeen":"2026-10-25","lastSeen":"2026-10-25","active":true,"history":[{"d":"2026-10-25","price":475000}]},
+    {"id":"iad-390-1850","status":"verifier","title":"Maison de 1850 sur trois niveaux","price":390000,"surface":123.79,"bedrooms":"4","land":530,"walk":"≈ 1 km du RER (annoncé)","quartier":"Chelles, Gambetta et Mont-Chalâts","condition":"« Fort potentiel » : travaux probables. DPE E.","mitoyen":"Non précisée","todo":"Probablement hors des 12 min. Travaux à chiffrer.","links":[{"label":"Bien'ici (iad)","url":"https://www.bienici.com/annonce/iad-france-944960"}],"firstSeen":"2026-10-25","lastSeen":"2026-10-25","active":true,"history":[{"d":"2026-10-25","price":390000}]},
+    {"id":"orpi-499","status":"retrait","title":"Pavillon des années 50 rénové et surélevé en 2021","price":499000,"priceNote":"485 000 € hors honoraires","surface":125.38,"bedrooms":"4","land":332,"walk":"< 10 min","quartier":"Chelles Sud, bords de Marne","condition":"Aucuns travaux. DPE C.","mitoyen":"Non précisée","todo":"Peu d'intérêt : rez-de-chaussée trop bas, voisinage douteux.","links":[{"label":"Orpi","url":"https://www.orpi.com/annonce-vente-maison-t6-chelles-77500-1512dc9e-6fb7-446e-aa37-9cb4b74b0808/"}],"firstSeen":"2026-10-25","lastSeen":"2026-10-25","active":true,"history":[{"d":"2026-10-25","price":499000}]},
+    {"id":"netty-435","status":"hors","reason":"Surface de 98 m², juste sous le seuil","title":"Pavillon indépendant en meulière","price":435000,"surface":98,"bedrooms":"4","land":352,"walk":"≈ 10 min","quartier":"Chelles, Abbesses","condition":"Non précisé. DPE D.","mitoyen":"Maison indépendante","todo":"","links":[{"label":"Bien'ici","url":"https://www.bienici.com/annonce/netty-company51712prz-house-2234"}],"firstSeen":"2026-10-25","lastSeen":"2026-10-25","active":true,"history":[{"d":"2026-10-25","price":435000}]},
+    {"id":"iad-460","status":"hors","reason":"Surface habitable réelle de 95 m², DPE F","title":"Pavillon début XXe rénové avec puits","price":460000,"surface":95,"surfaceNote":"habitables, 150 m² au sol","bedrooms":"4 (4e en sous-sol)","land":455,"walk":"≈ 12 min","quartier":"Chelles Sud, bords de Marne","condition":"Rénové. DPE F.","mitoyen":"Non précisée","todo":"","links":[{"label":"Bien'ici (iad)","url":"https://www.bienici.com/annonce/iad-france-1017661"}],"firstSeen":"2026-10-25","lastSeen":"2026-10-25","active":true,"history":[{"d":"2026-10-25","price":460000}]},
+    {"id":"hektor-365","status":"hors","reason":"Terrain de 150 m² et DPE F","title":"Maison familiale avec garage et combles","price":365000,"surface":120,"bedrooms":"4","land":150,"walk":"≈ 800 m","quartier":"Chelles Sud, bords de Marne","condition":"Fenêtres PVC, chaudière gaz récente. DPE F.","mitoyen":"Probable (petit terrain, garage en rez-de-chaussée)","todo":"","links":[{"label":"Bien'ici","url":"https://www.bienici.com/annonce/hektor-justimm77-66"}],"firstSeen":"2026-10-25","lastSeen":"2026-10-25","active":true,"history":[{"d":"2026-10-25","price":365000}]},
+    {"id":"abbesses-520","status":"hors","reason":"Au-dessus du budget de 510 k€","title":"Pavillon exposé sud, avenue des Abbesses","price":520000,"surface":150,"bedrooms":"5","land":486,"walk":"≈ 10 min","quartier":"Chelles, avenue des Abbesses","condition":"Bon état.","mitoyen":"Non précisée","todo":"Négociable ?","links":[{"label":"Orpi","url":"https://www.orpi.com/annonce-vente-maison-t7-chelles-77500-02728bd8-8d8a-45fe-94bf-6eb22f0a46ee/"},{"label":"Bien'ici","url":"https://www.bienici.com/annonce/ag773139-553960196"}],"firstSeen":"2026-10-25","lastSeen":"2026-10-25","active":true,"history":[{"d":"2026-10-25","price":520000}]},
+    {"id":"abbesses-315","status":"hors","reason":"3 chambres, DPE G, travaux lourds","title":"Pavillon avenue des Abbesses, garage-atelier de 45 m²","price":315000,"surface":100,"bedrooms":"3","land":365,"walk":"≈ 5 min","quartier":"Chelles, Abbesses","condition":"Beau potentiel, rénovation lourde probable. DPE G.","mitoyen":"Non précisée","todo":"","links":[{"label":"Orpi","url":"https://www.orpi.com/annonce-vente-maison-t5-chelles-77500-1ae5122a-4bfc-4824-b93c-bcdf35a04929/"},{"label":"Bien'ici","url":"https://www.bienici.com/annonce/ag773139-552432626"}],"firstSeen":"2026-10-25","lastSeen":"2026-10-25","active":true,"history":[{"d":"2026-10-25","price":315000}]},
+    {"id":"c21-379","status":"hors","reason":"Lotissement fermé, terrain de 115 m²","title":"Maison dans un petit lotissement fermé","price":379000,"surface":101.71,"bedrooms":"4","land":115,"walk":"≈ 6 min","quartier":"Chelles Sud, bords de Marne","condition":"Aucuns travaux. DPE C.","mitoyen":"Lotissement","todo":"","links":[{"label":"Bien'ici","url":"https://www.bienici.com/annonce/century-21-202_3881_10503"}],"firstSeen":"2026-10-25","lastSeen":"2026-10-25","active":true,"history":[{"d":"2026-10-25","price":379000}]},
+    {"id":"apimo-465","status":"ecartee","reason":"Visitée, ne plaît pas","title":"Meulière avec sous-sol total","price":465000,"surface":120,"bedrooms":"4 à 5","land":null,"walk":"≈ 5 min","quartier":"Chelles Sud, bords de Marne","condition":"Bon état, isolation récente.","mitoyen":"Non précisée","todo":"","links":[{"label":"Orpi","url":"https://www.orpi.com/annonce-vente-maison-t6-chelles-77500-c109726e-c5cd-421f-8533-e34e8960168f/"},{"label":"Bien'ici","url":"https://www.bienici.com/annonce/apimo-87032632"}],"firstSeen":"2026-10-25","lastSeen":"2026-10-25","active":true,"history":[{"d":"2026-10-25","price":465000}]}
+  ],
+  "journal": [
+    {"d":"2026-10-25","t":"Première version de la liste : 16 maisons repérées sur Bien'ici, Orpi, PAP, SeLoger et MeilleursAgents."}
+  ]
+}
+</script>
+
+<script>
+(function () {
+  var D = JSON.parse(document.getElementById('data').textContent);
+  var LABELS = { retenue: 'Retenue', etudier: 'À étudier', verifier: 'À situer', retrait: 'En retrait', hors: 'Hors critère', ecartee: 'Écartée' };
+  var ORDER = ['retenue', 'etudier', 'verifier', 'retrait', 'hors', 'ecartee'];
+  var active = { retenue: true, etudier: true, verifier: true, retrait: false, hors: false, ecartee: false };
+  try { var s = JSON.parse(localStorage.getItem('chelles-filters') || 'null'); if (s) active = Object.assign(active, s); } catch (e) {}
+  var sortBy = 'status';
+
+  function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+  function eur(n) { return n.toLocaleString('fr-FR') + ' €'; }
+  function dfr(iso) { var p = iso.split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
+  function days(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
+
+  var updated = D.meta.updated;
+  document.getElementById('upd').textContent = 'Mise à jour le ' + dfr(updated);
+  var crit = document.getElementById('crit');
+  D.meta.criteria.forEach(function (c) { crit.appendChild(el('span', null, c)); });
+
+  var bar = document.getElementById('bar');
+  var grid = document.getElementById('grid');
+
+  function count(st) { return D.listings.filter(function (l) { return l.status === st; }).length; }
+
+  function renderBar() {
+    bar.textContent = '';
+    ORDER.forEach(function (st) {
+      var b = el('button', 'chip'); b.type = 'button'; b.id = 'chip-' + st;
+      b.setAttribute('aria-pressed', active[st] ? 'true' : 'false');
+      b.appendChild(document.createTextNode(LABELS[st]));
+      b.appendChild(el('span', 'n', String(count(st))));
+      b.addEventListener('click', function () {
+        active[st] = !active[st];
+        try { localStorage.setItem('chelles-filters', JSON.stringify(active)); } catch (e) {}
+        render();
+      });
+      bar.appendChild(b);
+    });
+    bar.appendChild(el('span', 'sp'));
+    var sel = document.createElement('select'); sel.id = 'sort'; sel.setAttribute('aria-label', 'Trier');
+    [['status', 'Tri : statut'], ['price', 'Tri : prix croissant'], ['surface', 'Tri : surface décroissante'], ['new', 'Tri : plus récentes']].forEach(function (o) {
+      var op = document.createElement('option'); op.value = o[0]; op.textContent = o[1]; if (o[0] === sortBy) op.selected = true; sel.appendChild(op);
+    });
+    sel.addEventListener('change', function () { sortBy = sel.value; renderGrid(); });
+    bar.appendChild(sel);
+  }
+
+  function row(k, v) { var d = el('div'); d.appendChild(el('span', 'k', k)); d.appendChild(el('span', null, v)); return d; }
+  function spec(k, v) { var d = el('div', 'spec'); d.appendChild(el('span', null, k)); d.appendChild(el('b', null, v)); return d; }
+
+  function card(l) {
+    var c = el('article', 'card');
+    var top = el('div', 'top');
+    top.appendChild(el('span', 'pill ' + l.status, LABELS[l.status]));
+    var bd = el('div', 'badges');
+    if (days(l.firstSeen, updated) <= 3 && l.history.length === 1 && l.firstSeen !== '2026-10-25') bd.appendChild(el('span', 'badge', 'Nouveau'));
+    if (l.history.length > 1) {
+      var first = l.history[0].price, last = l.history[l.history.length - 1].price, diff = last - first;
+      if (diff !== 0) bd.appendChild(el('span', 'badge ' + (diff < 0 ? 'drop' : 'up'), (diff < 0 ? '−' : '+') + eur(Math.abs(diff)) + ' depuis le ' + dfr(l.history[0].d)));
+    }
+    if (l.active === false) bd.appendChild(el('span', 'badge gone', 'Plus en ligne depuis le ' + dfr(l.lastSeen)));
+    top.appendChild(bd);
+    c.appendChild(top);
+    c.appendChild(el('h2', null, l.title));
+    var p = el('div', 'price', eur(l.price));
+    if (l.priceNote) p.appendChild(el('small', null, l.priceNote));
+    else if (l.surface) p.appendChild(el('small', null, Math.round(l.price / l.surface).toLocaleString('fr-FR') + ' €/m²'));
+    c.appendChild(p);
+    var sp = el('div', 'specs');
+    sp.appendChild(spec('Surface', l.surface ? String(l.surface).replace('.', ',') + ' m²' : '?'));
+    sp.appendChild(spec('Terrain', l.land ? l.land + ' m²' : 'n.i.'));
+    sp.appendChild(spec('Gare', l.walk));
+    c.appendChild(sp);
+    var rows = el('div', 'rows');
+    rows.appendChild(row('Chambres', l.bedrooms));
+    if (l.surfaceNote) rows.appendChild(row('Surface', l.surfaceNote));
+    rows.appendChild(row('Quartier', l.quartier));
+    rows.appendChild(row('État', l.condition));
+    rows.appendChild(row('Mitoyenneté', l.mitoyen));
+    if (l.reason) rows.appendChild(row('Pourquoi', l.reason));
+    if (l.todo) rows.appendChild(row('À vérifier', l.todo));
+    c.appendChild(rows);
+    if (l.history.length > 1) {
+      var det = el('details', 'hist'); det.appendChild(el('summary', null, 'Évolution du prix'));
+      var ul = el('ul');
+      l.history.forEach(function (h) { ul.appendChild(el('li', null, dfr(h.d) + '  ' + eur(h.price))); });
+      det.appendChild(ul); c.appendChild(det);
+    }
+    var lk = el('div', 'links');
+    l.links.forEach(function (x, i) {
+      var a = el('a', 'btn' + (i ? ' alt' : ''), x.label); a.href = x.url; a.target = '_blank'; a.rel = 'noopener noreferrer'; lk.appendChild(a);
+    });
+    c.appendChild(lk);
+    return c;
+  }
+
+  function renderGrid() {
+    grid.textContent = '';
+    var list = D.listings.filter(function (l) { return active[l.status]; });
+    list.sort(function (a, b) {
+      if (sortBy === 'price') return a.price - b.price;
+      if (sortBy === 'surface') return (b.surface || 0) - (a.surface || 0);
+      if (sortBy === 'new') return b.firstSeen.localeCompare(a.firstSeen) || a.price - b.price;
+      return ORDER.indexOf(a.status) - ORDER.indexOf(b.status) || a.price - b.price;
+    });
+    if (!list.length) { grid.appendChild(el('p', 'empty', 'Aucune maison pour ces filtres. Activez un statut ci-dessus.')); return; }
+    list.forEach(function (l) { grid.appendChild(card(l)); });
+  }
+
+  function renderJournal() {
+    var ol = document.getElementById('journal'); ol.textContent = '';
+    D.journal.slice().sort(function (a, b) { return b.d.localeCompare(a.d); }).forEach(function (j) {
+      var li = el('li'); var t = el('time', null, dfr(j.d)); t.setAttribute('datetime', j.d);
+      li.appendChild(t); li.appendChild(el('span', null, j.t)); ol.appendChild(li);
+    });
+  }
+
+  function render() { renderBar(); renderGrid(); }
+  render(); renderJournal();
+})();
+</script>
+
+</body>
+</html>

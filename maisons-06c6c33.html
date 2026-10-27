@@ -132,8 +132,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
 </div>
 
 <script type="application/json" id="streets">["Allée Alexis Legrand", "Allée Chilpéric", "Allée des Pavillons", "Allée des Roses", "Allée Louis Delion", "Allée Mon Désir", "Avenue Aimé Auberville", "Avenue Albert Caillou", "Avenue Arthur de Smet", "Avenue Beauséjour", "Avenue Charles Tourel", "Avenue d'Austerlitz", "Avenue de l'Espérance", "Avenue de la Résistance", "Avenue de la Rochelle", "Avenue de Sully", "Avenue de Sylvie", "Avenue de Turenne", "Avenue des Abbesses", "Avenue des Martyrs de Chelles", "Avenue du Docteur Blanchet", "Avenue du Général Leclerc", "Avenue du Maréchal de Lattre de Tassigny", "Avenue du Maréchal Foch", "Avenue Elie", "Avenue Etienne Bourgeois", "Avenue François Mitterrand", "Avenue Gabriel", "Avenue Général de Gaulle", "Avenue Georges Digoy", "Avenue Germaine", "Avenue Hénin", "Avenue Jean de la Fontaine", "Avenue Jehan de Chelles", "Avenue Louis Guérin", "Avenue Madeleine", "Avenue Paul Doumer", "Avenue Robert Magisson", "Avenue Serge", "Boulevard Chilpéric", "Boulevard d'Alsace-Lorraine", "Boulevard Pierre Mendès France", "Cours Jacques Chaban-Delmas", "Impasse de la Goujonnette", "Impasse des Chrysanthemes", "Impasse Elise", "Impasse Emilie", "Impasse Mariey", "Parc du Souvenir Emile Fouchard", "Passage Bazin", "Place Cala", "Place de la République", "Place des Martyrs de Chateaubriant", "Place du Grand Jardin", "Place Gasnier Guy", "Place Georges Guillaume", "Rue Adolphe Besson", "Rue Alice et Jean Lafont", "Rue André Coudert", "Rue Auguste Meunier", "Rue Berteaux", "Rue de Bourgogne", "Rue de l'Agent Schoenfeld", "Rue de l'Ilette", "Rue de l'Independance", "Rue de l'Union", "Rue de la Belle Ile", "Rue de la Bichette", "Rue de la Marne", "Rue de la Paix", "Rue de Lorraine", "Rue de Nieuport", "Rue de Strasbourg", "Rue de Verdun", "Rue des Anémones", "Rue des Chrysanthèmes", "Rue des Cottages", "Rue des Frères Verdeaux", "Rue des Primevères", "Rue des Roches", "Rue des Tilleuls", "Rue des Tournelles", "Rue Docteur Roux", "Rue du 11 Novembre", "Rue du Chemin de Fer", "Rue du Chevalier Bayard", "Rue du Docteur Calmette", "Rue du Docteur Douarre", "Rue du Docteur Johannet", "Rue du Docteur Spadotto", "Rue du Pont de Bois", "Rue du Pont Saint-Martin", "Rue du Révérend Père Chaillet", "Rue du Temple", "Rue du Vieux Moulin", "Rue Duchesne", "Rue Eugène Bire", "Rue Florian", "Rue Franck Hémon", "Rue Gambetta", "Rue Gasnier Guy", "Rue Guy Pierre Fauconnet", "Rue Henri Poincaré", "Rue Henri Rol-Tanguy", "Rue Henri-Joseph et Marie Dégremont", "Rue Hortense", "Rue Jacques Delporte", "Rue Jean Mermoz", "Rue Jean Moulin", "Rue Jeanne d'Arc", "Rue Jonas", "Rue Léon Rimbert", "Rue Louis Eterlet", "Rue Marie Edmée", "Rue Marthe", "Rue Massenet", "Rue Parmentier", "Rue Pasteur", "Rue Perotin", "Rue Poncelet", "Rue Poulain", "Rue Raymond Counil", "Rue Raymond Delasalle", "Rue Rejanne Ruel", "Rue René Sallé", "Rue Saint Hubert", "Rue Sainte-Bathilde", "Rue Sauer", "Rue Victor Hugo"]</script>
-<script type="application/json" id="data">
-{
+<script type="application/json" id="data">{
  "meta": {
   "updated": "2026-10-27",
   "criteria": [
@@ -892,10 +891,13 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
   {
    "d": "2026-10-27",
    "t": "Aucune nouvelle annonce correspondant aux critères, aucune baisse de prix, aucun retrait. 3 maisons hors budget ajoutées (520 000 € : centre-ville - gare - Abbesses 140 m², Orpi 170 m², Chelles Sud 110 m²). Sources consultées : Bien'ici, Orpi (3 pages), MeilleursAgents, PAP, SeLoger, WebSearch. Meulière 450 000 € (MeilleursAgents) non revue en première page, conservée."
+  },
+  {
+   "d": "2026-10-27",
+   "t": "Aucun changement : pas de nouvelle annonce correspondant aux critères, aucune baisse de prix, aucun retrait (Bien'ici, Orpi 3 pages, PAP, SeLoger et recherche web consultés). Couverture partielle : MeilleursAgents bloqué (403 puis CAPTCHA) ; Meulière 450 000 € et maison de 1965 à 431 000 €, visibles seulement sur MeilleursAgents, conservées sans les compter absentes."
   }
  ]
-}
-</script>
+}</script>
 
 <script>
 (function () {
@@ -1045,6 +1047,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     q.addEventListener('input', draw);
   })();
 </script>
+
 
 
 

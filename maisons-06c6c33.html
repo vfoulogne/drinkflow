@@ -71,6 +71,17 @@ select { font: inherit; font-size: 13.5px; color: var(--ink); background: var(--
 .badge.drop { border-color: var(--ok); color: var(--ok); }
 .badge.up { border-color: var(--accent); color: var(--accent); }
 .badge.gone { border-color: var(--muted); color: var(--muted); }
+.badge.like { border-color: var(--ok); background: var(--ok); color: var(--bg); }
+.card.liked { border-color: var(--ok); box-shadow: inset 0 0 0 1px var(--ok); }
+.card.nope { opacity: .62; }
+.choice { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.choice button { font: inherit; font-size: 13.5px; font-weight: 600; color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: 7px 8px; cursor: pointer; }
+.choice button:hover { border-color: var(--ink); }
+.choice button.yes[aria-pressed="true"] { background: var(--ok); border-color: var(--ok); color: var(--bg); }
+.choice button.no[aria-pressed="true"] { background: var(--muted); border-color: var(--muted); color: var(--bg); }
+.choice button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.chip.nope-chip { border-color: var(--line); background: transparent; }
+.chip.nope-chip[aria-pressed="true"] { background: var(--muted); color: var(--bg); }
 h2 { font-family: var(--display); font-weight: 400; font-size: 19px; line-height: 1.25; margin: 0; text-wrap: balance; }
 .price { font-family: var(--mono); font-size: 24px; font-weight: 500; letter-spacing: -.01em; }
 .price small { font-size: 12.5px; color: var(--muted); font-weight: 400; margin-left: 6px; }
@@ -134,7 +145,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
 <script type="application/json" id="streets">["Allée Alexis Legrand", "Allée Chilpéric", "Allée des Pavillons", "Allée des Roses", "Allée Louis Delion", "Allée Mon Désir", "Avenue Aimé Auberville", "Avenue Albert Caillou", "Avenue Arthur de Smet", "Avenue Beauséjour", "Avenue Charles Tourel", "Avenue d'Austerlitz", "Avenue de l'Espérance", "Avenue de la Résistance", "Avenue de la Rochelle", "Avenue de Sully", "Avenue de Sylvie", "Avenue de Turenne", "Avenue des Abbesses", "Avenue des Martyrs de Chelles", "Avenue du Docteur Blanchet", "Avenue du Général Leclerc", "Avenue du Maréchal de Lattre de Tassigny", "Avenue du Maréchal Foch", "Avenue Elie", "Avenue Etienne Bourgeois", "Avenue François Mitterrand", "Avenue Gabriel", "Avenue Général de Gaulle", "Avenue Georges Digoy", "Avenue Germaine", "Avenue Hénin", "Avenue Jean de la Fontaine", "Avenue Jehan de Chelles", "Avenue Louis Guérin", "Avenue Madeleine", "Avenue Paul Doumer", "Avenue Robert Magisson", "Avenue Serge", "Boulevard Chilpéric", "Boulevard d'Alsace-Lorraine", "Boulevard Pierre Mendès France", "Cours Jacques Chaban-Delmas", "Impasse de la Goujonnette", "Impasse des Chrysanthemes", "Impasse Elise", "Impasse Emilie", "Impasse Mariey", "Parc du Souvenir Emile Fouchard", "Passage Bazin", "Place Cala", "Place de la République", "Place des Martyrs de Chateaubriant", "Place du Grand Jardin", "Place Gasnier Guy", "Place Georges Guillaume", "Rue Adolphe Besson", "Rue Alice et Jean Lafont", "Rue André Coudert", "Rue Auguste Meunier", "Rue Berteaux", "Rue de Bourgogne", "Rue de l'Agent Schoenfeld", "Rue de l'Ilette", "Rue de l'Independance", "Rue de l'Union", "Rue de la Belle Ile", "Rue de la Bichette", "Rue de la Marne", "Rue de la Paix", "Rue de Lorraine", "Rue de Nieuport", "Rue de Strasbourg", "Rue de Verdun", "Rue des Anémones", "Rue des Chrysanthèmes", "Rue des Cottages", "Rue des Frères Verdeaux", "Rue des Primevères", "Rue des Roches", "Rue des Tilleuls", "Rue des Tournelles", "Rue Docteur Roux", "Rue du 11 Novembre", "Rue du Chemin de Fer", "Rue du Chevalier Bayard", "Rue du Docteur Calmette", "Rue du Docteur Douarre", "Rue du Docteur Johannet", "Rue du Docteur Spadotto", "Rue du Pont de Bois", "Rue du Pont Saint-Martin", "Rue du Révérend Père Chaillet", "Rue du Temple", "Rue du Vieux Moulin", "Rue Duchesne", "Rue Eugène Bire", "Rue Florian", "Rue Franck Hémon", "Rue Gambetta", "Rue Gasnier Guy", "Rue Guy Pierre Fauconnet", "Rue Henri Poincaré", "Rue Henri Rol-Tanguy", "Rue Henri-Joseph et Marie Dégremont", "Rue Hortense", "Rue Jacques Delporte", "Rue Jean Mermoz", "Rue Jean Moulin", "Rue Jeanne d'Arc", "Rue Jonas", "Rue Léon Rimbert", "Rue Louis Eterlet", "Rue Marie Edmée", "Rue Marthe", "Rue Massenet", "Rue Parmentier", "Rue Pasteur", "Rue Perotin", "Rue Poncelet", "Rue Poulain", "Rue Raymond Counil", "Rue Raymond Delasalle", "Rue Rejanne Ruel", "Rue René Sallé", "Rue Saint Hubert", "Rue Sainte-Bathilde", "Rue Sauer", "Rue Victor Hugo"]</script>
 <script type="application/json" id="data">{
  "meta": {
-  "updated": "2026-10-27",
+  "updated": "2026-10-28",
   "criteria": [
    "Maison individuelle, sans mitoyenneté",
    "≥ 100 m² (idéalement 120 m²)",
@@ -166,7 +177,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-10-26",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -207,7 +218,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -236,7 +247,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -265,7 +276,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -299,7 +310,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -329,7 +340,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -358,7 +369,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -387,7 +398,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -417,7 +428,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -447,7 +458,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -478,7 +489,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -508,7 +519,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -546,7 +557,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -580,7 +591,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -618,7 +629,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -652,7 +663,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -681,7 +692,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-26",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -711,7 +722,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-26",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -740,7 +751,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-26",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -771,7 +782,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-26",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -801,7 +812,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-27",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -831,7 +842,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-27",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
@@ -861,12 +872,43 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-27",
-   "lastSeen": "2026-10-27",
+   "lastSeen": "2026-10-28",
    "active": true,
    "history": [
     {
      "d": "2026-10-27",
      "price": 520000
+    }
+   ]
+  },
+  {
+   "id": "c21-470",
+   "status": "verifier",
+   "title": "Maison familiale avec garage double, Mont-Chalâts",
+   "price": 470000,
+   "priceNote": "honoraires à la charge du vendeur",
+   "surface": 145,
+   "surfaceNote": "habitables, 220 m² utiles (150 m² dans le titre)",
+   "bedrooms": "5 (3 à l'étage dont suite parentale + 2 sous combles)",
+   "land": 625,
+   "walk": "à situer (≈ 5 min en voiture selon l'annonce, probablement hors des 12 min)",
+   "quartier": "Chelles, Mont-Chalâts",
+   "condition": "Parfaitement entretenue, pas de travaux cités. DPE D (énergie 2 510 à 3 480 €/an).",
+   "mitoyen": "Non précisée (sans vis-à-vis)",
+   "todo": "Distance réelle à la gare, mitoyenneté. Terrain 625 m² dans le texte, 600 m² dans la fiche. Agence Century 21 H.L.",
+   "links": [
+    {
+     "label": "MeilleursAgents",
+     "url": "https://www.meilleursagents.com/annonces/achat/1976686068/"
+    }
+   ],
+   "firstSeen": "2026-10-28",
+   "lastSeen": "2026-10-28",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-10-28",
+     "price": 470000
     }
    ]
   }
@@ -895,6 +937,10 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
   {
    "d": "2026-10-27",
    "t": "Aucun changement : pas de nouvelle annonce correspondant aux critères, aucune baisse de prix, aucun retrait (Bien'ici, Orpi 3 pages, PAP, SeLoger et recherche web consultés). Couverture partielle : MeilleursAgents bloqué (403 puis CAPTCHA) ; Meulière 450 000 € et maison de 1965 à 431 000 €, visibles seulement sur MeilleursAgents, conservées sans les compter absentes."
+  },
+  {
+   "d": "2026-10-28",
+   "t": "1 nouvelle annonce : Maison familiale avec garage double à Mont-Chalâts, 470 000 €, 145 m², 5 chambres, 625 m² de terrain (À situer, probablement hors des 12 min). Aucune baisse de prix, aucun retrait. Sources consultées : Bien'ici, Orpi (3 pages), PAP, SeLoger, recherche web et MeilleursAgents (accessible au second essai dans le navigateur ; meulière 450 000 € et maison de 1965 à 431 000 € toujours en ligne)."
   }
  ]
 }</script>
@@ -907,6 +953,38 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
   var active = { etudier: true, reserve: true, verifier: true, retrait: false, hors: false, ecartee: false };
   try { var s = JSON.parse(localStorage.getItem('chelles-filters-v2') || 'null'); if (s) active = Object.assign(active, s); } catch (e) {}
   var sortBy = 'status';
+  var showNope = false;
+  try { showNope = localStorage.getItem('chelles-show-nope') === '1'; } catch (e) {}
+
+  // Avis de l'utilisateur sur chaque fiche : 'oui' (intéressé) ou 'non' (pas pour moi).
+  // Sur claude.ai, stocké dans la base de la page (collection "choix", partagée entre appareils) ;
+  // ailleurs (copie statique), seulement dans ce navigateur.
+  var choices = {};
+  try { choices = JSON.parse(localStorage.getItem('chelles-choices') || '{}') || {}; } catch (e) {}
+  var choiceCol = null;
+  function saveLocal() { try { localStorage.setItem('chelles-choices', JSON.stringify(choices)); } catch (e) {} }
+  function setChoice(id, v) {
+    var prev = choices[id];
+    if (v) choices[id] = v; else delete choices[id];
+    saveLocal(); render();
+    if (!choiceCol) return;
+    var ref = choiceCol.doc(id);
+    (v ? ref.set({ v: v, d: new Date().toISOString().slice(0, 10) }) : ref.delete()).catch(function () {
+      if (prev) choices[id] = prev; else delete choices[id];
+      saveLocal(); render();
+    });
+  }
+  if (window.claude && typeof window.claude.use === 'function') {
+    window.claude.use('db').then(function (db) {
+      if (!db) return;
+      choiceCol = db.collection('choix');
+      choiceCol.onSnapshot(function (snap) {
+        var next = {};
+        snap.docs.forEach(function (d) { var x = d.data(); if (x && (x.v === 'oui' || x.v === 'non')) next[d.id] = x.v; });
+        choices = next; saveLocal(); render();
+      }, function () {});
+    }).catch(function () {});
+  }
 
   function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
   function eur(n) { return n.toLocaleString('fr-FR') + ' €'; }
@@ -921,7 +999,8 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
   var bar = document.getElementById('bar');
   var grid = document.getElementById('grid');
 
-  function count(st) { return D.listings.filter(function (l) { return l.status === st; }).length; }
+  function count(st) { return D.listings.filter(function (l) { return l.status === st && choices[l.id] !== 'non'; }).length; }
+  function countNope() { return D.listings.filter(function (l) { return choices[l.id] === 'non'; }).length; }
 
   function renderBar() {
     bar.textContent = '';
@@ -937,6 +1016,16 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
       });
       bar.appendChild(b);
     });
+    var nb = el('button', 'chip nope-chip'); nb.type = 'button'; nb.id = 'chip-nope';
+    nb.setAttribute('aria-pressed', showNope ? 'true' : 'false');
+    nb.appendChild(document.createTextNode('Pas pour moi'));
+    nb.appendChild(el('span', 'n', String(countNope())));
+    nb.addEventListener('click', function () {
+      showNope = !showNope;
+      try { localStorage.setItem('chelles-show-nope', showNope ? '1' : '0'); } catch (e) {}
+      render();
+    });
+    bar.appendChild(nb);
     bar.appendChild(el('span', 'sp'));
     var sel = document.createElement('select'); sel.id = 'sort'; sel.setAttribute('aria-label', 'Trier');
     [['status', 'Tri : statut'], ['price', 'Tri : prix croissant'], ['surface', 'Tri : surface décroissante'], ['new', 'Tri : plus récentes']].forEach(function (o) {
@@ -950,10 +1039,12 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
   function spec(k, v) { var d = el('div', 'spec'); d.appendChild(el('span', null, k)); d.appendChild(el('b', null, v)); return d; }
 
   function card(l) {
-    var c = el('article', 'card');
+    var ch = choices[l.id];
+    var c = el('article', 'card' + (ch === 'oui' ? ' liked' : ch === 'non' ? ' nope' : ''));
     var top = el('div', 'top');
     top.appendChild(el('span', 'pill ' + l.status, LABELS[l.status]));
     var bd = el('div', 'badges');
+    if (ch === 'oui') bd.appendChild(el('span', 'badge like', 'Ça m\'intéresse'));
     if (days(l.firstSeen, updated) <= 3 && l.history.length === 1 && l.firstSeen !== '2026-10-25') bd.appendChild(el('span', 'badge', 'Nouveau'));
     if (l.history.length > 1) {
       var first = l.history[0].price, last = l.history[l.history.length - 1].price, diff = last - first;
@@ -992,13 +1083,23 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
       var a = el('a', 'btn' + (i ? ' alt' : ''), x.label); a.href = x.url; a.target = '_blank'; a.rel = 'noopener noreferrer'; lk.appendChild(a);
     });
     c.appendChild(lk);
+    var cw = el('div', 'choice'); cw.setAttribute('role', 'group'); cw.setAttribute('aria-label', 'Mon avis');
+    [['oui', 'yes', 'Ça m\'intéresse'], ['non', 'no', 'Pas pour moi']].forEach(function (o) {
+      var b = el('button', o[1], o[2]); b.type = 'button';
+      b.setAttribute('aria-pressed', ch === o[0] ? 'true' : 'false');
+      b.addEventListener('click', function () { setChoice(l.id, ch === o[0] ? null : o[0]); });
+      cw.appendChild(b);
+    });
+    c.appendChild(cw);
     return c;
   }
 
   function renderGrid() {
     grid.textContent = '';
-    var list = D.listings.filter(function (l) { return active[l.status]; });
+    var list = D.listings.filter(function (l) { return choices[l.id] === 'non' ? showNope : active[l.status]; });
+    var rank = function (l) { return choices[l.id] === 'oui' ? 0 : choices[l.id] === 'non' ? 2 : 1; };
     list.sort(function (a, b) {
+      if (sortBy === 'status') return rank(a) - rank(b) || ORDER.indexOf(a.status) - ORDER.indexOf(b.status) || a.price - b.price;
       if (sortBy === 'price') return a.price - b.price;
       if (sortBy === 'surface') return (b.surface || 0) - (a.surface || 0);
       if (sortBy === 'new') return b.firstSeen.localeCompare(a.firstSeen) || a.price - b.price;
@@ -1047,6 +1148,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     q.addEventListener('input', draw);
   })();
 </script>
+
 
 
 

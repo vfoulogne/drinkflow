@@ -13,6 +13,8 @@
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
 </head>
 <body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>window.SUPA={url:"https://nbvzqxymbdvdpagrzync.supabase.co",key:"sb_publishable_jj95UVBXQr1B1nQYs1CZPA_-33GhRqR"}</script>
 <title>Repas &amp; Courses</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -620,12 +622,83 @@ function confirmTap(el,label){ if(el.dataset.sure) return true; el.dataset.sure=
 const saveWeek=wk=>put('weeks/'+wk,S.weeks[wk]);
 const saveRecipe=r=>put('recipes/'+r.id,r);
 
+// ---------- Supabase (version du site) : même interface que la base claude.ai ----------
+// Table repas_docs : une ligne par document (app/config, weeks/<vendredi>, recipes/<id>, checks/<vendredi>).
+let sb=null, sbUser=null;
+function supaDb(){
+  const T='repas_docs', cache={}, L={doc:{},coll:{}}, pending={};
+  let ready=false;
+  const snapDoc=p=>({exists:p in cache,data:()=>cache[p]});
+  const snapColl=c=>({docs:Object.keys(cache).filter(p=>p.startsWith(c+'/')).map(p=>({id:p.slice(c.length+1),data:()=>cache[p]}))});
+  const emit=p=>{const c=p.split('/')[0];(L.doc[p]||[]).forEach(f=>f(snapDoc(p)));(L.coll[c]||[]).forEach(f=>f(snapColl(c)))};
+  const ok=r=>{if(r&&r.error)throw r.error;return r};
+  // Pendant qu'une écriture part, on ignore l'écho temps réel de ce document (l'état local est déjà le bon).
+  const track=(p,pr)=>{pending[p]=(pending[p]||0)+1;return pr.then(ok).finally(()=>{pending[p]--})};
+  const api={
+    doc(p){return{
+      set(d){cache[p]=clone(d);return track(p,sb.from(T).upsert({path:p,data:d,updated_at:new Date().toISOString()}))},
+      update(patch){const cur=cache[p]||{};cache[p]=Object.assign({},cur,patch,{items:Object.assign({},cur.items,patch.items)});return track(p,sb.rpc('repas_merge_items',{p_path:p,p_items:patch.items||{}}))},
+      delete(){delete cache[p];return track(p,sb.from(T).delete().eq('path',p))},
+      onSnapshot(f){(L.doc[p]||(L.doc[p]=[])).push(f);if(ready)f(snapDoc(p))}
+    }},
+    collection(c){return{onSnapshot(f){(L.coll[c]||(L.coll[c]=[])).push(f);if(ready)f(snapColl(c))}}},
+    async start(){
+      const r=await sb.from(T).select('path,data'); ok(r);
+      r.data.forEach(x=>{cache[x.path]=x.data});
+      // Premier branchement : on envoie ce qui est déjà sur cet appareil.
+      if(!r.data.length&&localStorage.getItem(LS)){
+        const rows=[['app/config',S.config]];
+        for(const [c,o] of [['weeks',S.weeks],['recipes',S.recipes],['checks',S.checks]]) for(const id in o) rows.push([c+'/'+id,o[id]]);
+        const now=new Date().toISOString();
+        ok(await sb.from(T).upsert(rows.map(([path,data])=>({path,data,updated_at:now}))));
+        rows.forEach(([p,d])=>{cache[p]=clone(d)});
+      }
+      ready=true;
+      Object.keys(L.doc).forEach(p=>L.doc[p].forEach(f=>f(snapDoc(p))));
+      Object.keys(L.coll).forEach(c=>L.coll[c].forEach(f=>f(snapColl(c))));
+      sb.channel('repas').on('postgres_changes',{event:'*',schema:'public',table:T},ev=>{
+        const p=(ev.new&&ev.new.path)||(ev.old&&ev.old.path); if(!p||pending[p]>0) return;
+        if(ev.eventType==='DELETE') delete cache[p]; else cache[p]=ev.new.data;
+        emit(p);
+      }).subscribe();
+    }
+  };
+  return api;
+}
+async function connectSupa(){
+  if(!(window.SUPA&&window.SUPA.key&&window.supabase)) return;
+  if(!sb) sb=window.supabase.createClient(window.SUPA.url,window.SUPA.key);
+  const {data}=await sb.auth.getSession(); sbUser=data&&data.session?data.session.user:null;
+  render();
+  if(!sbUser) return;
+  db=supaDb(); cloud=true; render();
+  wire();
+  try{await db.start()}catch(e){cloud=false;db=null;render();toast('Connexion à la base impossible, données gardées sur cet appareil.')}
+}
+async function login(email,pw){
+  const {data,error}=await sb.auth.signInWithPassword({email,password:pw});
+  if(error){toast(/invalid/i.test(error.message)?'E-mail ou mot de passe incorrect':'Connexion impossible : '+error.message);return false}
+  sbUser=data.user; closeSheet(); toast('Connecté, synchronisation en cours'); await connectSupa(); return true;
+}
+async function logout(){try{await sb.removeAllChannels();await sb.auth.signOut()}catch(e){} sbUser=null;cloud=false;db=null;render();toast('Déconnecté : les données restent sur cet appareil')}
+function openLogin(){
+  openSheet(`<h2 style="margin:0">Se connecter</h2>
+  <p class="small muted" style="margin:0">Pour retrouver les mêmes menus et la même liste sur tous vos téléphones.</p>
+  <form class="stack" data-form="login"><input name="e" type="email" autocomplete="username" placeholder="E-mail" aria-label="E-mail" required>
+  <input name="p" type="password" autocomplete="current-password" placeholder="Mot de passe" aria-label="Mot de passe" required>
+  <button class="btn primary">Se connecter</button></form>`,'login');
+}
+
 async function connect(){
+  if(window.SUPA){ await connectSupa(); return; }
   if(!(window.claude&&typeof window.claude.use==='function')) return;
   try{db=await window.claude.use('db')}catch(e){db=null}
   if(!db) return;
   cloud=true; render();
   try{const user=await window.claude.use('user'); if(user&&user.can){const c=user.can('data.write'); if(c===false) canWrite=false}}catch(e){}
+  wire();
+}
+function wire(){
   let firstCfg=true;
   db.doc('app/config').onSnapshot(snap=>{
     if(snap.exists){S.config=Object.assign(clone(DEFAULT_CONFIG),snap.data())}
@@ -793,7 +866,7 @@ function toast(msg){clearTimeout(toastT);let t=document.querySelector('.toast');
 function protTag(p){const x=PROT[p];return x?`<span class="row" style="gap:5px"><span class="dot" style="background:${x[1]}"></span>${x[0]}</span>`:''}
 function header(title,sub){
   return `<div class="top"><div class="titles"><div class="eyebrow">${esc(sub)}</div><h1>${esc(title)}</h1></div>
-  <div class="sync ${cloud?'on':''}" title="${cloud?'Synchronisé : Agnès voit les mêmes menus et la même liste':'Enregistré sur cet appareil'}"><i></i>${cloud?'Partagé':'Cet appareil'}</div></div>`;
+  ${window.SUPA&&!sbUser?`<button class="sync btn sm" data-act="login"><i></i>Se connecter</button>`:`<div class="sync ${cloud?'on':''}" title="${cloud?'Synchronisé : Agnès voit les mêmes menus et la même liste':'Enregistré sur cet appareil'}"><i></i>${cloud?(window.SUPA?'En ligne':'Partagé'):'Cet appareil'}</div>`}</div>`;
 }
 function weekNav(){
   const wk=ui.wk,cur=startOf(new Date());
@@ -956,7 +1029,8 @@ function renderSettings(){
   ${window.BASIQUES.concat(c.basCustom||[]).map(b=>`<label class="switch"><span>${esc(b.n)} ${b.m!=='B'?`<span class="mode-chip ${b.m}">${b.m==='F'?'famille':'couple'}</span>`:''}</span><input type="checkbox" id="bas-${b.id}" data-act="bastoggle" data-id="${b.id}" ${c.basOff[b.id]?'':'checked'}></label>`).join('')}
   <form class="row" data-form="addbas" style="flex-wrap:nowrap"><input id="addbas" name="n" placeholder="Nouveau basique" autocomplete="off" aria-label="Nouveau basique"><select id="addbas-m" name="m" style="width:auto" aria-label="Quelles semaines"><option value="B">Toujours</option><option value="F">Famille</option><option value="C">Couple</option></select><button class="btn sm">Ajouter</button></form></section>
   <section class="card"><h2>Partage & sauvegarde</h2>
-  <p class="small muted" style="margin:0">${cloud?'Les menus, la liste et vos recettes sont partagés en direct avec les personnes qui ont accès à cette page (invite Agnès en éditrice depuis le bouton Partager).':'Les données sont enregistrées sur cet appareil. Utilise l\'export pour les copier sur un autre téléphone.'}</p>
+  <p class="small muted" style="margin:0">${window.SUPA?(sbUser?`Connecté (${esc(sbUser.email||'')}) : menus, liste et recettes sont enregistrés en ligne et partagés entre vos téléphones.`:'Connecte-toi pour enregistrer les menus en ligne et les retrouver sur tous vos téléphones.'):cloud?'Les menus, la liste et vos recettes sont partagés en direct avec les personnes qui ont accès à cette page (invite Agnès en éditrice depuis le bouton Partager).':'Les données sont enregistrées sur cet appareil. Utilise l\'export pour les copier sur un autre téléphone.'}</p>
+  ${window.SUPA?`<div class="row">${sbUser?'<button class="btn sm" data-act="logout">Se déconnecter</button>':'<button class="btn sm primary" data-act="login">Se connecter</button>'}</div>`:''}
   <div class="row"><button class="btn sm" data-act="export">Exporter</button><button class="btn sm" data-act="import">Importer</button></div></section>
   <section class="card"><h2>Tout remettre à zéro</h2>
   <p class="small muted" style="margin:0">Efface tous les menus, les listes de courses, l'alternance, les favoris et les réglages${cloud?', pour toi comme pour Agnès':''}. Les 200 recettes de base restent.</p>
@@ -1110,6 +1184,8 @@ document.addEventListener('click',e=>{
     case 'ingsearch': ui.tab='recettes'; ui.f='tous'; closeSheet(); render(); window.scrollTo(0,0); setTimeout(()=>{const i=document.getElementById('ing-input');i&&i.focus()},50); break;
     case 'newrecipe': openRecipeForm(); break;
     case 'editrecipe': openRecipeForm(id); break;
+    case 'login': openLogin(); break;
+    case 'logout': logout(); break;
     case 'delrecipe': if(el.dataset.sure){delete S.recipes[id]; saveLocal(); if(cloud&&db&&canWrite)enqueue('recipes/'+id,()=>db.doc('recipes/'+id).delete()); closeSheet(); render(); toast('Recette supprimée')} else {el.dataset.sure='1';el.textContent='Confirmer la suppression'} break;
     case 'copy': copy(listText(wk)); break;
     case 'copytext': { const t=document.getElementById('io-text'); t.select(); navigator.clipboard&&navigator.clipboard.writeText(t.value).then(()=>toast('Copié'),()=>toast('Texte sélectionné : copie-le')); break }
@@ -1144,6 +1220,7 @@ document.addEventListener('input',e=>{
 document.addEventListener('keydown',e=>{ if(e.key==='Enter'&&e.target.id==='csearch'&&e.target.value.trim()){ e.preventDefault(); document.querySelector('[data-act=quickperso]')?.click() } });
 document.addEventListener('submit',e=>{
   e.preventDefault(); const f=e.target, fd=new FormData(f), t=f.dataset.form;
+  if(t==='login'){const b=f.querySelector('button');b.disabled=true;login(String(fd.get('e')||'').trim(),String(fd.get('p')||'')).then(ok=>{if(!ok)b.disabled=false});return}
   if(t==='extra'){const n=String(fd.get('n')||'').trim(); if(!n) return; const w=week(ui.wk); const id=uid(); (w.extras||(w.extras={}))[id]={id,n,r:guessRayon(n)}; saveWeek(ui.wk); render(); setTimeout(()=>{const i=document.getElementById('extra-input');i&&i.focus()},0)}
   if(t==='ing'){let a=String(fd.get('a')||'').trim(); if(!a) return; const known=ALIMENTS.find(x=>norm(x)===norm(a)); a=known||cap(a); a.split(/\s*,\s*/).forEach(x=>{if(x&&!ui.ings.includes(x))ui.ings.push(cap(x))}); render(); return}
   if(t==='addx'){const x=String(fd.get('x')||'').trim(); if(!x) return; S.config.members[+f.dataset.m].x.push(x); saveConfig(); render()}

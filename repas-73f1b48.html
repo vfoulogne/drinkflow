@@ -826,7 +826,7 @@ function renderWeek(){
     slotKeys(wk).filter(k=>+k[0]===d).forEach(k=>{
       const s=w.slots[k]; const isL=k[1]==='m';
       if(!s){h+=`<div class="slot empty"><span class="when">${isL?'Midi':'Soir'}</span><button class="meal" data-act="choose" data-k="${k}"><span class="nm">+ Choisir un repas</span></button></div>`;return}
-      if(s.c){h+=`<div class="slot"><span class="when">${isL?'Midi':'Soir'}</span><button class="meal" data-act="perso" data-k="${k}"><span class="nm">${esc(s.c.n)}</span><span class="meta"><span class="tag">perso</span><span>${(s.c.i||[]).length?(s.c.i.length+' ingrédient'+(s.c.i.length>1?'s':'')):'ajouter des ingrédients'}</span></span></button><span class="acts"><button class="icon-btn" data-act="clear" data-k="${k}" aria-label="Vider">${ico('x')}</button></span></div>`;return}
+      if(s.c){h+=`<div class="slot"><span class="when">${isL?'Midi':'Soir'}</span><button class="meal" data-act="perso" data-k="${k}"><span class="nm">${esc(s.c.n)}</span><span class="meta"><span class="tag">perso</span><span>${(s.c.i||[]).length?(s.c.i.length+' ingrédient'+(s.c.i.length>1?'s':'')):'ajouter des ingrédients'}</span></span></button><span class="acts"><button class="icon-btn ${s.lock?'on':''}" data-act="lock" data-k="${k}" aria-label="${s.lock?'Déverrouiller':'Garder ce repas'}" aria-pressed="${!!s.lock}">${ico(s.lock?'lock':'unlock')}</button><button class="icon-btn" data-act="clear" data-k="${k}" aria-label="Vider">${ico('x')}</button></span></div>`;return}
       if(PSEUDO[s.r]){h+=`<div class="slot"><span class="when">${isL?'Midi':'Soir'}</span><button class="meal" data-act="choose" data-k="${k}"><span class="nm muted">${esc(PSEUDO[s.r])}</span></button><span class="acts"><button class="icon-btn" data-act="clear" data-k="${k}" aria-label="Vider">${ico('x')}</button></span></div>`;return}
       const r=recipeById(s.r); if(!r) return;
       const c=conflicts(r,mode);
@@ -839,7 +839,7 @@ function renderWeek(){
     h+=`</div></div>`;
   }
   h+=`</div><div class="row"><button class="btn" style="flex:1" data-act="tab" data-t="courses">${ico('cart')}Liste de courses</button><button class="btn" style="flex:1" data-act="ingsearch">${ico('search')}Un aliment à finir ?</button></div>
-  ${filled?`<button class="btn ghost sm" data-act="resetweek">${ico('x')}Vider la semaine</button>`:''}</div>`;
+  ${(()=>{const locked=slotKeys(wk).filter(k=>w.slots[k]&&w.slots[k].lock).length; return filled>locked?`<button class="btn ghost sm" data-act="resetweek">${ico('x')}Vider la semaine${locked?` (garde ${locked} verrouillé${locked>1?'s':''})`:''}</button>`:''})()}</div>`;
   return h;
 }
 
@@ -1076,7 +1076,11 @@ document.addEventListener('click',e=>{
       week(wk).slots[k]={r:'_perso',c:{n,i:[]}}; saveWeek(wk); closeSheet(); render(); toast('« '+n+' » ajouté au menu'); break }
     case 'personame': { const n=cap((document.getElementById('csearch')?.value||'').trim()); openPerso(k,n); break }
     case 'resetweek': { if(!confirmTap(el,'Appuie encore pour vider la semaine')) break;
-      const w=week(wk); w.slots={}; w.extras={}; w.basOff={}; delete w.lunch; saveWeek(wk); clearChecks(wk); render(); toast('Semaine vidée'); break }
+      const w=week(wk), kept={}; Object.entries(w.slots||{}).forEach(([k2,s2])=>{ if(s2&&s2.lock) kept[k2]=s2 });
+      w.slots=kept; w.extras={}; w.basOff={};
+      if(w.lunch){ Object.keys(w.lunch).forEach(d2=>{ if(!kept[d2+'m']) delete w.lunch[d2] }); if(!Object.keys(w.lunch).length) delete w.lunch }
+      saveWeek(wk); clearChecks(wk); render(); const n=Object.keys(kept).length;
+      toast(n?'Semaine vidée, '+n+' repas verrouillé'+(n>1?'s':'')+' gardé'+(n>1?'s':''):'Semaine vidée'); break }
     case 'uncheck': { if(!confirmTap(el,'Appuie encore pour tout décocher')) break; clearChecks(wk); render(); toast('Liste décochée'); break }
     case 'resetall': { if(!confirmTap(el,'Appuie encore : tout sera effacé')) break;
       const alsoRecipes=document.getElementById('reset-recipes')?.checked;

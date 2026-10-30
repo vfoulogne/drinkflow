@@ -60,7 +60,9 @@ textarea{min-height:110px;resize:vertical}
 label.f{display:grid;gap:6px;font-weight:700;font-size:.9rem}
 .muted{color:var(--muted)}
 .small{font-size:.85rem}
-.stack{display:grid;gap:12px}
+.stack{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
+.btn{text-align:center}
+#cquick .btn.sm{flex:none}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .spacer{flex:1}
 .eyebrow{font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--muted)}
@@ -78,6 +80,7 @@ label.f{display:grid;gap:6px;font-weight:700;font-size:.9rem}
 .btn.ghost{background:transparent}
 .btn.sm{min-height:36px;padding:6px 12px;font-size:.88rem}
 .btn.block{width:100%}
+.btn.danger{background:var(--bad);color:#fff;border-color:transparent}
 .icon-btn{width:40px;height:40px;border-radius:50%;border:none;background:transparent;display:inline-grid;place-items:center;color:var(--muted)}
 .icon-btn:hover{background:var(--sunk);color:var(--ink)}
 .icon-btn.on{color:var(--accent)}
@@ -600,6 +603,10 @@ function mergeChecks(wk,key,val){
   if(cloud&&db&&canWrite) enqueue('checks/'+wk,()=>existed?db.doc('checks/'+wk).update({items:{[key]:val}}).catch(e=>{if(e&&e.code==='invalid_argument')return db.doc('checks/'+wk).set(clone(c));throw e}):db.doc('checks/'+wk).set(clone(c)));
 }
 const saveConfig=()=>put('app/config',S.config);
+function drop(path){ saveLocal(); if(cloud&&db&&canWrite) enqueue(path,()=>db.doc(path).delete()); }
+function clearChecks(wk){ delete S.checks[wk]; drop('checks/'+wk); }
+// Deuxième appui pour confirmer : le premier change le libellé pendant 4 s.
+function confirmTap(el,label){ if(el.dataset.sure) return true; el.dataset.sure='1'; const old=el.innerHTML; el.innerHTML=label; el.classList.add('danger'); setTimeout(()=>{ if(el.isConnected){ delete el.dataset.sure; el.innerHTML=old; el.classList.remove('danger') } },4000); return false; }
 const saveWeek=wk=>put('weeks/'+wk,S.weeks[wk]);
 const saveRecipe=r=>put('recipes/'+r.id,r);
 
@@ -819,7 +826,7 @@ function renderWeek(){
     slotKeys(wk).filter(k=>+k[0]===d).forEach(k=>{
       const s=w.slots[k]; const isL=k[1]==='m';
       if(!s){h+=`<div class="slot empty"><span class="when">${isL?'Midi':'Soir'}</span><button class="meal" data-act="choose" data-k="${k}"><span class="nm">+ Choisir un repas</span></button></div>`;return}
-      if(s.c){h+=`<div class="slot"><span class="when">${isL?'Midi':'Soir'}</span><button class="meal" data-act="perso" data-k="${k}"><span class="nm">${esc(s.c.n)}</span><span class="meta"><span class="tag">perso</span><span>${(s.c.i||[]).length} ingrédient${(s.c.i||[]).length>1?'s':''}</span></span></button><span class="acts"><button class="icon-btn" data-act="clear" data-k="${k}" aria-label="Vider">${ico('x')}</button></span></div>`;return}
+      if(s.c){h+=`<div class="slot"><span class="when">${isL?'Midi':'Soir'}</span><button class="meal" data-act="perso" data-k="${k}"><span class="nm">${esc(s.c.n)}</span><span class="meta"><span class="tag">perso</span><span>${(s.c.i||[]).length?(s.c.i.length+' ingrédient'+(s.c.i.length>1?'s':'')):'ajouter des ingrédients'}</span></span></button><span class="acts"><button class="icon-btn" data-act="clear" data-k="${k}" aria-label="Vider">${ico('x')}</button></span></div>`;return}
       if(PSEUDO[s.r]){h+=`<div class="slot"><span class="when">${isL?'Midi':'Soir'}</span><button class="meal" data-act="choose" data-k="${k}"><span class="nm muted">${esc(PSEUDO[s.r])}</span></button><span class="acts"><button class="icon-btn" data-act="clear" data-k="${k}" aria-label="Vider">${ico('x')}</button></span></div>`;return}
       const r=recipeById(s.r); if(!r) return;
       const c=conflicts(r,mode);
@@ -831,7 +838,8 @@ function renderWeek(){
     });
     h+=`</div></div>`;
   }
-  h+=`</div><div class="row"><button class="btn" style="flex:1" data-act="tab" data-t="courses">${ico('cart')}Liste de courses</button><button class="btn" style="flex:1" data-act="ingsearch">${ico('search')}Un aliment à finir ?</button></div></div>`;
+  h+=`</div><div class="row"><button class="btn" style="flex:1" data-act="tab" data-t="courses">${ico('cart')}Liste de courses</button><button class="btn" style="flex:1" data-act="ingsearch">${ico('search')}Un aliment à finir ?</button></div>
+  ${filled?`<button class="btn ghost sm" data-act="resetweek">${ico('x')}Vider la semaine</button>`:''}</div>`;
   return h;
 }
 
@@ -862,6 +870,7 @@ function renderShop(){
     });
     h+=`</section>`;
   });
+  if(done) h+=`<button class="btn ghost sm" data-act="uncheck">${ico('x')}Tout décocher</button>`;
   const off=Object.keys((S.weeks[wk]||{}).basOff||{}); if(off.length) h+=`<button class="btn ghost sm" data-act="baseon">Remettre les ${off.length} basique(s) retiré(s)</button>`;
   h+=`<p class="small muted">Quantités calculées pour ${S.config.portions[mode]} personnes et arrondies vers le haut. Pense à vérifier le frigo avant de partir.</p></div>`;
   return h;
@@ -938,7 +947,11 @@ function renderSettings(){
   <form class="row" data-form="addbas" style="flex-wrap:nowrap"><input id="addbas" name="n" placeholder="Nouveau basique" autocomplete="off" aria-label="Nouveau basique"><select id="addbas-m" name="m" style="width:auto" aria-label="Quelles semaines"><option value="B">Toujours</option><option value="F">Famille</option><option value="C">Couple</option></select><button class="btn sm">Ajouter</button></form></section>
   <section class="card"><h2>Partage & sauvegarde</h2>
   <p class="small muted" style="margin:0">${cloud?'Les menus, la liste et vos recettes sont partagés en direct avec les personnes qui ont accès à cette page (invite Agnès en éditrice depuis le bouton Partager).':'Les données sont enregistrées sur cet appareil. Utilise l\'export pour les copier sur un autre téléphone.'}</p>
-  <div class="row"><button class="btn sm" data-act="export">Exporter</button><button class="btn sm" data-act="import">Importer</button></div></section></div>`;
+  <div class="row"><button class="btn sm" data-act="export">Exporter</button><button class="btn sm" data-act="import">Importer</button></div></section>
+  <section class="card"><h2>Tout remettre à zéro</h2>
+  <p class="small muted" style="margin:0">Efface tous les menus, les listes de courses, l'alternance, les favoris et les réglages${cloud?', pour toi comme pour Agnès':''}. Les 200 recettes de base restent.</p>
+  <label class="switch"><span>Effacer aussi mes recettes ajoutées (${Object.keys(S.recipes||{}).length})</span><input type="checkbox" id="reset-recipes"></label>
+  <button class="btn" data-act="resetall">${ico('x')}Tout remettre à zéro</button></section></div>`;
   return h;
 }
 
@@ -985,7 +998,8 @@ function openChooser(k){
   <div class="stack"><button class="btn primary" data-act="reroll" data-k="${k}">${ico('sparkle')}Surprends-moi</button>
   <button class="btn" data-act="perso" data-k="${k}">${ico('plus')}Plat perso : je mets mes ingrédients</button>
   <div class="row">${Object.entries(PSEUDO).map(([id,l])=>`<button class="btn sm" data-act="setslot" data-k="${k}" data-id="${id}">${esc(l)}</button>`).join('')}</div>
-  <input id="csearch" type="search" placeholder="Chercher une recette" aria-label="Chercher une recette" data-k="${k}">
+  <input id="csearch" type="search" enterkeyhint="done" placeholder="Chercher une recette ou taper ton plat" aria-label="Chercher une recette ou taper le nom de ton plat" data-k="${k}">
+  <div id="cquick"></div>
   <div id="clist">${recipeCards(list,'setslot',k)}</div></div>`;
   openSheet(h,'choose');
 }
@@ -995,18 +1009,18 @@ function openPlan(id){
   <div class="stack">${weekNav()}<div class="rlist">${slotKeys(wk).map(k=>{const s=w.slots[k];const r=s&&(PSEUDO[s.r]?{n:PSEUDO[s.r]}:recipeById(s.r));return `<button class="rcard" data-act="setslot" data-k="${k}" data-id="${id}"><span class="txt"><span class="nm">${dayLong(wk,+k[0])} ${k[1]==='m'?'midi':'soir'}</span><span class="meta">${r?'Remplace : '+esc(r.n):'Libre'}</span></span></button>`}).join('')}</div></div>`;
   openSheet(h,'plan');
 }
-function openPerso(k){
+function openPerso(k,prefill){
   const wk=ui.wk, s=(S.weeks[wk]||{slots:{}}).slots[k], c=s&&s.c, d=+k[0], por=S.config.portions[modeOf(wk)];
   const h=`<div class="sheet-head"><div style="flex:1"><div class="eyebrow">${dayLong(wk,d)} ${k[1]==='m'?'midi':'soir'}</div><h2>Plat perso</h2></div><button class="icon-btn" data-act="close" aria-label="Fermer">${ico('x')}</button></div>
   <form class="stack" data-form="perso" data-k="${k}">
-  <label class="f">Nom du plat<input id="perso-n" name="n" required value="${esc(c?c.n:'')}" placeholder="ex : Raclette, Galettes chez mamie…"></label>
+  <label class="f">Nom du plat<input id="perso-n" name="n" required value="${esc(c?c.n:(prefill||''))}" placeholder="ex : Raclette, Galettes chez mamie…"></label>
   <label class="f">Ingrédients à acheter, un par ligne<textarea id="perso-i" name="i" placeholder="800 g pommes de terre&#10;400 g fromage à raclette&#10;jambon cru&#10;cornichons">${esc(c?(c.i||[]).join('\n'):'')}</textarea>
   <span class="small muted" style="font-weight:400">Quantités pour tout le repas (${por} personnes), facultatives. Les ingrédients s'ajoutent à la liste de courses.</span></label>
   <label class="switch"><span>Garder aussi dans mes recettes</span><input type="checkbox" id="perso-keep" name="keep"></label>
   <button class="btn primary block">${c?'Enregistrer':'Mettre au menu'}</button>
   ${c?'':`<button type="button" class="btn ghost block" data-act="choose" data-k="${k}">Retour aux idées</button>`}</form>`;
   openSheet(h,'perso');
-  if(!c) setTimeout(()=>{const i=document.getElementById('perso-n');i&&i.focus()},60);
+  if(!c) setTimeout(()=>{const i=document.getElementById(prefill?'perso-i':'perso-n');i&&i.focus()},60);
 }
 function openRecipeForm(id){
   const r=id?S.recipes[id]:null;
@@ -1058,6 +1072,18 @@ document.addEventListener('click',e=>{
     case 'lunch': { const d=+el.dataset.d, w=week(wk), on=hasLunch(wk,d); (w.lunch||(w.lunch={}))[d]=!on; if(on) delete w.slots[d+'m']; saveWeek(wk); render(); break }
     case 'choose': openChooser(k); break;
     case 'perso': openPerso(k); break;
+    case 'quickperso': { const n=cap((document.getElementById('csearch')?.value||'').trim()); if(!n) break;
+      week(wk).slots[k]={r:'_perso',c:{n,i:[]}}; saveWeek(wk); closeSheet(); render(); toast('« '+n+' » ajouté au menu'); break }
+    case 'personame': { const n=cap((document.getElementById('csearch')?.value||'').trim()); openPerso(k,n); break }
+    case 'resetweek': { if(!confirmTap(el,'Appuie encore pour vider la semaine')) break;
+      const w=week(wk); w.slots={}; w.extras={}; w.basOff={}; delete w.lunch; saveWeek(wk); clearChecks(wk); render(); toast('Semaine vidée'); break }
+    case 'uncheck': { if(!confirmTap(el,'Appuie encore pour tout décocher')) break; clearChecks(wk); render(); toast('Liste décochée'); break }
+    case 'resetall': { if(!confirmTap(el,'Appuie encore : tout sera effacé')) break;
+      const alsoRecipes=document.getElementById('reset-recipes')?.checked;
+      Object.keys(S.weeks).forEach(k2=>drop('weeks/'+k2)); Object.keys(S.checks).forEach(k2=>drop('checks/'+k2));
+      if(alsoRecipes){ Object.keys(S.recipes).forEach(k2=>drop('recipes/'+k2)); S.recipes={} }
+      S.weeks={}; S.checks={}; S.config=clone(DEFAULT_CONFIG); saveConfig();
+      ui.wk=startOf(new Date()); ui.ings=[]; ui.tab='semaine'; render(); window.scrollTo(0,0); toast('Tout est remis à zéro'); break }
     case 'setslot': week(wk).slots[k]={r:id}; saveWeek(wk); closeSheet(); render(); if(ui.tab!=='semaine')toast('Ajouté au menu'); break;
     case 'recipe': openRecipe(id,k); break;
     case 'plan': openPlan(id); break;
@@ -1097,8 +1123,11 @@ document.addEventListener('input',e=>{
   if(e.target.id==='rsearch'){ui.q=e.target.value;document.getElementById('rlist').innerHTML=recipeCards(filterRecipes(),'recipe')}
   if(e.target.id==='csearch'){const k=e.target.dataset.k,mode=modeOf(ui.wk),q=norm(e.target.value);
     const list=allRecipes().filter(r=>modeOK(r,mode)&&!S.config.hidden[r.id]&&norm(r.n+' '+(r.i||[]).join(' ')).includes(q));
-    document.getElementById('clist').innerHTML=recipeCards(list,'setslot',k)}
+    document.getElementById('clist').innerHTML=recipeCards(list,'setslot',k);
+    const raw=e.target.value.trim();
+    document.getElementById('cquick').innerHTML=raw?`<div class="row" style="flex-wrap:nowrap"><button class="btn primary" style="flex:1;min-width:0" data-act="quickperso" data-k="${k}"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Mettre « ${esc(cap(raw))} » au menu</span></button><button class="btn sm" data-act="personame" data-k="${k}">+ ingrédients</button></div>`:'';}
 });
+document.addEventListener('keydown',e=>{ if(e.key==='Enter'&&e.target.id==='csearch'&&e.target.value.trim()){ e.preventDefault(); document.querySelector('[data-act=quickperso]')?.click() } });
 document.addEventListener('submit',e=>{
   e.preventDefault(); const f=e.target, fd=new FormData(f), t=f.dataset.form;
   if(t==='extra'){const n=String(fd.get('n')||'').trim(); if(!n) return; const w=week(ui.wk); const id=uid(); (w.extras||(w.extras={}))[id]={id,n,r:guessRayon(n)}; saveWeek(ui.wk); render(); setTimeout(()=>{const i=document.getElementById('extra-input');i&&i.focus()},0)}

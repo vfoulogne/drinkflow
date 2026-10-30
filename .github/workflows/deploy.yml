@@ -24,6 +24,7 @@ jobs:
           cp icon-192.png dist/
           cp icon-512.png dist/
           cp maisons-06c6c33.html dist/
+          cp repas-73f1b48.html dist/
 
       - name: Push dist/ to deploy branch
         uses: JamesIves/github-pages-deploy-action@v4

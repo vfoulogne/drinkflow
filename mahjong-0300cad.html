@@ -141,13 +141,13 @@ h1 span{display:block; font-size:18px; font-weight:500; letter-spacing:.08em; te
 .tile.match::after,.tile.hint::after{opacity:0!important}
 .tile.out{animation:out .3s ease-out forwards; pointer-events:none; will-change:transform,opacity}
 .tile.in{animation:pop .24s ease-out}
-.tile.shake{animation:none}
+.tile.shake{animation:shake .45s cubic-bezier(.36,.07,.19,.97) both!important; z-index:210!important}
 .tile.gone{display:none}
 .tile:focus-visible{outline:4px solid var(--select); outline-offset:2px}
 @keyframes deal{from{opacity:0; transform:translateY(-16px) scale(.9)}}
 @keyframes out{35%{transform:scale(1.14); opacity:1} 100%{transform:scale(1.35); opacity:0}}
 @keyframes pop{from{transform:scale(.6); opacity:0}}
-@keyframes shake{25%{transform:translateX(-3px)} 75%{transform:translateX(3px)}}
+@keyframes shake{10%,90%{translate:-2px 0} 20%,80%{translate:5px 0} 30%,50%,70%{translate:-9px 0} 40%,60%{translate:9px 0}}
 @keyframes glow{50%{outline-color:transparent}}
 @media (prefers-reduced-motion:reduce){
   .tile{transition:none}
@@ -889,18 +889,21 @@ function clearHint(){
   clearTimeout(hintTimer);
   state.tiles.forEach(function(t){t.el.classList.remove('hint');});
 }
+function shakeTile(t){
+  var el=t.el; el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
+  setTimeout(function(){el.classList.remove('shake');},480);
+}
 function onTile(t){
   if(t.removed||state.won||state.lost)return;
   if(!t.free){
-    t.el.classList.remove('shake'); void t.el.offsetWidth; t.el.classList.add('shake');
-    setTimeout(function(){t.el.classList.remove('shake');},300);
+    shakeTile(t);
     buzz([60,40,60]); say('Tuile bloquée : choisissez une tuile claire.',3200,'warn');
     return;
   }
   var sel=state.selected;
   if(!sel){select(t);return;}
   if(sel===t){deselect();say(idleMsg());return;}
-  if(FACES[sel.face].key===FACES[t.face].key){takePair(sel,t);}else{select(t);}
+  if(FACES[sel.face].key===FACES[t.face].key){takePair(sel,t);}else{shakeTile(sel);select(t);shakeTile(t);buzz([60,40,60]);say('Ces deux tuiles ne vont pas ensemble.',3200,'warn');}
 }
 var fx=document.createElement('div'); fx.className='fx'; fx.setAttribute('aria-hidden','true'); table.appendChild(fx);
 var CAN_ANIM=typeof fx.animate==='function';

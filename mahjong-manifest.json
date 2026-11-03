@@ -1,0 +1,13 @@
+{
+  "name": "Mah-jong Solitaire",
+  "short_name": "Mah-jong",
+  "start_url": "mahjong-0300cad.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#081843",
+  "theme_color": "#081843",
+  "icons": [
+    {"src": "mahjong-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "mahjong-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}
+  ]
+}

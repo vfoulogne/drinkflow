@@ -808,7 +808,7 @@ function buildDOM(){
 function fit(){
   if(!state)return;
   var Lay=LAYOUTS[state.layoutId];
-  var sH=strip.offsetHeight, bH=bar.offsetHeight;
+  var sH=strip.offsetHeight, bH=bar.offsetParent?(bar.offsetParent.clientHeight-bar.offsetTop):bar.offsetHeight; // inclut la zone de sécurité iPhone sous la barre
   table.style.paddingTop=(sH+4)+'px'; table.style.paddingBottom=(bH+10)+'px';
   var avW=table.clientWidth-2*PAD-4, avH=table.clientHeight-sH-bH-26;
   var w=Math.max(16,Math.floor(Math.min(avW/Lay.cols,avH/(Lay.rows*RATIO),112)));

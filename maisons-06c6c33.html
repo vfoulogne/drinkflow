@@ -80,6 +80,8 @@ select { font: inherit; font-size: 13.5px; color: var(--ink); background: var(--
 .choice button.yes[aria-pressed="true"] { background: var(--ok); border-color: var(--ok); color: var(--bg); }
 .choice button.no[aria-pressed="true"] { background: var(--muted); border-color: var(--muted); color: var(--bg); }
 .choice button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.choice-link { display: block; text-align: center; font-size: 13.5px; font-weight: 600; color: var(--ink); text-decoration: none; border: 1px dashed var(--line); border-radius: 8px; padding: 7px 8px; }
+.choice-link:hover { border-color: var(--ink); }
 .chip.nope-chip { border-color: var(--line); background: transparent; }
 .chip.nope-chip[aria-pressed="true"] { background: var(--muted); color: var(--bg); }
 h2 { font-family: var(--display); font-weight: 400; font-size: 19px; line-height: 1.25; margin: 0; text-wrap: balance; }
@@ -146,7 +148,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
 <script type="application/json" id="data">
 {
  "meta": {
-  "updated": "2026-11-08",
+  "updated": "2026-11-09",
   "criteria": [
    "Maison individuelle, sans mitoyenneté",
    "≥ 100 m² (idéalement 120 m²)",
@@ -178,7 +180,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -219,7 +221,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -252,7 +254,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -285,7 +287,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -327,7 +329,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -361,7 +363,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -390,7 +392,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -431,7 +433,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -465,7 +467,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -499,7 +501,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -530,7 +532,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -560,7 +562,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -598,7 +600,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -632,7 +634,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -670,7 +672,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -704,7 +706,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-25",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -733,7 +735,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-26",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -763,7 +765,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-26",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -796,7 +798,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-26",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -827,7 +829,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-26",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -884,10 +886,14 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     {
      "label": "Orpi",
      "url": "https://www.orpi.com/annonce-vente-maison-t7-chelles-77500-a48467a9-58db-48ae-a598-b4c07b9d8982/"
+    },
+    {
+     "label": "SeLoger (Étude Médéric, 185 m², même bien probable)",
+     "url": "https://www.seloger.com/annonce/achat/ile-de-france/seine-et-marne-77/chelles-77500/25S25ARKA6HX"
     }
    ],
    "firstSeen": "2026-10-27",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -917,7 +923,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-27",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -952,7 +958,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-28",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -983,7 +989,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-29",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -1013,7 +1019,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-10-30",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -1054,7 +1060,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
   },
   {
    "firstSeen": "2026-11-01",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -1084,7 +1090,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
   },
   {
    "firstSeen": "2026-11-01",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -1115,7 +1121,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
   },
   {
    "firstSeen": "2026-11-01",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -1173,7 +1179,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-11-05",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -1202,7 +1208,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-11-06",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -1242,7 +1248,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-11-07",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -1273,7 +1279,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     }
    ],
    "firstSeen": "2026-11-08",
-   "lastSeen": "2026-11-08",
+   "lastSeen": "2026-11-09",
    "active": true,
    "history": [
     {
@@ -1363,8 +1369,19 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
   {
    "d": "2026-11-08",
    "t": "Aucune nouvelle annonce correspondant aux critères, aucune baisse de prix, aucun retrait (toutes les fiches suivies toujours en ligne, prix inchangés). 1 maison hors budget ajoutée pour mémoire : villa de 1912 de 150 m² à 529 000 €, 5 chambres + bureau, 386 m² de terrain, à 10 min de la gare (Chelles Habitat, MeilleursAgents). Lien SeLoger (iad) ajouté à la maison familiale à 489 000 €. Sources consultées : Bien'ici, Orpi (3 pages), MeilleursAgents (+ page LMA Chelloise ; meulière 450 000 € toujours en ligne), PAP (pavillon base meulière toujours à 395 000 €), SeLoger et recherche web. Ignorées : maison de caractère de 148 m² à 449 900 € à Mont-Chalâts (L'Adresse, environ 1,5 km de la gare), maisons SIM à 364 000 € (3 chambres, dont une à 1,6 km), maisons à construire (Maisons Balency) et programmes neufs, biens à Chantereine, Coudreaux et Clos Roger ; annonces efficity 132 m² et ParuVendu 130 m² trouvées par la recherche web mais plus en ligne."
+  },
+  {
+   "d": "2026-11-09",
+   "t": "Aucun changement : pas de nouvelle annonce correspondant aux critères, aucune baisse de prix, aucun retrait (toutes les fiches suivies toujours en ligne, prix inchangés). Lien SeLoger (Étude Médéric, 520 000 €, 185 m², 6 chambres, 365 m²) ajouté à la maison de 170 m² à 520 000 €, probablement le même bien. Sources consultées : Bien'ici, Orpi (3 pages), MeilleursAgents (+ page LMA Chelloise ; meulière 450 000 € toujours en ligne en direct, plus listée sur la page de l'agence), PAP (pavillon base meulière toujours à 395 000 €), SeLoger et recherche web. Ignorées : maison de 145 m² à 385 000 € aux Coudreaux (Chelles Habitat), maisons à Chantereine (475 000 €, 390 000 €, 345 000 €), Clos Roger et Coudreaux, maisons de moins de 100 m² ou à 3 chambres, programmes neufs et maisons à construire."
   }
- ]
+ ],
+ "choix": {
+  "apimo-475": "non",
+  "iad-489": "non",
+  "ladresse-348": "non",
+  "lma-390": "oui",
+  "lma-450": "oui"
+ }
 }
 </script>
 
@@ -1382,8 +1399,12 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
   // Avis de l'utilisateur sur chaque fiche : 'oui' (intéressé) ou 'non' (pas pour moi).
   // Sur claude.ai, stocké dans la base de la page (collection "choix", partagée entre appareils) ;
   // ailleurs (copie statique), seulement dans ce navigateur.
+  // Copie des choix recopiée chaque jour par la tâche (D.choix) : seule source sur la copie statique (drinkflow.xyz).
+  var onClaude = !!(window.claude && typeof window.claude.use === 'function');
+  var ARTIFACT_URL = 'https://claude.ai/artifact/GfyQhz8mjnrpd6zAqRiyTi';
   var choices = {};
-  try { choices = JSON.parse(localStorage.getItem('chelles-choices') || '{}') || {}; } catch (e) {}
+  Object.keys(D.choix || {}).forEach(function (k) { var v = D.choix[k]; if (v === 'oui' || v === 'non') choices[k] = v; });
+  if (onClaude) { try { var lc = JSON.parse(localStorage.getItem('chelles-choices') || 'null'); if (lc) choices = lc; } catch (e) {} }
   var choiceCol = null;
   function saveLocal() { try { localStorage.setItem('chelles-choices', JSON.stringify(choices)); } catch (e) {} }
   function setChoice(id, v) {
@@ -1397,7 +1418,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
       saveLocal(); render();
     });
   }
-  if (window.claude && typeof window.claude.use === 'function') {
+  if (onClaude) {
     window.claude.use('db').then(function (db) {
       if (!db) return;
       choiceCol = db.collection('choix');
@@ -1506,6 +1527,12 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
       var a = el('a', 'btn' + (i ? ' alt' : ''), x.label); a.href = x.url; a.target = '_blank'; a.rel = 'noopener noreferrer'; lk.appendChild(a);
     });
     c.appendChild(lk);
+    if (!onClaude) {
+      var cl = el('a', 'choice-link', ch ? 'Modifier mon avis sur claude.ai' : 'Donner mon avis sur claude.ai');
+      cl.href = ARTIFACT_URL; cl.target = '_blank'; cl.rel = 'noopener noreferrer';
+      c.appendChild(cl);
+      return c;
+    }
     var cw = el('div', 'choice'); cw.setAttribute('role', 'group'); cw.setAttribute('aria-label', 'Mon avis');
     [['oui', 'yes', 'Ça m\'intéresse'], ['non', 'no', 'Pas pour moi']].forEach(function (o) {
       var b = el('button', o[1], o[2]); b.type = 'button';
@@ -1571,6 +1598,7 @@ details.hist ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono);
     q.addEventListener('input', draw);
   })();
 </script>
+
 
 
 

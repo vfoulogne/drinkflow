@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Maisons Champs-sur-Marne</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: en-tête avec critères, puces de filtre par statut, grille de fiches (une par maison), journal des changements en bas */
+:root {
+  --bg: #EEF1EF;
+  --card: #FFFFFF;
+  --ink: #18282A;
+  --muted: #5B6B6B;
+  --line: #D5DCD9;
+  --accent: #1F6F78;
+  --accent-ink: #FFFFFF;
+  --ok: #2F6B4F;
+  --warn: #8F6410;
+  --new: #1E5FA8;
+  --chip: #E1E7E4;
+  --display: "Young Serif", Georgia, "Times New Roman", serif;
+  --body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111A1B; --card: #192426; --ink: #E8EFEC; --muted: #93A5A2; --line: #2C3B3C;
+    --accent: #6CC3CB; --accent-ink: #0B1A1C; --ok: #6FC49A; --warn: #E0B24F; --new: #7DB4F0; --chip: #233133;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111A1B; --card: #192426; --ink: #E8EFEC; --muted: #93A5A2; --line: #2C3B3C;
+  --accent: #6CC3CB; --accent-ink: #0B1A1C; --ok: #6FC49A; --warn: #E0B24F; --new: #7DB4F0; --chip: #233133;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.5;
+  padding-block: 28px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 1120px; margin: 0 auto; }
+header { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(28px, 6vw, 42px); line-height: 1.1; margin: 0; text-wrap: balance; }
+.crit { display: flex; flex-wrap: wrap; gap: 6px 14px; color: var(--muted); font-size: 14px; }
+.crit b { color: var(--ink); font-weight: 600; }
+.upd { font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
+.bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 20px; }
+.chip {
+  font: inherit; font-size: 13.5px; font-weight: 500; color: var(--ink); background: var(--chip);
+  border: 1px solid transparent; border-radius: 999px; padding: 6px 12px; cursor: pointer;
+}
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.chip:focus-visible, .btn:focus-visible, summary:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.chip .n { font-family: var(--mono); opacity: .75; margin-left: 4px; }
+.sp { flex: 1 1 20px; }
+select { font: inherit; font-size: 13.5px; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 14px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.top { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; flex-wrap: wrap; }
+.pill { font-size: 12px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: var(--chip); color: var(--ink); }
+.pill.etudier { background: var(--ok); color: var(--bg); }
+.pill.reserve { background: var(--accent); color: var(--accent-ink); }
+.pill.verifier { background: var(--warn); color: var(--bg); }
+.badges { display: flex; gap: 6px; flex-wrap: wrap; }
+.badge { font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 6px; border: 1px solid var(--new); color: var(--new); }
+.badge.drop { border-color: var(--ok); color: var(--ok); }
+.badge.up { border-color: var(--accent); color: var(--accent); }
+.badge.gone { border-color: var(--muted); color: var(--muted); }
+.badge.like { border-color: var(--ok); background: var(--ok); color: var(--bg); }
+.card.liked { border-color: var(--ok); box-shadow: inset 0 0 0 1px var(--ok); }
+.card.nope { opacity: .62; }
+.choice { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.choice button { font: inherit; font-size: 13.5px; font-weight: 600; color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: 7px 8px; cursor: pointer; }
+.choice button:hover { border-color: var(--ink); }
+.choice button.yes[aria-pressed="true"] { background: var(--ok); border-color: var(--ok); color: var(--bg); }
+.choice button.no[aria-pressed="true"] { background: var(--muted); border-color: var(--muted); color: var(--bg); }
+.choice button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.choice-link { display: block; text-align: center; font-size: 13.5px; font-weight: 600; color: var(--ink); text-decoration: none; border: 1px dashed var(--line); border-radius: 8px; padding: 7px 8px; }
+.choice-link:hover { border-color: var(--ink); }
+.chip.nope-chip { border-color: var(--line); background: transparent; }
+.chip.nope-chip[aria-pressed="true"] { background: var(--muted); color: var(--bg); }
+h2 { font-family: var(--display); font-weight: 400; font-size: 19px; line-height: 1.25; margin: 0; text-wrap: balance; }
+.price { font-family: var(--mono); font-size: 24px; font-weight: 500; letter-spacing: -.01em; }
+.price small { font-size: 12.5px; color: var(--muted); font-weight: 400; margin-left: 6px; }
+.specs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.spec { background: var(--chip); border-radius: 8px; padding: 7px 9px; min-width: 0; }
+.spec span { display: block; font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.spec b { font-family: var(--mono); font-weight: 500; font-size: 14px; overflow-wrap: anywhere; }
+.rows { display: grid; gap: 4px; font-size: 14px; }
+.rows div { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 8px; }
+.rows dt, .rows .k { color: var(--muted); }
+.links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 4px; }
+.btn { font-size: 13.5px; font-weight: 600; text-decoration: none; color: var(--accent-ink); background: var(--accent); border-radius: 8px; padding: 7px 12px; }
+.btn.alt { background: var(--chip); color: var(--ink); }
+details.hist { font-size: 13.5px; }
+details.hist summary { cursor: pointer; color: var(--muted); }
+details.hist ul, details.zone ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono); font-size: 12.5px; }
+details.zone { margin-top: 24px; }
+details.zone ul { font-family: var(--body); font-size: 14px; display: grid; gap: 4px; }
+.empty { color: var(--muted); padding: 24px 0; }
+.journal { margin-top: 36px; }
+.journal h3 { font-family: var(--display); font-weight: 400; font-size: 22px; margin: 0 0 10px; }
+.journal ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.journal li { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 10px; font-size: 14px; border-top: 1px solid var(--line); padding-top: 6px; }
+.journal time { font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
+.foot { margin-top: 28px; color: var(--muted); font-size: 13px; }
+@media (max-width: 420px) { .specs { grid-template-columns: repeat(2, minmax(0, 1fr)); } .rows div { grid-template-columns: 96px minmax(0, 1fr); } }
+@media (prefers-reduced-motion: no-preference) { .card { transition: border-color .15s; } .card:hover { border-color: var(--accent); } }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Maisons à Champs-sur-Marne, bords de Marne ou accès rapide à Noisy-Champs</h1>
+    <div class="crit" id="crit"></div>
+    <div class="upd" id="upd"></div>
+  </header>
+  <div class="bar" id="bar"></div>
+  <div class="grid" id="grid"></div>
+  <section class="journal">
+    <h3>Journal des changements</h3>
+    <ol id="journal"></ol>
+  </section>
+  <p class="foot">Les temps d'accès viennent des annonces ou d'une estimation (position des annonces Bien'ici floutée à 50-250 m). La mitoyenneté n'est presque jamais indiquée : à contrôler à la visite.</p>
+  <details class="hist zone" id="zoneInfo">
+    <summary>Zone retenue et lignes de bus vers Noisy-Champs</summary>
+    <ul>
+      <li>À pied : 15 min maximum jusqu'à la gare RER A de Noisy-Champs.</li>
+      <li>En bus : 6 min à pied maximum jusqu'à un arrêt d'une ligne directe (213, 312, 313, 212, 100), trajet total vers la gare d'environ 20 min.</li>
+      <li>Bords de Marne : à 600 m maximum de la Marne (quartiers Bords de Marne, Pointe de Champs, Vallaud).</li>
+    </ul>
+  </details>
+
+</div>
+
+<script type="application/json" id="data">
+{
+ "meta": {
+  "updated": "2026-11-11",
+  "started": "2026-11-10",
+  "criteria": [
+   "Maison individuelle, sans mitoyenneté",
+   "≥ 100 m² (idéalement 120 m²)",
+   "≥ 4 chambres",
+   "Budget max 510 000 €, travaux déduits du prix",
+   "Terrain > 300 m² idéalement",
+   "Bords de Marne, ou ≤ 15 min à pied de Noisy-Champs, ou bus direct à ≤ 6 min à pied"
+  ]
+ },
+ "listings": [
+  {
+   "id": "iad-355",
+   "status": "etudier",
+   "title": "Maison 5 pièces non mitoyenne, Le Luzard",
+   "price": 355000,
+   "surface": 102,
+   "bedrooms": "4 (dont 1 sous combles)",
+   "land": 268,
+   "walk": "bus 312/313 : arrêt Place Pablo Picasso à ≈ 1-2 min, ≈ 15-20 min au total ; RER A Noisiel à 8 min à pied (annonce)",
+   "zone": "Bus direct (313 et 312, arrêt Place Pablo Picasso)",
+   "quartier": "Le Luzard - Picasso",
+   "condition": "Très bon état, « aucun travaux à prévoir », 1991, DPE D",
+   "mitoyen": "Non mitoyenne (annonce)",
+   "todo": "Terrain 268 m² (sous l'idéal de 300 m²), garage attenant",
+   "links": [
+    {
+     "label": "Bien'ici (iad)",
+     "url": "https://www.bienici.com/annonce/iad-france-1943796"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 355000
+    }
+   ]
+  },
+  {
+   "id": "c21-387",
+   "status": "etudier",
+   "title": "Maison familiale de bourg, impasse près du château",
+   "price": 387000,
+   "surface": 110.47,
+   "bedrooms": "4 (3 + suite parentale sous combles) + bureau",
+   "land": 530.67,
+   "walk": "bus 100 (express) et 312 : arrêt Mairie de Champs à ≈ 2 min, ≈ 15 min au total",
+   "zone": "Bus direct (100 et 312, arrêt Mairie de Champs)",
+   "quartier": "Centre-ville (vieux bourg)",
+   "condition": "Bon état apparent, cuisine moderne, DPE E",
+   "mitoyen": "Non précisée",
+   "todo": "Mitoyenneté à vérifier (bourg ancien) ; jardin de 416 m² selon le texte, 531 m² de parcelle",
+   "links": [
+    {
+     "label": "Bien'ici (Century 21)",
+     "url": "https://www.bienici.com/annonce/century-21-202_3235_3891"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 387000
+    }
+   ]
+  },
+  {
+   "id": "smart-399",
+   "status": "etudier",
+   "title": "Maison ancienne sans mitoyenneté agrandie en 2017, Bords de Marne",
+   "price": 399000,
+   "priceNote": "dont 9 000 € d'honoraires",
+   "surface": 115,
+   "bedrooms": "4 (1 au RDC + 3 à l'étage)",
+   "land": 389,
+   "walk": "bus 213 : arrêt Place Churchill à ≈ 5 min, ≈ 17 min au total ; 312 à Albert Berthelot (≈ 3 min)",
+   "zone": "Bords de Marne + bus 213 (Place Churchill)",
+   "quartier": "Bords de Marne",
+   "condition": "Années 1930 agrandie en 2017, sous-sol total, DPE F (changement de 4 fenêtres prévu pour passer en D)",
+   "mitoyen": "Sans mitoyenneté (annonce)",
+   "todo": "Surface : 115 m² chez Smartproprio, 102 m² habitables (117 m² au sol) chez iad ; coût des fenêtres à chiffrer ; à ≈ 600 m de la Marne",
+   "links": [
+    {
+     "label": "Bien'ici (Smartproprio)",
+     "url": "https://www.bienici.com/annonce/hektor-61_smartproprio-2271"
+    },
+    {
+     "label": "Bien'ici (iad)",
+     "url": "https://www.bienici.com/annonce/iad-france-2062450"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 399000
+    }
+   ]
+  },
+  {
+   "id": "c21-439",
+   "status": "etudier",
+   "title": "Grande maison familiale sur sous-sol total, Bords de Marne",
+   "price": 439000,
+   "surface": 147.96,
+   "bedrooms": "4 (dont suite parentale) + bureau",
+   "land": 360,
+   "walk": "bus 312 : arrêt Albert Berthelot à ≈ 4 min, ≈ 20 min au total ; pas de 213 à moins de 6 min",
+   "zone": "Bords de Marne (312 seulement pour la gare)",
+   "quartier": "Bords de Marne",
+   "condition": "Bon état apparent, DPE E",
+   "mitoyen": "Non précisée",
+   "todo": "Mitoyenneté ; position floutée (250 m), à ≈ 800 m du tracé de la Marne",
+   "links": [
+    {
+     "label": "Bien'ici (Century 21)",
+     "url": "https://www.bienici.com/annonce/century-21-202_3235_3768"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 439000
+    }
+   ]
+  },
+  {
+   "id": "adresse-440",
+   "status": "etudier",
+   "title": "Maison indépendante 104 m², 4 chambres, Le Luzard",
+   "price": 440000,
+   "surface": 104,
+   "bedrooms": "4 (dont suite parentale)",
+   "land": 293,
+   "walk": "bus 312/313 : arrêt Les Vignes de Bailly à ≈ 1-2 min, ≈ 15-20 min au total ; « 11 min à pied des gares RER A » (annonce)",
+   "zone": "Bus direct (312 et 313, arrêt Les Vignes de Bailly)",
+   "quartier": "Le Luzard - Picasso",
+   "condition": "Non précisé, 1992, DPE D",
+   "mitoyen": "Indépendante (annonce)",
+   "todo": "Gare citée probablement Noisiel ; terrain 293 m² ; 2 places + box",
+   "links": [
+    {
+     "label": "Bien'ici (L'Adresse)",
+     "url": "https://www.bienici.com/annonce/ladresse-1-adresse-14588914"
+    },
+    {
+     "label": "Bien'ici (L'Adresse, 2e annonce)",
+     "url": "https://www.bienici.com/annonce/ladresse-1-adresse-14615546"
+    },
+    {
+     "label": "MeilleursAgents",
+     "url": "https://www.meilleursagents.com/annonces/achat/1976688963/"
+    },
+    {
+     "label": "MeilleursAgents (2e annonce)",
+     "url": "https://www.meilleursagents.com/annonces/achat/1976688966/"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 440000
+    }
+   ]
+  },
+  {
+   "id": "orpi-449",
+   "status": "etudier",
+   "title": "Maison traditionnelle 6 pièces, sous-sol aménagé, Bords de Marne",
+   "price": 449900,
+   "surface": 127,
+   "bedrooms": "4 selon Orpi (2 au RDC + bureau + grande pièce sous combles)",
+   "land": 418,
+   "walk": "bus 312 : arrêt Les Pinsons à ≈ 2 min, ≈ 20 min au total",
+   "zone": "Bords de Marne (312 seulement pour la gare)",
+   "quartier": "Bords de Marne",
+   "condition": "« Parfaitement entretenue », sous-sol total aménagé, garage, DPE E",
+   "mitoyen": "Non précisée",
+   "todo": "Vrai nombre de chambres (texte : 2 chambres + bureau + combles) ; mitoyenneté",
+   "links": [
+    {
+     "label": "Orpi",
+     "url": "https://www.orpi.com/annonce-vente-maison-t6-champs-sur-marne-77420-0cf30e0f-0df8-48bd-aba7-b7a83cc164cf/"
+    },
+    {
+     "label": "Bien'ici",
+     "url": "https://www.bienici.com/annonce/ag942551-528391460"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 449900
+    }
+   ]
+  },
+  {
+   "id": "laforet-495",
+   "status": "etudier",
+   "title": "Maison familiale 7 pièces avec grand jardin, Bords de Marne",
+   "price": 495000,
+   "surface": 148.15,
+   "surfaceNote": "148 m² sur Bien'ici, 140 m² dans le texte",
+   "bedrooms": "5 (3 à l'étage + 2 sous combles)",
+   "land": null,
+   "walk": "bus 312 : arrêt Albert Berthelot à ≈ 1 min, ≈ 20 min au total ; Place Churchill (213) à ≈ 8 min",
+   "zone": "Bords de Marne (312 seulement pour la gare)",
+   "quartier": "Bords de Marne",
+   "condition": "Non précisé, 1937, DPE D",
+   "mitoyen": "Non précisée",
+   "todo": "Surface du terrain non précisée (« grand jardin ») ; état et travaux ; mitoyenneté",
+   "links": [
+    {
+     "label": "Bien'ici (Laforêt)",
+     "url": "https://www.bienici.com/annonce/laforet-immo-facile-52896104"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 495000
+    }
+   ]
+  },
+  {
+   "id": "nestenn-499",
+   "status": "etudier",
+   "title": "Maison 7 pièces sur sous-sol surélevé, limite Gournay",
+   "price": 499900,
+   "surface": 127.25,
+   "bedrooms": "5 (2 au RDC + 3 à l'étage)",
+   "land": 470,
+   "walk": "bus 312 : arrêt Albert Berthelot à ≈ 3 min, ≈ 20 min au total",
+   "zone": "Bords de Marne (312 seulement pour la gare)",
+   "quartier": "Bords de Marne",
+   "condition": "Non précisé, poêle à bois, DPE D",
+   "mitoyen": "Non précisée",
+   "todo": "Mitoyenneté ; état général",
+   "links": [
+    {
+     "label": "Bien'ici (Nestenn)",
+     "url": "https://www.bienici.com/annonce/nestenn-1-99939753274"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 499900
+    }
+   ]
+  },
+  {
+   "id": "adresse-509",
+   "status": "etudier",
+   "title": "Maison indépendante avec dépendance de 23 m², Bords de Marne",
+   "price": 509000,
+   "surface": 167,
+   "surfaceNote": "144 m² au sol + dépendance 23 m² ; 118,6 m² habitables selon Century 21",
+   "bedrooms": "4 à 5 (4 à l'étage, + 1 dans la dépendance)",
+   "land": 449,
+   "walk": "≈ 15 min à pied (annonce) ; bus 213 : arrêt Rond-Point des Pyramides à ≈ 1 min, ≈ 12 min au total",
+   "zone": "Bords de Marne + bus 213 (Rond-Point des Pyramides)",
+   "quartier": "Bords de Marne",
+   "condition": "Non précisé, 1991, DPE D",
+   "mitoyen": "Indépendante (annonce)",
+   "todo": "Surface : 167 m² dont dépendance (L'Adresse), 118,6 m² habitables (Century 21) ; budget au plafond",
+   "links": [
+    {
+     "label": "Bien'ici (L'Adresse)",
+     "url": "https://www.bienici.com/annonce/ladresse-1-adresse-14676521"
+    },
+    {
+     "label": "Bien'ici (L'Adresse, 2e annonce)",
+     "url": "https://www.bienici.com/annonce/ladresse-1-adresse-14690473"
+    },
+    {
+     "label": "Bien'ici (Century 21)",
+     "url": "https://www.bienici.com/annonce/century-21-202_3235_4368"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 509000
+    }
+   ]
+  },
+  {
+   "id": "laforet-435",
+   "status": "reserve",
+   "title": "Maison non mitoyenne 113 m², 4 chambres, Le Luzard",
+   "price": 435000,
+   "surface": 113,
+   "bedrooms": "4",
+   "land": 200,
+   "walk": "bus 312/313 : arrêt Fontaine aux Coulons à ≈ 2 min, ≈ 15-20 min au total",
+   "zone": "Bus direct (312 et 313, arrêt Fontaine aux Coulons)",
+   "quartier": "Le Luzard - Picasso",
+   "condition": "Non précisé, 2007, DPE D",
+   "mitoyen": "Non mitoyenne (annonce)",
+   "todo": "Copropriété de 11 lots (400 €/an) : probablement un petit lotissement ; terrain 200 m²",
+   "links": [
+    {
+     "label": "Bien'ici (Laforêt)",
+     "url": "https://www.bienici.com/annonce/laforet-immo-facile-52862422"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 435000
+    }
+   ]
+  },
+  {
+   "id": "laforet-415",
+   "status": "reserve",
+   "title": "Maison 135 m², rez-de-chaussée aménagé, Bords de Marne",
+   "price": 415000,
+   "surface": 135,
+   "bedrooms": "3 (+ RDC aménagé avec cuisine et séjour, 4e possible)",
+   "land": 444,
+   "walk": "bus 213 : arrêt Rond-Point des Pyramides à ≈ 2 min, ≈ 12 min au total",
+   "zone": "Bords de Marne + bus 213 (Rond-Point des Pyramides)",
+   "quartier": "Bords de Marne",
+   "condition": "Non précisé, 1963, DPE E",
+   "mitoyen": "Non précisée",
+   "todo": "Possibilité d'une 4e chambre au RDC ; mitoyenneté",
+   "links": [
+    {
+     "label": "Bien'ici (Laforêt)",
+     "url": "https://www.bienici.com/annonce/laforet-immo-facile-52959543"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 415000
+    }
+   ]
+  },
+  {
+   "id": "iad-429",
+   "status": "reserve",
+   "title": "Maison 137 m² sur sous-sol total, près de la Marne",
+   "price": 429000,
+   "surface": 137,
+   "bedrooms": "3 (+ salon de 13 m² utilisable en chambre)",
+   "land": 480,
+   "walk": "bus 312 : arrêt Les Pinsons à ≈ 7 min, ≈ 25 min au total",
+   "zone": "Bords de Marne (≈ 300 m de la Marne)",
+   "quartier": "Bords de Marne",
+   "condition": "Non précisé, 1973, DPE E",
+   "mitoyen": "Non précisée",
+   "todo": "4e chambre possible (salon attenant) ; mitoyenneté",
+   "links": [
+    {
+     "label": "Bien'ici (iad)",
+     "url": "https://www.bienici.com/annonce/iad-france-2088199"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 429000
+    }
+   ]
+  },
+  {
+   "id": "c21-360",
+   "status": "reserve",
+   "title": "Maison années 2000, centre-ville ancien",
+   "price": 360000,
+   "surface": 119.55,
+   "bedrooms": "4 (3 + chambre sous combles)",
+   "land": 253,
+   "walk": "bus 312 : arrêt Pointe de Champs à ≈ 5 min, ≈ 20 min au total ; bus 100 à Mairie de Champs à ≈ 6-7 min",
+   "zone": "Bus direct (312 ; 100 à la limite des 6 min)",
+   "quartier": "Centre-ville",
+   "condition": "Bon état apparent, 2000, DPE C",
+   "mitoyen": "Non précisée",
+   "todo": "Distance exacte à l'arrêt Mairie de Champs (bus 100) ; terrain 253 m² ; mitoyenneté",
+   "links": [
+    {
+     "label": "Bien'ici (Century 21)",
+     "url": "https://www.bienici.com/annonce/century-21-202_3235_2651"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 360000
+    }
+   ]
+  },
+  {
+   "id": "laforet-479",
+   "status": "verifier",
+   "title": "Maison rénovée 148 m² près du château",
+   "price": 479000,
+   "priceNote": "474 900 € chez iad",
+   "surface": 148,
+   "bedrooms": "4 (dont suite parentale)",
+   "land": 467,
+   "walk": "bus 313 : arrêt Guy de Maupassant à ≈ 6 min (limite), ≈ 20 min au total",
+   "zone": "À confirmer : bus 313 à la limite des 6 min, position floutée (250 m)",
+   "quartier": "Centre-ville (près du château)",
+   "condition": "Entièrement rénovée, clim réversible, DPE D",
+   "mitoyen": "Non précisée (« sans vis-à-vis »)",
+   "todo": "Adresse exacte pour la distance à l'arrêt ; mitoyenneté",
+   "links": [
+    {
+     "label": "Bien'ici (Laforêt)",
+     "url": "https://www.bienici.com/annonce/laforet-immo-facile-52919714"
+    },
+    {
+     "label": "Bien'ici (iad, 474 900 €)",
+     "url": "https://www.bienici.com/annonce/iad-france-1827578"
+    },
+    {
+     "label": "SeLoger (Agence 101)",
+     "url": "https://www.seloger.com/annonce/achat/ile-de-france/seine-et-marne-77/champs-sur-marne-77420/262SQJWNNDEZ"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 479000
+    }
+   ]
+  },
+  {
+   "id": "safti-415",
+   "status": "hors",
+   "title": "Maison 1986 en résidence sécurisée, Le Nesles",
+   "price": 415000,
+   "surface": 100,
+   "bedrooms": "3 + bureau",
+   "land": 265,
+   "walk": "≈ 15 min à pied (≈ 1,15 km) ; bus 213 : arrêt Xavier Bichat à ≈ 2 min",
+   "zone": "Gare à pied + bus 213",
+   "quartier": "Le Nesles",
+   "condition": "Bon état (PAC, clim, électricité 2020), DPE C",
+   "mitoyen": "Non précisée",
+   "todo": "",
+   "reason": "Lotissement : résidence sécurisée en copropriété de 37 lots, et 3 chambres + bureau",
+   "links": [
+    {
+     "label": "Bien'ici (Safti)",
+     "url": "https://www.bienici.com/annonce/safti-1-1708673"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 415000
+    }
+   ]
+  },
+  {
+   "id": "iad-399-luzard",
+   "status": "hors",
+   "title": "Maison 98 m², 4 chambres, Le Luzard",
+   "price": 399000,
+   "surface": 98,
+   "bedrooms": "4 (dont suite parentale)",
+   "land": 253,
+   "walk": "bus 312/313 : arrêt Place Pablo Picasso à ≈ 3 min, ≈ 15-20 min au total",
+   "zone": "Bus direct (312 et 313)",
+   "quartier": "Le Luzard - Picasso",
+   "condition": "Non précisé, 1990, PAC réversible, DPE D",
+   "mitoyen": "Non précisée",
+   "todo": "",
+   "reason": "Surface 98 m² (sous 100 m²)",
+   "links": [
+    {
+     "label": "Bien'ici (iad)",
+     "url": "https://www.bienici.com/annonce/iad-france-2105606"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 399000
+    }
+   ]
+  },
+  {
+   "id": "laforet-345",
+   "status": "hors",
+   "title": "Maison 105 m² sur 516 m² de terrain, Bords de Marne",
+   "price": 345000,
+   "surface": 105,
+   "bedrooms": "3",
+   "land": 516,
+   "walk": "bus 312 : arrêt Albert Berthelot à ≈ 4 min, ≈ 20 min au total",
+   "zone": "Bords de Marne",
+   "quartier": "Bords de Marne",
+   "condition": "Travaux à prévoir (annonce), 1949, DPE E",
+   "mitoyen": "Non précisée",
+   "todo": "",
+   "reason": "3 chambres seulement, travaux à prévoir",
+   "links": [
+    {
+     "label": "Bien'ici (Laforêt)",
+     "url": "https://www.bienici.com/annonce/laforet-immo-facile-52971274"
+    },
+    {
+     "label": "Bien'ici (Century 21)",
+     "url": "https://www.bienici.com/annonce/century-21-202_3235_4254"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 345000
+    }
+   ]
+  },
+  {
+   "id": "orpi-399",
+   "status": "hors",
+   "title": "Pavillon 5 pièces sur 432 m², Bords de Marne",
+   "price": 399000,
+   "surface": 120,
+   "surfaceNote": "120 m² chez Orpi, 140 m² sur SeLoger (Immobilier De Demain)",
+   "bedrooms": "3",
+   "land": 432,
+   "walk": "non précisé (position inconnue)",
+   "zone": "Bords de Marne (quartier indiqué par Orpi)",
+   "quartier": "Bords de Marne",
+   "condition": "Non précisé, DPE E",
+   "mitoyen": "Non précisée",
+   "todo": "",
+   "reason": "3 chambres seulement",
+   "links": [
+    {
+     "label": "Orpi",
+     "url": "https://www.orpi.com/annonce-vente-maison-t5-champs-sur-marne-77420-af6019dc-c7e4-40ca-8b0d-c8dcf35dcc00/"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 399000
+    }
+   ]
+  },
+  {
+   "id": "versosud-338",
+   "status": "hors",
+   "title": "Pavillon familial 108 m², proche RER A, Le Luzard",
+   "price": 338000,
+   "surface": 108.17,
+   "bedrooms": "3 + bureau",
+   "land": 231,
+   "walk": "≈ 15 min à pied ou 9 min en bus jusqu'au RER A (annonce, gare non précisée) ; bus 312/313 : arrêt Place Pablo Picasso à 1 min",
+   "zone": "Bus direct (312 et 313)",
+   "quartier": "Le Luzard - Picasso",
+   "condition": "Rafraîchissement à prévoir, 1980, DPE E",
+   "mitoyen": "Non précisée",
+   "todo": "",
+   "reason": "3 chambres seulement (+ bureau)",
+   "links": [
+    {
+     "label": "Bien'ici (VersoSud)",
+     "url": "https://www.bienici.com/annonce/hektor-amb-invest_1-671"
+    },
+    {
+     "label": "MeilleursAgents",
+     "url": "https://www.meilleursagents.com/annonces/achat/1976642431/"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 338000
+    }
+   ]
+  },
+  {
+   "id": "citrine-359",
+   "status": "hors",
+   "title": "Maison « Citrine » 111 m², Le Luzard",
+   "price": 359000,
+   "surface": 111,
+   "bedrooms": "3",
+   "land": 123,
+   "walk": "bus 313 : arrêt Guy de Maupassant à ≈ 2 min, ≈ 20 min au total ; « moins de 10 min à pied du RER A » (annonce)",
+   "zone": "Bus direct (313)",
+   "quartier": "Le Luzard - Picasso",
+   "condition": "Non précisé, 1978, DPE D",
+   "mitoyen": "Non précisée",
+   "todo": "",
+   "reason": "3 chambres seulement, terrain 123 m²",
+   "links": [
+    {
+     "label": "Bien'ici",
+     "url": "https://www.bienici.com/annonce/ag440414-555677864"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 359000
+    }
+   ]
+  },
+  {
+   "id": "iad-520",
+   "status": "hors",
+   "title": "Maison rénovée 120 m² habitables, Bords de Marne",
+   "price": 520000,
+   "surface": 120,
+   "surfaceNote": "120 m² habitables, 150 m² utiles",
+   "bedrooms": "4 (dont 1 au dernier niveau)",
+   "land": 439,
+   "walk": "bus 312 : arrêt Les Pinsons à ≈ 2 min, ≈ 20 min au total",
+   "zone": "Bords de Marne",
+   "quartier": "Bords de Marne",
+   "condition": "Rénovation complète, DPE C",
+   "mitoyen": "Non précisée",
+   "todo": "",
+   "reason": "Budget : 520 000 € (plafond 510 000 €)",
+   "links": [
+    {
+     "label": "Bien'ici (iad)",
+     "url": "https://www.bienici.com/annonce/iad-france-2023851"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 520000
+    }
+   ]
+  },
+  {
+   "id": "adresse-529",
+   "status": "hors",
+   "title": "Maison familiale 133 m² avec salon d'hiver, Bords de Marne",
+   "price": 529000,
+   "surface": 133,
+   "bedrooms": "4 (dont suite parentale)",
+   "land": 467,
+   "walk": "bus 312 : arrêt Les Pinsons à ≈ 6 min, ≈ 25 min au total",
+   "zone": "Bords de Marne (≈ 400 m de la Marne)",
+   "quartier": "Bords de Marne",
+   "condition": "Non précisé, sur cave, DPE D",
+   "mitoyen": "Non précisée",
+   "todo": "",
+   "reason": "Budget : 529 000 € (plafond 510 000 €)",
+   "links": [
+    {
+     "label": "Bien'ici (L'Adresse Noisiel)",
+     "url": "https://www.bienici.com/annonce/ladresse-1-adresse-14305513"
+    },
+    {
+     "label": "Bien'ici (Century 21)",
+     "url": "https://www.bienici.com/annonce/century-21-202_3235_4285"
+    },
+    {
+     "label": "Bien'ici (3e agence)",
+     "url": "https://www.bienici.com/annonce/ag060811-550871081"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 529000
+    }
+   ]
+  },
+  {
+   "id": "dolce-529",
+   "status": "hors",
+   "title": "Maison 167 m² face à la Marne, rénovée en 2020",
+   "price": 529000,
+   "surface": 167,
+   "bedrooms": "4 à 5",
+   "land": 548,
+   "walk": "≈ 30 min (bus 312 à ≈ 9 min à pied)",
+   "zone": "Bords de Marne (face à la Marne)",
+   "quartier": "Bords de Marne",
+   "condition": "Rénovée en 2020, PAC récente",
+   "mitoyen": "Non précisée",
+   "todo": "",
+   "reason": "Budget : 529 000 € (plafond 510 000 €)",
+   "links": [
+    {
+     "label": "Bien'ici (Dolce Casa)",
+     "url": "https://www.bienici.com/annonce/immo-facile-59789097"
+    },
+    {
+     "label": "MeilleursAgents",
+     "url": "https://www.meilleursagents.com/annonces/achat/1976154605/"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 529000
+    }
+   ]
+  },
+  {
+   "id": "orpi-599",
+   "status": "hors",
+   "title": "Maison 6 pièces 151 m², Bords de Marne",
+   "price": 599900,
+   "surface": 151,
+   "surfaceNote": "126 m² habitables selon Orpi",
+   "bedrooms": "4",
+   "land": null,
+   "walk": "non précisé (position inconnue)",
+   "zone": "Bords de Marne (quartier indiqué par Orpi)",
+   "quartier": "Bords de Marne",
+   "condition": "Non précisé",
+   "mitoyen": "Non précisée",
+   "todo": "",
+   "reason": "Budget : 599 900 € (plafond 510 000 €)",
+   "links": [
+    {
+     "label": "Orpi",
+     "url": "https://www.orpi.com/annonce-vente-maison-t6-champs-sur-marne-77420-52d6952c-98d3-4510-b0e4-9896e8625827/"
+    },
+    {
+     "label": "MeilleursAgents",
+     "url": "https://www.meilleursagents.com/annonces/achat/1976279883/"
+    }
+   ],
+   "firstSeen": "2026-11-10",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-10",
+     "price": 599900
+    }
+   ]
+  },
+  {
+   "id": "immo5-589",
+   "status": "hors",
+   "title": "Pavillon familial 6 pièces sur sous-sol total, près des bords de Marne",
+   "price": 589000,
+   "priceNote": "honoraires à la charge du vendeur",
+   "surface": 180,
+   "surfaceNote": "« plus de 180 m² utiles », surface habitable non précisée",
+   "bedrooms": "4 (1 au RDC + 3 à l'étage) + pièce aménagée au sous-sol",
+   "land": 455,
+   "walk": "non précisé (position inconnue)",
+   "zone": "Bords de Marne (« à proximité des bords de Marne » selon l'annonce, position non précisée)",
+   "quartier": "Bords de Marne (secteur pavillonnaire)",
+   "condition": "Non précisé, sous-sol total avec garage double, DPE D",
+   "mitoyen": "Non précisée (« jardin sans vis-à-vis »)",
+   "todo": "",
+   "reason": "Budget : 589 000 € (plafond 510 000 €)",
+   "links": [
+    {
+     "label": "MeilleursAgents (Immo 5)",
+     "url": "https://www.meilleursagents.com/annonces/achat/1976634684/"
+    }
+   ],
+   "firstSeen": "2026-11-11",
+   "lastSeen": "2026-11-11",
+   "active": true,
+   "history": [
+    {
+     "d": "2026-11-11",
+     "price": 589000
+    }
+   ]
+  }
+ ],
+ "journal": [
+  {
+   "d": "2026-11-10",
+   "t": "Première version de la liste : 24 maisons repérées sur Bien'ici, Orpi, SeLoger et MeilleursAgents (9 à étudier, 4 sous réserve, 1 à situer, 10 hors critère) ; PAP ne propose que des maisons à construire."
+  },
+  {
+   "d": "2026-11-11",
+   "t": "Aucune nouvelle maison dans les critères, aucune baisse de prix ni retrait. Ajout en hors critère d'un pavillon de 589 000 € près des bords de Marne (Immo 5, en ligne depuis septembre, hors budget) ; nouveaux liens pour la maison de 440 000 € (MeilleursAgents) et celle de 479 000 € (Agence 101 sur SeLoger). PAP : uniquement des maisons à construire."
+  }
+ ],
+ "choix": {}
+}
+</script>
+
+<script>
+(function () {
+  var D = JSON.parse(document.getElementById('data').textContent);
+  var LABELS = { etudier: 'À étudier', reserve: 'Sous réserve', verifier: 'À situer', retrait: 'En retrait', hors: 'Hors critère', ecartee: 'Écartée' };
+  var ORDER = ['etudier', 'reserve', 'verifier', 'retrait', 'hors', 'ecartee'];
+  var active = { etudier: true, reserve: true, verifier: true, retrait: false, hors: false, ecartee: false };
+  try { var s = JSON.parse(localStorage.getItem('champs-filters') || 'null'); if (s) active = Object.assign(active, s); } catch (e) {}
+  var sortBy = 'status';
+  var showNope = false;
+  try { showNope = localStorage.getItem('champs-show-nope') === '1'; } catch (e) {}
+
+  // Avis de l'utilisateur sur chaque fiche : 'oui' (intéressé) ou 'non' (pas pour moi).
+  // Sur claude.ai, stocké dans la base de la page (collection "choix", partagée entre appareils) ;
+  // ailleurs (copie statique), seulement dans ce navigateur.
+  // Copie des choix recopiée chaque jour par la tâche (D.choix) : seule source sur la copie statique (drinkflow.xyz).
+  var onClaude = !!(window.claude && typeof window.claude.use === 'function');
+  var ARTIFACT_URL = 'https://claude.ai/artifact/AfUpGrDuJJCcoNHg5ZQefF';
+  var choices = {};
+  Object.keys(D.choix || {}).forEach(function (k) { var v = D.choix[k]; if (v === 'oui' || v === 'non') choices[k] = v; });
+  if (onClaude) { try { var lc = JSON.parse(localStorage.getItem('champs-choices') || 'null'); if (lc) choices = lc; } catch (e) {} }
+  var choiceCol = null;
+  function saveLocal() { try { localStorage.setItem('champs-choices', JSON.stringify(choices)); } catch (e) {} }
+  function setChoice(id, v) {
+    var prev = choices[id];
+    if (v) choices[id] = v; else delete choices[id];
+    saveLocal(); render();
+    if (!choiceCol) return;
+    var ref = choiceCol.doc(id);
+    (v ? ref.set({ v: v, d: new Date().toISOString().slice(0, 10) }) : ref.delete()).catch(function () {
+      if (prev) choices[id] = prev; else delete choices[id];
+      saveLocal(); render();
+    });
+  }
+  if (onClaude) {
+    window.claude.use('db').then(function (db) {
+      if (!db) return;
+      choiceCol = db.collection('choix');
+      choiceCol.onSnapshot(function (snap) {
+        var next = {};
+        snap.docs.forEach(function (d) { var x = d.data(); if (x && (x.v === 'oui' || x.v === 'non')) next[d.id] = x.v; });
+        choices = next; saveLocal(); render();
+      }, function () {});
+    }).catch(function () {});
+  }
+
+  function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+  function eur(n) { return n.toLocaleString('fr-FR') + ' €'; }
+  function dfr(iso) { var p = iso.split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
+  function days(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
+
+  var updated = D.meta.updated;
+  document.getElementById('upd').textContent = 'Mise à jour le ' + dfr(updated);
+  var crit = document.getElementById('crit');
+  D.meta.criteria.forEach(function (c) { crit.appendChild(el('span', null, c)); });
+
+  var bar = document.getElementById('bar');
+  var grid = document.getElementById('grid');
+
+  function count(st) { return D.listings.filter(function (l) { return l.status === st && choices[l.id] !== 'non'; }).length; }
+  function countNope() { return D.listings.filter(function (l) { return choices[l.id] === 'non'; }).length; }
+
+  function renderBar() {
+    bar.textContent = '';
+    ORDER.forEach(function (st) {
+      var b = el('button', 'chip'); b.type = 'button'; b.id = 'chip-' + st;
+      b.setAttribute('aria-pressed', active[st] ? 'true' : 'false');
+      b.appendChild(document.createTextNode(LABELS[st]));
+      b.appendChild(el('span', 'n', String(count(st))));
+      b.addEventListener('click', function () {
+        active[st] = !active[st];
+        try { localStorage.setItem('champs-filters', JSON.stringify(active)); } catch (e) {}
+        render();
+      });
+      bar.appendChild(b);
+    });
+    var nb = el('button', 'chip nope-chip'); nb.type = 'button'; nb.id = 'chip-nope';
+    nb.setAttribute('aria-pressed', showNope ? 'true' : 'false');
+    nb.appendChild(document.createTextNode('Pas pour moi'));
+    nb.appendChild(el('span', 'n', String(countNope())));
+    nb.addEventListener('click', function () {
+      showNope = !showNope;
+      try { localStorage.setItem('champs-show-nope', showNope ? '1' : '0'); } catch (e) {}
+      render();
+    });
+    bar.appendChild(nb);
+    bar.appendChild(el('span', 'sp'));
+    var sel = document.createElement('select'); sel.id = 'sort'; sel.setAttribute('aria-label', 'Trier');
+    [['status', 'Tri : statut'], ['price', 'Tri : prix croissant'], ['surface', 'Tri : surface décroissante'], ['new', 'Tri : plus récentes']].forEach(function (o) {
+      var op = document.createElement('option'); op.value = o[0]; op.textContent = o[1]; if (o[0] === sortBy) op.selected = true; sel.appendChild(op);
+    });
+    sel.addEventListener('change', function () { sortBy = sel.value; renderGrid(); });
+    bar.appendChild(sel);
+  }
+
+  function row(k, v) { var d = el('div'); d.appendChild(el('span', 'k', k)); d.appendChild(el('span', null, v)); return d; }
+  function spec(k, v) { var d = el('div', 'spec'); d.appendChild(el('span', null, k)); d.appendChild(el('b', null, v)); return d; }
+
+  function card(l) {
+    var ch = choices[l.id];
+    var c = el('article', 'card' + (ch === 'oui' ? ' liked' : ch === 'non' ? ' nope' : ''));
+    var top = el('div', 'top');
+    top.appendChild(el('span', 'pill ' + l.status, LABELS[l.status]));
+    var bd = el('div', 'badges');
+    if (ch === 'oui') bd.appendChild(el('span', 'badge like', 'Ça m\'intéresse'));
+    if (days(l.firstSeen, updated) <= 3 && l.history.length === 1 && l.firstSeen !== D.meta.started) bd.appendChild(el('span', 'badge', 'Nouveau'));
+    if (l.history.length > 1) {
+      var first = l.history[0].price, last = l.history[l.history.length - 1].price, diff = last - first;
+      if (diff !== 0) bd.appendChild(el('span', 'badge ' + (diff < 0 ? 'drop' : 'up'), (diff < 0 ? '−' : '+') + eur(Math.abs(diff)) + ' depuis le ' + dfr(l.history[0].d)));
+    }
+    if (l.active === false) bd.appendChild(el('span', 'badge gone', 'Plus en ligne depuis le ' + dfr(l.lastSeen)));
+    top.appendChild(bd);
+    c.appendChild(top);
+    c.appendChild(el('h2', null, l.title));
+    var p = el('div', 'price', eur(l.price));
+    if (l.priceNote) p.appendChild(el('small', null, l.priceNote));
+    else if (l.surface) p.appendChild(el('small', null, Math.round(l.price / l.surface).toLocaleString('fr-FR') + ' €/m²'));
+    c.appendChild(p);
+    var sp = el('div', 'specs');
+    sp.appendChild(spec('Surface', l.surface ? String(l.surface).replace('.', ',') + ' m²' : '?'));
+    sp.appendChild(spec('Terrain', l.land ? l.land + ' m²' : 'n.i.'));
+    sp.appendChild(spec('Accès gare', l.walk));
+    c.appendChild(sp);
+    var rows = el('div', 'rows');
+    rows.appendChild(row('Chambres', l.bedrooms));
+    if (l.surfaceNote) rows.appendChild(row('Surface', l.surfaceNote));
+    rows.appendChild(row('Quartier', l.quartier));
+    if (l.zone) rows.appendChild(row('Zone', l.zone));
+    rows.appendChild(row('État', l.condition));
+    rows.appendChild(row('Mitoyenneté', l.mitoyen));
+    if (l.reason) rows.appendChild(row('Pourquoi', l.reason));
+    if (l.todo) rows.appendChild(row('À vérifier', l.todo));
+    c.appendChild(rows);
+    if (l.history.length > 1) {
+      var det = el('details', 'hist'); det.appendChild(el('summary', null, 'Évolution du prix'));
+      var ul = el('ul');
+      l.history.forEach(function (h) { ul.appendChild(el('li', null, dfr(h.d) + '  ' + eur(h.price))); });
+      det.appendChild(ul); c.appendChild(det);
+    }
+    var lk = el('div', 'links');
+    l.links.forEach(function (x, i) {
+      var a = el('a', 'btn' + (i ? ' alt' : ''), x.label); a.href = x.url; a.target = '_blank'; a.rel = 'noopener noreferrer'; lk.appendChild(a);
+    });
+    c.appendChild(lk);
+    if (!onClaude) {
+      var cl = el('a', 'choice-link', ch ? 'Modifier mon avis sur claude.ai' : 'Donner mon avis sur claude.ai');
+      cl.href = ARTIFACT_URL; cl.target = '_blank'; cl.rel = 'noopener noreferrer';
+      c.appendChild(cl);
+      return c;
+    }
+    var cw = el('div', 'choice'); cw.setAttribute('role', 'group'); cw.setAttribute('aria-label', 'Mon avis');
+    [['oui', 'yes', 'Ça m\'intéresse'], ['non', 'no', 'Pas pour moi']].forEach(function (o) {
+      var b = el('button', o[1], o[2]); b.type = 'button';
+      b.setAttribute('aria-pressed', ch === o[0] ? 'true' : 'false');
+      b.addEventListener('click', function () { setChoice(l.id, ch === o[0] ? null : o[0]); });
+      cw.appendChild(b);
+    });
+    c.appendChild(cw);
+    return c;
+  }
+
+  function renderGrid() {
+    grid.textContent = '';
+    var list = D.listings.filter(function (l) { return choices[l.id] === 'non' ? showNope : active[l.status]; });
+    var rank = function (l) { return choices[l.id] === 'oui' ? 0 : choices[l.id] === 'non' ? 2 : 1; };
+    list.sort(function (a, b) {
+      if (sortBy === 'status') return rank(a) - rank(b) || ORDER.indexOf(a.status) - ORDER.indexOf(b.status) || a.price - b.price;
+      if (sortBy === 'price') return a.price - b.price;
+      if (sortBy === 'surface') return (b.surface || 0) - (a.surface || 0);
+      if (sortBy === 'new') return b.firstSeen.localeCompare(a.firstSeen) || a.price - b.price;
+      return ORDER.indexOf(a.status) - ORDER.indexOf(b.status) || a.price - b.price;
+    });
+    if (!list.length) { grid.appendChild(el('p', 'empty', 'Aucune maison pour ces filtres. Activez un statut ci-dessus, ou attendez la prochaine recherche quotidienne.')); return; }
+    list.forEach(function (l) { grid.appendChild(card(l)); });
+  }
+
+  function renderJournal() {
+    var ol = document.getElementById('journal'); ol.textContent = '';
+    D.journal.slice().sort(function (a, b) { return b.d.localeCompare(a.d); }).forEach(function (j) {
+      var li = el('li'); var t = el('time', null, dfr(j.d)); t.setAttribute('datetime', j.d);
+      li.appendChild(t); li.appendChild(el('span', null, j.t)); ol.appendChild(li);
+    });
+  }
+
+  function render() { renderBar(); renderGrid(); }
+  render(); renderJournal();
+})();
+
+</script>
+
+
+
+</body>
+</html>

@@ -56,6 +56,15 @@ body{
   text-transform:uppercase; margin:0;
 }
 
+/* ── Navigation entre les pages ── */
+.sitenav{display:flex; justify-content:center; gap:6px; margin-top:22px;}
+.sitenav a{
+  font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; text-decoration:none;
+  color:var(--text-dim); padding:11px 18px; border-radius:999px; border:1px solid transparent; transition:all .12s;
+}
+.sitenav a:hover{color:var(--terracotta);}
+.sitenav a[aria-current="page"]{color:#fff; background:var(--terracotta); border-color:var(--terracotta); font-weight:600;}
+
 /* ── Search ── */
 .searchbar{
   position:sticky; top:0; background:var(--bg); padding:10px 0 14px; z-index:5;
@@ -217,6 +226,10 @@ body{
   <div class="hero-title">Cocktails</div>
   <div class="hero-rule">◆</div>
   <p class="hero-sub">Recherche par ingrédient</p>
+  <nav class="sitenav" aria-label="Pages du site">
+    <a href="index.html" aria-current="page">Top 100</a>
+    <a href="home-bar.html">Mon bar</a>
+  </nav>
 </header>
 
   <div class="searchbar">

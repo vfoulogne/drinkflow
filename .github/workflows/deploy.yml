@@ -17,6 +17,7 @@ jobs:
         run: |
           mkdir -p dist
           cp index.html dist/
+          cp home-bar.html dist/
           cp quiz-italiano.html dist/
           cp quiz-espanol.html dist/
           cp quiz-anglais.html dist/

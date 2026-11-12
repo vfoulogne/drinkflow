@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Home Bar — mon bar</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cdefs%3E%3CradialGradient%20id%3D%22v%22%20cx%3D%2250%25%22%20cy%3D%2242%25%22%20r%3D%2275%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23C96B4F%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%239A4632%22/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22url%28%23v%29%22/%3E%3Cpath%20d%3D%22M19%2014%20C%2016.5%2021%2019.5%2028%2032%2033%20C%2044.5%2028%2047.5%2021%2045%2014%22%20fill%3D%22none%22%20stroke%3D%22%23F5F0E6%22%20stroke-width%3D%223%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2219%22%20y1%3D%2214%22%20x2%3D%2245%22%20y2%3D%2214%22%20stroke%3D%22%23F5F0E6%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2232%22%20y1%3D%2233%22%20x2%3D%2232%22%20y2%3D%2250%22%20stroke%3D%22%23F5F0E6%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2221%22%20y1%3D%2252%22%20x2%3D%2243%22%20y2%3D%2252%22%20stroke%3D%22%23F5F0E6%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v=2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mon bar">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#B85741">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,600&display=swap');
+
+:root{
+  color-scheme:light;
+  --bg:#F5F0E6; --panel:#FDFAF4; --panel2:#EDE8DA; --border:#D4C9B4;
+  --text:#2A2018; --text-dim:#7E7060;
+  --terracotta:#B85741; --terracotta-pale:#EDD8D2;
+  --lilac:#7565A0; --lilac-pale:#C8C0DC;
+  --shadow:rgba(90,60,40,.07);
+  --c-whisky:#9a5b12; --c-rhum:#6e3b1c; --c-gin:#2f6f86; --c-vodka:#5f6f86;
+  --c-agave:#4d7c6a; --c-brandy:#a0562a; --c-vermouth:#7a2646; --c-amari:#a8362b;
+  --c-liqueurs:#7565A0; --c-bitters:#4a4f57; --c-autres:#3b6ea5; --c-maison:#a8880f;
+  --serif:'Cormorant Garamond',Georgia,serif;
+}
+*{box-sizing:border-box;}
+[hidden]{display:none!important;}
+body{
+  margin:0; padding:0 20px 96px; background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-size:15px; line-height:1.5; -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:880px; margin:0 auto;}
+button,input,select,textarea{font-family:inherit;}
+
+/* ── Hero (identique à la page Top 100) ── */
+.hero{text-align:center; padding:48px 0 30px; border-bottom:1px solid var(--border); margin-bottom:0;}
+.hero-eyebrow{
+  font-family:var(--serif); font-size:1rem; font-weight:400;
+  letter-spacing:.55em; text-transform:uppercase; color:var(--terracotta); margin-bottom:4px;
+}
+.hero-title{
+  font-family:var(--serif); font-size:4.8rem; font-weight:300; font-style:italic;
+  color:var(--text); line-height:1.05; margin:0 0 16px; letter-spacing:-.01em;
+}
+.hero-rule{display:flex; align-items:center; justify-content:center; gap:14px; color:var(--terracotta); font-size:.5rem; margin-bottom:12px;}
+.hero-rule::before,.hero-rule::after{content:''; display:block; height:1px; width:52px; background:var(--border);}
+.hero-sub{font-size:.72rem; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase; margin:0; font-variant-numeric:tabular-nums;}
+
+/* ── Navigation entre les pages ── */
+.sitenav{display:flex; justify-content:center; gap:6px; margin-top:22px;}
+.sitenav a{
+  font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; text-decoration:none;
+  color:var(--text-dim); padding:11px 18px; border-radius:999px; border:1px solid transparent; transition:all .12s;
+}
+.sitenav a:hover{color:var(--terracotta);}
+.sitenav a[aria-current="page"]{color:#fff; background:var(--terracotta); border-color:var(--terracotta); font-weight:600;}
+
+/* ── Barre d'outils ── */
+.toolbar{position:sticky; top:0; z-index:5; background:var(--bg); padding:12px 0 12px; border-bottom:1px solid var(--border);}
+.progress{height:2px; background:var(--panel2); border-radius:2px; overflow:hidden; margin-bottom:12px;}
+.progress>i{display:block; height:100%; width:0; background:var(--terracotta); transition:width .3s ease;}
+.search{
+  width:100%; padding:12px 16px; font-size:16px; border-radius:8px; border:1.5px solid var(--border);
+  background:var(--panel); color:var(--text); outline:none; -webkit-appearance:none; appearance:none;
+  transition:border-color .15s, box-shadow .15s;
+}
+.search:focus{border-color:var(--terracotta); box-shadow:0 0 0 3px var(--terracotta-pale);}
+.filters{display:flex; gap:6px; margin-top:10px; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch;}
+.filters::-webkit-scrollbar{display:none;}
+.chip{
+  flex:none; white-space:nowrap; padding:7px 14px; border-radius:999px; border:1px solid var(--border);
+  background:var(--panel); color:var(--text-dim); font-size:.78rem; cursor:pointer; user-select:none;
+  transition:all .12s; letter-spacing:.02em;
+}
+.chip:hover{border-color:var(--terracotta); color:var(--terracotta);}
+.chip[aria-pressed="true"]{background:var(--terracotta); color:#fff; border-color:var(--terracotta); font-weight:600;}
+.hint{margin:20px 0 0; font-size:.82rem; line-height:1.6; color:var(--text-dim); max-width:64ch;}
+.warn{margin:14px 0 0; padding:10px 14px; border:1px solid var(--terracotta); border-radius:8px; color:var(--terracotta); font-size:.82rem; background:var(--terracotta-pale);}
+.jump{display:flex; flex-wrap:wrap; gap:6px; margin:16px 0 0;}
+.jump .chip{font-size:.72rem; padding:6px 12px; letter-spacing:.06em;}
+
+/* ── Familles ── */
+main{margin-top:26px;}
+.family{
+  display:grid; grid-template-columns:190px minmax(0,1fr); gap:0 44px;
+  padding:34px 0 30px; border-top:1px solid var(--border); scroll-margin-top:96px;
+}
+.side{position:sticky; top:96px; align-self:start;}
+h2.fam{
+  margin:0; font-family:var(--serif); font-style:italic; font-weight:300; color:var(--cat);
+  font-size:2.7rem; line-height:1.05; text-wrap:balance;
+}
+.count{display:block; margin-top:10px; font-size:.72rem; letter-spacing:.2em; color:var(--text-dim); font-variant-numeric:tabular-nums;}
+.level{position:relative; width:1px; height:64px; margin:14px 0 12px 2px; background:var(--border);}
+.level::after{content:""; position:absolute; left:-1px; right:-1px; bottom:0; height:calc(var(--p,0)*100%); background:var(--cat); transition:height .35s ease;}
+.sub{margin:0; font-size:.82rem; line-height:1.55; color:var(--text-dim); max-width:28ch;}
+.subhead{margin:26px 0 2px; font-size:.66rem; font-weight:600; letter-spacing:.24em; text-transform:uppercase; color:var(--text-dim);}
+.body>.subhead:first-child,.body>.swap:first-child{margin-top:0;}
+ul.items{list-style:none; margin:0; padding:0;}
+ul.items li{min-width:0;}
+
+.bottle{border-bottom:1px solid var(--border);}
+.row{display:flex; align-items:flex-start; gap:12px;}
+label.pick{
+  flex:1; min-width:0; display:grid; grid-template-columns:16px minmax(0,1fr) minmax(0,1.25fr);
+  column-gap:18px; align-items:baseline; padding:13px 0; cursor:pointer;
+}
+label.pick input{
+  -webkit-appearance:none; appearance:none; width:16px; height:16px; margin:0; align-self:center;
+  border:1.5px solid var(--text-dim); border-radius:50%; background:transparent; cursor:pointer;
+  transition:background .15s ease, border-color .15s ease;
+}
+label.pick input:checked{background:var(--cat); border-color:var(--cat);}
+.name{font-weight:600; font-size:1rem; letter-spacing:-.01em; overflow-wrap:anywhere;}
+.note{font-size:.85rem; color:var(--text-dim); overflow-wrap:anywhere;}
+.bottle:has(input:not(:checked)) .name{color:var(--text-dim); font-weight:500;}
+.mini{
+  align-self:center; flex:none; background:none; border:1px solid var(--border); color:var(--text-dim);
+  font-size:.66rem; letter-spacing:.06em; text-transform:uppercase; padding:7px 12px; border-radius:999px;
+  cursor:pointer; white-space:nowrap; transition:all .12s;
+}
+.mini:hover{border-color:var(--terracotta); color:var(--terracotta);}
+.mini.accent{border-color:var(--terracotta); color:var(--terracotta);}
+.next-line{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:-4px 0 12px 34px; font-size:.82rem; color:var(--text-dim);}
+.next-line strong{color:var(--text); font-weight:600;}
+
+.swap{margin:22px 0 6px; padding-left:18px; border-left:1.5px solid var(--cat);}
+.swap-head{display:flex; gap:4px 12px; align-items:baseline; flex-wrap:wrap;}
+.swap-badge{font-size:.62rem; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--cat);}
+.swap-label{font-size:.82rem; color:var(--text-dim);}
+.swap .bottle{border-bottom:0;}
+.swap li+li::before{
+  content:"ou"; display:block; font-family:var(--serif); font-style:italic; font-size:1.5rem;
+  line-height:.9; color:var(--cat); padding-left:34px;
+}
+
+/* ── Formulaires ── */
+.editor{background:var(--panel2); border:1px solid var(--border); border-radius:8px; padding:14px; margin:6px 0 14px; display:grid; gap:12px;}
+.field{display:grid; gap:5px;}
+.field label{font-size:.72rem; letter-spacing:.04em; color:var(--text-dim);}
+.field input[type=text],.field select{
+  width:100%; padding:10px 12px; font-size:16px; border:1px solid var(--border); border-radius:6px;
+  background:var(--panel); color:var(--text); outline:none;
+}
+.field input[type=text]:focus,.field select:focus{border-color:var(--terracotta);}
+.check{display:flex; align-items:center; gap:10px; font-size:.88rem; padding:2px 0;}
+.check input{width:18px; height:18px; accent-color:var(--terracotta); margin:0;}
+.actions{display:flex; flex-wrap:wrap; gap:8px 10px; align-items:center;}
+.btn{padding:10px 18px; border-radius:6px; border:none; background:var(--terracotta); color:#fff; font-size:.82rem; cursor:pointer; transition:opacity .12s;}
+.btn:hover{opacity:.88;}
+.btn.ghost{background:none; border:1px solid var(--border); color:var(--text-dim);}
+.link{background:none; border:none; padding:8px 2px; font-size:.8rem; text-decoration:underline; cursor:pointer; color:var(--text-dim);}
+.link.danger{color:var(--terracotta); margin-left:auto;}
+.add-btn{
+  width:100%; margin-top:16px; background:none; border:1px dashed var(--border); color:var(--text-dim);
+  font-size:.78rem; padding:12px; border-radius:8px; cursor:pointer; transition:all .12s;
+}
+.add-btn:hover{border-color:var(--terracotta); color:var(--terracotta);}
+.empty{text-align:center; color:var(--text-dim); padding:48px 0; font-size:.9rem;}
+
+/* ── Sauvegarde ── */
+.backup{margin-top:10px; border-top:1px solid var(--border); padding-top:26px;}
+.backup h2{margin:0 0 6px; font-family:var(--serif); font-style:italic; font-weight:300; font-size:2rem;}
+.backup p{margin:0 0 12px; font-size:.82rem; line-height:1.6; color:var(--text-dim);}
+.backup textarea{
+  width:100%; min-height:96px; padding:10px 12px; font-size:16px; font-family:ui-monospace,Menlo,monospace;
+  border:1px solid var(--border); border-radius:8px; background:var(--panel); color:var(--text); outline:none; margin-bottom:12px; resize:vertical;
+}
+.backup textarea:focus{border-color:var(--terracotta);}
+#backup-msg{margin-top:10px; min-height:1.2em;}
+
+/* ── Toast ── */
+.toast{
+  position:fixed; left:50%; transform:translateX(-50%); bottom:calc(18px + env(safe-area-inset-bottom,0px)); z-index:20;
+  display:flex; gap:14px; align-items:center; background:var(--text); color:var(--bg); padding:12px 16px;
+  border-radius:10px; font-size:.85rem; width:max-content; max-width:calc(100vw - 28px); box-shadow:0 6px 20px rgba(42,32,24,.25);
+}
+.toast button{background:none; border:none; color:var(--lilac-pale); font:inherit; font-weight:600; cursor:pointer; padding:6px;}
+
+@media (max-width:760px){
+  .family{grid-template-columns:1fr; padding:28px 0 24px; scroll-margin-top:150px;}
+  .side{position:static; margin-bottom:16px;}
+  .level{width:72px; height:1.5px; margin:12px 0;}
+  .level::after{top:-1px; bottom:-1px; left:0; right:auto; height:auto; width:calc(var(--p,0)*100%); transition:width .35s ease;}
+  label.pick{grid-template-columns:16px minmax(0,1fr); row-gap:2px;}
+  .note{grid-column:2;}
+  .note:empty{display:none;}
+}
+@media (max-width:480px){
+  body{padding:0 14px 96px;}
+  .hero{padding:32px 0 24px;}
+  .hero-eyebrow{font-size:.85rem; letter-spacing:.38em;}
+  .hero-title{font-size:3rem;}
+  .hero-sub{font-size:.76rem;}
+  h2.fam{font-size:2.3rem;}
+  .name{font-size:1.05rem;}
+  .note{font-size:.88rem;}
+  .next-line{margin-left:30px;}
+}
+@media (prefers-reduced-motion:reduce){.progress>i,.level::after,label.pick input{transition:none;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-eyebrow">Mon bar</div>
+    <div class="hero-title">Home Bar</div>
+    <div class="hero-rule">◆</div>
+    <p class="hero-sub"><span id="owned-n">0</span> / <span id="total-n">0</span> bouteilles</p>
+    <nav class="sitenav" aria-label="Pages du site">
+      <a href="index.html">Top 100</a>
+      <a href="home-bar.html" aria-current="page">Mon bar</a>
+    </nav>
+  </header>
+
+  <div class="toolbar">
+    <div class="progress" role="progressbar" aria-label="Bouteilles possédées" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="bar"><i id="bar-fill"></i></div>
+    <input class="search" id="search" type="search" placeholder="Chercher une bouteille" aria-label="Chercher une bouteille" autocomplete="off">
+    <div class="filters" role="group" aria-label="Filtre">
+      <button class="chip" type="button" data-filter="all" aria-pressed="true">Toutes</button>
+      <button class="chip" type="button" data-filter="missing" aria-pressed="false">Manquantes</button>
+      <button class="chip" type="button" data-filter="owned" aria-pressed="false">Possédées</button>
+      <button class="chip" type="button" data-filter="next" aria-pressed="false">Remplacements</button>
+    </div>
+  </div>
+
+  <p class="warn" id="warn" hidden>Le stockage du navigateur est indisponible : tes modifications ne seront pas conservées. Utilise « Exporter » en bas de page pour les garder.</p>
+  <p class="hint">Classées dans chaque famille de la plus à la moins utilisée en cocktail. Les amari reliés par un filet et un « ou » sont interchangeables. Touche « modifier » pour renommer ou supprimer une bouteille, ou pour prévoir celle qui la remplacera une fois finie.</p>
+  <nav class="jump" id="jump" aria-label="Aller à une famille"></nav>
+
+  <main id="main"></main>
+  <p class="empty" id="empty" hidden>Aucune bouteille ne correspond.</p>
+
+  <div class="backup" id="backup">
+    <h2>Sauvegarde</h2>
+    <p>Ton bar est enregistré dans ce navigateur, sur cet appareil. Exporte-le pour le garder en lieu sûr ou le retrouver sur un autre appareil, puis colle-le ici et touche « Importer ».</p>
+    <textarea id="backup-text" aria-label="Données du bar" placeholder="Les données exportées apparaissent ici. Pour importer, colle-les ici." spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>
+    <div class="actions">
+      <button class="btn" id="export-btn" type="button">Exporter</button>
+      <button class="btn ghost" id="import-btn" type="button">Importer</button>
+      <button class="link" id="restore-btn" type="button" hidden></button>
+    </div>
+    <p id="backup-msg" aria-live="polite"></p>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" hidden><span id="toast-msg"></span><button type="button" id="toast-undo">Annuler</button></div>
+
+<script>
+/* [id, libellé, libellé court, description, bouteilles]
+   « #Titre » ouvre un sous-groupe ; « =Titre » ouvre un groupe d'amari interchangeables. */
+const CATS = [
+  ["whisky", "Whiskies", "Whiskies", "Bourbon, rye, scotch, irish : Manhattan, Old Fashioned, Penicillin.", [
+    "#Rye et bourbon",
+    "rye-ritt|Rittenhouse Rye 100 proof|Manhattan, Sazerac, Boulevardier",
+    "bourbon-wt101|Wild Turkey 101|Old Fashioned, Paper Plane, Whiskey Sour",
+    "bourbon-buffalo|Buffalo Trace|Old Fashioned, Whiskey Sour, Mint Julep",
+    "#Scotch",
+    "scotch-jw12|Johnnie Walker 12 ans|Rob Roy, Blood and Sand, Penicillin",
+    "scotch-laph|Laphroaig 10 ans|Penicillin (en float), sec ou sur glace",
+    "scotch-aber10|Aberlour 12 ans Double Cask Matured|Rob Roy, Rusty Nail, Bobby Burns",
+    "scotch-mac12|Macallan 12 Double Cask|Se boit sec ou sur glace",
+    "#Irish",
+    "irish-bushmills|Bushmills|Tipperary, Irish Mule, Cameron's Kick"
+  ]],
+  ["rhum", "Rhums", "Rhums", "Du blanc agricole à l'overproof jamaïcain : Daiquiri, Mai Tai, Jungle Bird, Kingston Negroni.", [
+    "#Blancs et légers",
+    "rum-3stars|Planteray 3 Stars|Daiquiri, Mojito, Hemingway Daiquiri",
+    "rum-havana3|Havana Club 3 ans|Mojito, Daiquiri, Cuba Libre",
+    "rum-flor4|Flor de Caña 4 ans|Daiquiri, Mojito, El Presidente",
+    "#Jamaïcains",
+    "rum-appsig|Appleton Estate Signature|Mai Tai, Jungle Bird, Kingston Negroni",
+    "rum-wray|Wray & Nephew Overproof|Mai Tai, Zombie, Planter's Punch",
+    "rum-hampden|Hampden Estate 1753|Kingston Negroni, Mai Tai, Daiquiri",
+    "#Agricoles et cachaça",
+    "rum-bologne|Rhum Bologne 50°|Ti' Punch, Daiquiri, Planteur",
+    "rum-ypioca|Ypióca|Caipirinha, Rabo de Galo, Batida",
+    "#Ambrés, vieillis et épicés",
+    "rum-eldo12|El Dorado 12 ans|Rum Old Fashioned, El Presidente, Mai Tai",
+    "rum-pampero|Pampero Especial|Rum Old Fashioned, Dark 'n' Stormy, Jungle Bird",
+    "rum-kraken|Kraken Black Spiced|Dark 'n' Stormy, Rum Old Fashioned, Hot Buttered Rum"
+  ]],
+  ["gin", "Gins", "Gins", "Martini, Negroni, Gimlet, Last Word, Martinez.", [
+    "#London Dry",
+    "gin-tanq|Tanqueray London Dry|Negroni, Last Word, White Negroni",
+    "gin-plym|Plymouth Gin|Martini, Gimlet, Aviation",
+    "gin-tanq10|Tanqueray Ten|Martini, Vesper, Corpse Reviver #2",
+    "gin-bf24|Beefeater 24|Negroni, Bramble, Southside",
+    "#Botaniques",
+    "gin-hendricks|Hendrick's|Gin Tonic, Southside, Gimlet",
+    "gin-botanist|The Botanist|Gin Tonic, Gimlet, Clover Club",
+    "gin-citadelle|Citadelle Jardin d'Été|Gin Tonic, French 75, Gin Fizz",
+    "#Japonais",
+    "gin-roku|Roku Gin|Gin Tonic, Martini, Gimlet",
+    "gin-kinobi|Kinobi Kyoto Dry Gin|Martini, Gin Tonic, Gibson"
+  ]],
+  ["vodka", "Vodkas", "Vodkas", "Vodka neutre.", [
+    "vodka-sobieski|Sobieski|Vesper, Moscow Mule, Bloody Mary"
+  ]],
+  ["agave", "Tequilas et mezcals", "Agaves", "Margarita, Paloma, Tommy's, Oaxaca Old Fashioned.", [
+    "#Tequilas",
+    "agave-altos|Olmeca Altos|Margarita, Paloma, Tommy's Margarita",
+    "agave-tequileno|El Tequileño Reposado|Margarita, Paloma, Matador",
+    "#Mezcal",
+    "agave-vida|Del Maguey Vida|Naked and Famous, Mezcal Negroni, Oaxaca Old Fashioned"
+  ]],
+  ["brandy", "Cognacs et eaux-de-vie", "Cognacs", "Sidecar, Vieux Carré, Jack Rose, Pisco Sour.", [
+    "#Cognac et calvados",
+    "brandy-magloire|Père Magloire VSOP|Jack Rose, Corpse Reviver #1, Widow's Kiss",
+    "brandy-hine|H by Hine VSOP|Sidecar, Vieux Carré, Brandy Alexander",
+    "#Pisco",
+    "brandy-pisco|Pisco Barsol Quebranta|Pisco Sour, Chilcano, Capitán",
+    "#Grappa",
+    "brandy-grappa|Grappa Barricata|Se boit sec, en digestif"
+  ]],
+  ["vermouth", "Vermouths et vins fortifiés", "Vermouths", "Le cœur des cocktails spirit-forward. Un vermouth ouvert se garde au frais.", [
+    "#Vermouths rouges",
+    "verm-cocchi|Cocchi Vermouth di Torino|Negroni, Manhattan, Boulevardier",
+    "verm-carpano|Carpano Antica Formula|Manhattan, Black Manhattan, Vieux Carré",
+    "verm-dolin-rouge|Dolin Rouge|Manhattan, Rob Roy, Americano",
+    "verm-puntemes|Punt e Mes|Boulevardier, Negroni, Manhattan",
+    "verm-noilly-rouge|Noilly Prat Rouge|Americano, Manhattan, Negroni Sbagliato",
+    "#Vermouths secs",
+    "verm-dolin-dry|Dolin Dry|Martini, Gibson, Bronx",
+    "verm-noilly|Noilly Prat Original Dry|Martini, Gibson, Dirty Martini",
+    "verm-cocchi-ed|Cocchi Extra Dry|Martini, Gibson, Bronx",
+    "#Blancs et aromatisés",
+    "verm-cocchi-am|Cocchi Americano|Vesper, Corpse Reviver #2, 20th Century",
+    "verm-dolin-blanc|Dolin Blanc|Reverse Martini, Vermouth Tonic",
+    "verm-cinzano|Cinzano Bianco|Vermouth Tonic, Reverse Martini",
+    "#Quinquinas",
+    "verm-capmattei-r|Cap Mattei Rouge|Quinquina Tonic, sec ou sur glace",
+    "verm-capmattei-b|Cap Mattei Blanc|Quinquina Tonic, sec ou sur glace",
+    "#Xérès",
+    "fort-fino|Fino (Tío Pepe)|Adonis, Bamboo, Tuxedo",
+    "fort-realtesoro|Real Tesoro Medium Dry|Sherry Cobbler, Bamboo, Adonis"
+  ]],
+  ["amari", "Bitters italiens et amari", "Amari", "Negroni, Paper Plane, Last Word, Black Manhattan.", [
+    "#Bitters apéritifs",
+    "amaro-campari|Campari|Negroni, Boulevardier, Americano",
+    "amaro-aperol|Aperol|Aperol Spritz, Paper Plane, Naked and Famous",
+    "#Amari digestifs",
+    "=Orangés et floraux",
+    "amaro-nonino|Amaro Nonino Quintessentia|Paper Plane, sec ou sur glace",
+    "amaro-montenegro|Amaro Montenegro|Montenegro Spritz, Montenegro Tonic",
+    "=Végétaux et rhubarbe",
+    "amaro-cynar|Cynar|Little Italy, Cynar Spritz, Rabo de Galo",
+    "amaro-zucca|Rabarbaro Zucca|Zucca Spritz, Zucca Tonic",
+    "=Ronds et caramélisés",
+    "amaro-averna|Averna|Black Manhattan, sec ou sur glace",
+    "amaro-lucano|Amaro Lucano|Sec ou sur glace, Amaro Spritz",
+    "amaro-ramazzotti|Ramazzotti|Sec ou sur glace, Ramazzotti Tonic",
+    "=Amers et mentholés",
+    "amaro-fernet|Fernet-Branca|Hanky Panky, Toronto, Fernet & Cola",
+    "amaro-braulio|Braulio|Sec ou sur glace, Braulio Tonic",
+    "=Quinquinas à l'orange",
+    "amaro-china|China Martini|Sec ou sur glace, China Tonic",
+    "amaro-picon|Picon Club|Picon Bière, Brooklyn, Picon Spritz",
+    "#Autres amers",
+    "amaro-aveze|Aveze|White Negroni, Gentian Tonic",
+    "amaro-brancamenta|Brancamenta|Se boit sec ou sur glace",
+    "amaro-jager|Jägermeister|Jägerbomb, Jäger Tonic"
+  ]],
+  ["liqueurs", "Liqueurs et distillats aromatiques", "Liqueurs", "Les modificateurs : Last Word, Aviation, Corpse Reviver, Sazerac.", [
+    "#Agrumes",
+    "liq-cointreau|Cointreau|Margarita, Sidecar, Corpse Reviver #2",
+    "liq-pfcurace|Pierre Ferrand Dry Curaçao|Mai Tai, Sidecar, Margarita",
+    "liq-limoncello|Limoncello Limoncè|Limoncello Spritz, bien frais en digestif",
+    "liq-bluecuracao|Blue Curaçao Giffard|Blue Lagoon, Blue Hawaii, Blue Margarita",
+    "#Herbales et monastiques",
+    "liq-chartv|Chartreuse Verte|Last Word, Bijou, Chartreuse Swizzle",
+    "liq-benedictine|Bénédictine|Vieux Carré, Singapore Sling, Monte Carlo",
+    "liq-chartj|Chartreuse Jaune|Naked and Famous, Alaska, Widow's Kiss",
+    "liq-bb|B&B (Brandy & Bénédictine)|Se boit sec ou sur glace",
+    "liq-strega|Strega|Se boit sec ou sur glace, en digestif",
+    "#Fruits et fleurs",
+    "liq-maraschino|Luxardo Maraschino|Aviation, Last Word, Martinez",
+    "liq-stgermain|Saint-Germain|St-Germain Cocktail, Hugo Spritz",
+    "liq-violette|Crème de violette Vedrenne|Aviation, Blue Moon, Violet Fizz",
+    "liq-cassis|Crème de cassis L'Héritier-Guyot|Kir, Kir Royal, Bramble",
+    "liq-chambord|Chambord|Bramble, Chambord Royale, French Martini",
+    "liq-mure|Crème de mûre L'Héritier-Guyot|Bramble, Kir mûre",
+    "#Anisés",
+    "liq-absinthe|Absinthe La Fée Parisienne|Sazerac, Corpse Reviver #2, Death in the Afternoon",
+    "liq-pastis|Pastis Ricard|Tomate, Mauresque, Perroquet",
+    "#Chocolat et amande",
+    "liq-cacao|Crème de cacao blanc Cartron|Brandy Alexander, Grasshopper, Alexander",
+    "liq-amaretto|Amaretto Disaronno|Amaretto Sour, Godfather"
+  ]],
+  ["bitters", "Bitters aromatiques", "Bitters", "Une bouteille suffit souvent à des dizaines de cocktails.", [
+    "bit-ango|Angostura Aromatic Bitters|Old Fashioned, Manhattan, Champagne Cocktail",
+    "bit-peychaud|Peychaud's Bitters|Sazerac, Vieux Carré, Seelbach",
+    "bit-ango-orange|Angostura Orange Bitters|Old Fashioned, Martini, Martinez",
+    "bit-chocolate|Angostura Cocoa Bitters|Oaxaca Old Fashioned, Rum Old Fashioned"
+  ]],
+  ["autres", "Autres bouteilles", "Autres", "Aquavit, genièvre, punch suédois et mousseux.", [
+    "#Mousseux",
+    "oth-prosecco|Prosecco Mionetto|Aperol Spritz, Negroni Sbagliato, Hugo Spritz",
+    "#Genièvre et spiritueux nordiques",
+    "oth-genever|Dirk Martens Oude Genever|Improved Holland Gin Cocktail, Martinez",
+    "oth-swedish|Carlshamns Swedish Punch|Doctor Cocktail, Diki-Diki",
+    "oth-aquavit|Aquavit Skåne|Se boit sec, bien frais"
+  ]],
+  ["maison", "Faits maison", "Maison", "Préparations maison.", [
+    "home-falernum|Falernum|Corn 'n' Oil, Zombie, Saturn",
+    "home-allspice|Allspice dram|Jet Pilot, Hot Buttered Rum",
+    "home-apricot|Apricot brandy|Hotel Nacional, Apricot Sour",
+    "home-cherry|Cherry brandy|Blood and Sand, Singapore Sling, Remember the Maine"
+  ]]
+];
+
+/* ── Catalogue d'origine ── */
+const DEF = [];
+const DEF_BY_ID = new Map();
+const GROUP_KEYS = new Set();
+CATS.forEach(([cid, label, short, sub, items]) => {
+  const cat = { id: cid, label, short, sub, groups: [] };
+  let g = null;
+  const newGroup = (kind, title) => {
+    g = { key: cid + ":" + cat.groups.length, kind, title, bottles: [] };
+    cat.groups.push(g);
+    GROUP_KEYS.add(g.key);
+  };
+  items.forEach((raw) => {
+    if (raw[0] === "#") { newGroup("list", raw.slice(1)); return; }
+    if (raw[0] === "=") { newGroup("swap", raw.slice(1)); return; }
+    if (!g) newGroup("list", "");
+    const [id, name, note] = raw.split("|");
+    g.bottles.push({ id, name, note });
+    DEF_BY_ID.set(id, { cat: cid, group: g.key, name, note });
+  });
+  DEF.push(cat);
+});
+
+/* ── État ── (stocké dans le navigateur)
+   owned   : identifiants des bouteilles possédées
+   removed : bouteilles d'origine supprimées
+   edits   : bouteilles d'origine renommées { id: { name, note } }
+   next    : bouteille prévue en remplacement { id: { name } }
+   added   : bouteilles ajoutées { id, cat, group, name, note } */
+const KEY = "drinkflow-homebar-v2";
+const norm = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+const blank = () => ({ owned: new Set(), removed: new Set(), edits: {}, next: {}, added: [] });
+let S = blank();
+let filter = "all";
+let query = "";
+const ui = { editing: null, adding: null };
+
+function ser(s) {
+  return JSON.stringify({ app: "drinkflow-homebar", v: 2, owned: [...s.owned], removed: [...s.removed], edits: s.edits, next: s.next, added: s.added });
+}
+
+function parse(text) {
+  let o;
+  try { o = JSON.parse(text); } catch (e) { return null; }
+  if (Array.isArray(o)) o = { owned: o };
+  if (!o || typeof o !== "object") return null;
+  const str = (v, n) => (typeof v === "string" ? v.trim().slice(0, n) : "");
+  const s = blank();
+  const catIds = new Set(DEF.map((c) => c.id));
+  const known = new Set(DEF_BY_ID.keys());
+  (Array.isArray(o.added) ? o.added : []).forEach((a) => {
+    if (!a || typeof a !== "object" || typeof a.id !== "string") return;
+    const id = a.id.slice(0, 40), name = str(a.name, 120);
+    if (!id || !name || !catIds.has(a.cat) || known.has(id)) return;
+    known.add(id);
+    s.added.push({ id, cat: a.cat, group: GROUP_KEYS.has(a.group) ? a.group : null, name, note: str(a.note, 200) });
+  });
+  (Array.isArray(o.owned) ? o.owned : []).forEach((id) => { if (typeof id === "string" && known.has(id)) s.owned.add(id); });
+  (Array.isArray(o.removed) ? o.removed : []).forEach((id) => { if (DEF_BY_ID.has(id)) s.removed.add(id); });
+  if (o.edits && typeof o.edits === "object") {
+    Object.keys(o.edits).forEach((id) => {
+      const e = o.edits[id];
+      if (DEF_BY_ID.has(id) && e && str(e.name, 120)) s.edits[id] = { name: str(e.name, 120), note: str(e.note, 200) };
+    });
+  }
+  if (o.next && typeof o.next === "object") {
+    Object.keys(o.next).forEach((id) => {
+      const n = o.next[id];
+      if (known.has(id) && n && str(n.name, 120)) s.next[id] = { name: str(n.name, 120) };
+    });
+  }
+  return s;
+}
+
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) return parse(raw) || blank();
+  } catch (e) {}
+  return blank();
+}
+function save() {
+  try {
+    localStorage.setItem(KEY, ser(S));
+    document.getElementById("warn").hidden = true;
+  } catch (e) {
+    document.getElementById("warn").hidden = false;
+  }
+}
+
+/* ── Modèle effectif ── */
+function mk(id, name, note, custom) {
+  const nx = S.next[id] ? S.next[id].name : "";
+  return { id, name, note, next: nx, custom, hay: norm(name + " " + note + " " + nx) };
+}
+function catBottles(cat) {
+  const out = cat.groups.map((g) => ({ g, list: [] }));
+  const byKey = new Map(out.map((o) => [o.g.key, o]));
+  cat.groups.forEach((g) => {
+    g.bottles.forEach((d) => {
+      if (S.removed.has(d.id)) return;
+      const e = S.edits[d.id];
+      byKey.get(g.key).list.push(mk(d.id, e ? e.name : d.name, e ? e.note : d.note, false));
+    });
+  });
+  S.added.filter((a) => a.cat === cat.id).forEach((a) => {
+    (byKey.get(a.group) || out[out.length - 1]).list.push(mk(a.id, a.name, a.note, true));
+  });
+  return out;
+}
+function visible(b) {
+  const on = S.owned.has(b.id);
+  if (filter === "owned" && !on) return false;
+  if (filter === "missing" && on) return false;
+  if (filter === "next" && !b.next) return false;
+  if (query && !b.hay.includes(query)) return false;
+  return true;
+}
+function findBottle(id) {
+  for (const cat of DEF) for (const { list } of catBottles(cat)) { const b = list.find((x) => x.id === id); if (b) return b; }
+  return null;
+}
+
+/* ── Fabrique DOM (tout le texte saisi passe par textContent) ── */
+function h(tag, attrs, ...kids) {
+  const e = document.createElement(tag);
+  if (attrs) {
+    for (const [k, v] of Object.entries(attrs)) {
+      if (v === false || v == null) continue;
+      if (k === "class") e.className = v;
+      else if (k === "dataset") Object.assign(e.dataset, v);
+      else if (k in e) e[k] = v;
+      else e.setAttribute(k, v);
+    }
+  }
+  kids.flat().forEach((c) => {
+    if (c == null || c === false) return;
+    e.append(c.nodeType ? c : document.createTextNode(c));
+  });
+  return e;
+}
+function field(label, name, value, attrs) {
+  const id = "f-" + name + "-" + Math.random().toString(36).slice(2, 7);
+  return h("div", { class: "field" },
+    h("label", { for: id }, label),
+    h("input", Object.assign({ type: "text", name, id, value: value || "", autocomplete: "off" }, attrs)));
+}
+
+function editorEl(b) {
+  return h("form", { class: "editor", dataset: { form: "edit", id: b.id } },
+    field("Nom", "name", b.name, { required: true, maxLength: 120 }),
+    field("Usages en cocktail (facultatif)", "note", b.note, { maxLength: 200 }),
+    field("Prochaine bouteille (prendra la place de celle-ci une fois finie)", "next", b.next, { maxLength: 120, placeholder: "ex. Gosling's Black Seal" }),
+    h("div", { class: "actions" },
+      h("button", { type: "submit", class: "btn" }, "Enregistrer"),
+      h("button", { type: "button", class: "btn ghost", dataset: { act: "cancel" } }, "Annuler"),
+      h("button", { type: "button", class: "link danger", dataset: { act: "delete", id: b.id } }, "Supprimer la bouteille")));
+}
+
+function rowEl(b) {
+  const li = h("li", { class: "bottle", dataset: { id: b.id } });
+  li.append(h("div", { class: "row" },
+    h("label", { class: "pick" },
+      h("input", { type: "checkbox", checked: S.owned.has(b.id), dataset: { id: b.id } }),
+      h("span", { class: "name" }, b.name),
+      h("span", { class: "note" }, b.note)),
+    h("button", { type: "button", class: "mini", dataset: { act: "edit", id: b.id }, "aria-label": "Modifier " + b.name }, "modifier")));
+  if (b.next) {
+    li.append(h("div", { class: "next-line" },
+      h("span", null, "Prochaine : ", h("strong", null, b.next)),
+      h("button", { type: "button", class: "mini accent", dataset: { act: "replace", id: b.id }, "aria-label": "Remplacer " + b.name + " par " + b.next }, "Remplacer")));
+  }
+  if (ui.editing === b.id) li.append(editorEl(b));
+  return li;
+}
+
+function addEl(cat) {
+  if (ui.adding !== cat.id) {
+    return h("button", { type: "button", class: "add-btn", dataset: { act: "add", cat: cat.id } }, "+ Ajouter une bouteille");
+  }
+  const kids = [
+    field("Nom de la bouteille", "name", "", { required: true, maxLength: 120, placeholder: "ex. Gosling's Black Seal" }),
+    field("Usages en cocktail (facultatif)", "note", "", { maxLength: 200 })
+  ];
+  if (cat.groups.length > 1) {
+    const last = cat.groups[cat.groups.length - 1].key;
+    const id = "f-group-" + cat.id;
+    kids.push(h("div", { class: "field" },
+      h("label", { for: id }, "Rangée dans"),
+      h("select", { name: "group", id },
+        cat.groups.map((g) => h("option", { value: g.key, selected: g.key === last },
+          (g.kind === "swap" ? "Interchangeables · " : "") + (g.title || "Général"))))));
+  }
+  kids.push(h("label", { class: "check" }, h("input", { type: "checkbox", name: "owned", checked: true }), "Déjà dans mon bar"));
+  kids.push(h("div", { class: "actions" },
+    h("button", { type: "submit", class: "btn" }, "Ajouter"),
+    h("button", { type: "button", class: "btn ghost", dataset: { act: "cancel" } }, "Annuler")));
+  return h("form", { class: "editor", dataset: { form: "add", cat: cat.id } }, kids);
+}
+
+function famEl(cat, groups, n, have) {
+  const sec = h("section", { class: "family", id: "fam-" + cat.id });
+  sec.style.setProperty("--cat", "var(--c-" + cat.id + ")");
+  sec.style.setProperty("--p", n ? have / n : 0);
+  const side = h("div", { class: "side" },
+    h("h2", { class: "fam" }, cat.label),
+    h("span", { class: "count" }, have + " / " + n),
+    h("div", { class: "level", "aria-hidden": "true" }),
+    h("p", { class: "sub" }, cat.sub));
+  const body = h("div", { class: "body" });
+  groups.forEach(({ g, list }) => {
+    const rows = list.filter(visible);
+    if (!rows.length) return;
+    const ul = h("ul", { class: "items" }, rows.map(rowEl));
+    if (g.kind === "swap") {
+      body.append(h("div", { class: "swap" },
+        h("div", { class: "swap-head" }, h("span", { class: "swap-badge" }, "Interchangeables"), h("span", { class: "swap-label" }, g.title)),
+        ul));
+    } else {
+      if (g.title) body.append(h("h3", { class: "subhead" }, g.title));
+      body.append(ul);
+    }
+  });
+  if (!(filter !== "all" || query) || ui.adding === cat.id) body.append(addEl(cat));
+  sec.append(side, body);
+  return sec;
+}
+
+/* ── Rendu ── */
+const main = document.getElementById("main");
+function render() {
+  const f = document.activeElement;
+  const focusId = f && f.matches && f.matches(".pick input") ? f.dataset.id : null;
+  main.textContent = "";
+  const filtering = filter !== "all" || !!query;
+  let total = 0, have = 0, shown = 0;
+  DEF.forEach((cat) => {
+    const groups = catBottles(cat);
+    let n = 0, h2 = 0, vis = 0;
+    groups.forEach(({ list }) => list.forEach((b) => {
+      n++;
+      if (S.owned.has(b.id)) h2++;
+      if (visible(b)) vis++;
+    }));
+    total += n; have += h2; shown += vis;
+    if (filtering && !vis) return;
+    main.append(famEl(cat, groups, n, h2));
+  });
+  document.getElementById("owned-n").textContent = have;
+  document.getElementById("total-n").textContent = total;
+  const pct = total ? (have / total) * 100 : 0;
+  document.getElementById("bar-fill").style.width = pct + "%";
+  document.getElementById("bar").setAttribute("aria-valuenow", Math.round(pct));
+  document.getElementById("empty").hidden = !(filtering && shown === 0);
+  const rb = document.getElementById("restore-btn");
+  rb.hidden = S.removed.size === 0;
+  rb.textContent = "Restaurer les bouteilles d'origine supprimées (" + S.removed.size + ")";
+  if (focusId) {
+    const el = main.querySelector('.pick input[data-id="' + (window.CSS && CSS.escape ? CSS.escape(focusId) : focusId) + '"]');
+    if (el) el.focus({ preventScroll: true });
+  }
+}
+
+/* ── Annuler ── */
+const toast = document.getElementById("toast");
+let toastTimer = null, undoSnap = null;
+function showToast(msg, snap) {
+  undoSnap = snap;
+  document.getElementById("toast-msg").textContent = msg;
+  document.getElementById("toast-undo").hidden = !snap;
+  toast.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { toast.hidden = true; undoSnap = null; }, 9000);
+}
+document.getElementById("toast-undo").addEventListener("click", () => {
+  const s = undoSnap && parse(undoSnap);
+  toast.hidden = true;
+  undoSnap = null;
+  if (s) { S = s; save(); render(); }
+});
+function mutate(fn, msg) {
+  const snap = ser(S);
+  fn();
+  save();
+  render();
+  if (msg) showToast(msg, snap);
+}
+
+/* ── Actions ── */
+function focusField(sel) {
+  const el = main.querySelector(sel);
+  if (el) el.focus();
+}
+
+main.addEventListener("change", (e) => {
+  const cb = e.target;
+  if (!(cb instanceof HTMLInputElement) || cb.type !== "checkbox" || !cb.dataset.id) return;
+  if (cb.checked) S.owned.add(cb.dataset.id); else S.owned.delete(cb.dataset.id);
+  save();
+  render();
+});
+
+main.addEventListener("click", (e) => {
+  const t = e.target.closest("[data-act]");
+  if (!t) return;
+  const act = t.dataset.act, id = t.dataset.id;
+  if (act === "edit") {
+    ui.editing = ui.editing === id ? null : id;
+    ui.adding = null;
+    render();
+    if (ui.editing) focusField(".editor input[name=name]");
+  } else if (act === "add") {
+    ui.adding = t.dataset.cat;
+    ui.editing = null;
+    render();
+    focusField(".editor input[name=name]");
+  } else if (act === "cancel") {
+    ui.editing = null;
+    ui.adding = null;
+    render();
+  } else if (act === "delete") {
+    const b = findBottle(id);
+    if (!b) return;
+    ui.editing = null;
+    mutate(() => {
+      if (DEF_BY_ID.has(id)) S.removed.add(id);
+      else S.added = S.added.filter((a) => a.id !== id);
+      S.owned.delete(id);
+      delete S.next[id];
+      delete S.edits[id];
+    }, "« " + b.name + " » supprimée");
+  } else if (act === "replace") {
+    const b = findBottle(id);
+    if (!b || !b.next) return;
+    const nx = b.next;
+    mutate(() => {
+      if (DEF_BY_ID.has(id)) S.edits[id] = { name: nx, note: b.note };
+      else { const a = S.added.find((x) => x.id === id); if (a) a.name = nx; }
+      delete S.next[id];
+      S.owned.add(id);
+    }, "« " + b.name + " » remplacée par « " + nx + " »");
+  }
+});
+
+main.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const f = e.target;
+  const fd = new FormData(f);
+  const get = (k, n) => String(fd.get(k) || "").trim().slice(0, n);
+  const name = get("name", 120);
+  if (!name) return;
+  const note = get("note", 200);
+  if (f.dataset.form === "edit") {
+    const id = f.dataset.id, nx = get("next", 120);
+    ui.editing = null;
+    mutate(() => {
+      const d = DEF_BY_ID.get(id);
+      if (d) {
+        if (name === d.name && note === d.note) delete S.edits[id];
+        else S.edits[id] = { name, note };
+      } else {
+        const a = S.added.find((x) => x.id === id);
+        if (a) { a.name = name; a.note = note; }
+      }
+      if (nx) S.next[id] = { name: nx }; else delete S.next[id];
+    });
+  } else if (f.dataset.form === "add") {
+    const cat = f.dataset.cat;
+    if (!DEF.some((c) => c.id === cat)) return;
+    const gk = String(fd.get("group") || "");
+    const id = "u-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    ui.adding = null;
+    mutate(() => {
+      S.added.push({ id, cat, group: GROUP_KEYS.has(gk) ? gk : null, name, note });
+      if (fd.get("owned")) S.owned.add(id);
+    });
+  }
+});
+
+document.querySelectorAll(".chip[data-filter]").forEach((b) => b.addEventListener("click", () => {
+  filter = b.dataset.filter;
+  document.querySelectorAll(".chip[data-filter]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+  render();
+}));
+document.getElementById("search").addEventListener("input", (e) => {
+  query = norm(e.target.value.trim());
+  render();
+});
+
+const jump = document.getElementById("jump");
+DEF.forEach((cat) => {
+  jump.append(h("button", { type: "button", class: "chip" }, cat.short));
+  jump.lastChild.addEventListener("click", () => {
+    const el = document.getElementById("fam-" + cat.id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
+
+/* ── Sauvegarde ── */
+const ta = document.getElementById("backup-text");
+const msg = document.getElementById("backup-msg");
+document.getElementById("export-btn").addEventListener("click", async () => {
+  ta.value = ser(S);
+  ta.focus();
+  ta.select();
+  try { ta.setSelectionRange(0, ta.value.length); } catch (e) {}
+  try {
+    await navigator.clipboard.writeText(ta.value);
+    msg.textContent = "Copié dans le presse-papiers. Colle-le dans une note pour le garder.";
+  } catch (e) {
+    msg.textContent = "Sélectionné : copie-le puis colle-le dans une note pour le garder.";
+  }
+});
+document.getElementById("import-btn").addEventListener("click", () => {
+  const s = parse(ta.value.trim());
+  if (!s) { msg.textContent = "Données illisibles : colle d'abord un export dans la zone ci-dessus."; return; }
+  ui.editing = null;
+  ui.adding = null;
+  mutate(() => { S = s; }, "Bar importé");
+  msg.textContent = "Import terminé.";
+});
+document.getElementById("restore-btn").addEventListener("click", () => {
+  mutate(() => { S.removed.clear(); }, "Bouteilles d'origine restaurées");
+});
+
+S = load();
+render();
+</script>
+</body>
+</html>

@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#B85741">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,600&family=Herr+Von+Muellerhoff&display=swap');
 
 :root{
   --bg:#F5F0E6; --panel:#FDFAF4; --panel2:#EDE8DA; --border:#D4C9B4;
@@ -33,16 +33,16 @@ body{
 
 /* ── Hero ── */
 .hero{
-  text-align:center; padding:48px 0 36px;
-  border-bottom:1px solid var(--border); margin-bottom:28px;
+  text-align:center; padding:60px 0 44px;
+  border-bottom:1px solid var(--border); margin-bottom:36px;
 }
 .hero-eyebrow{
   font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:400;
-  letter-spacing:.55em; text-transform:uppercase; color:var(--terracotta); margin-bottom:4px;
+  letter-spacing:.55em; text-transform:uppercase; color:var(--terracotta); margin-bottom:14px;
 }
 .hero-title{
-  font-family:'Cormorant Garamond',serif; font-size:4.8rem; font-weight:300; font-style:italic;
-  color:var(--text); line-height:1.05; margin:0 0 16px; letter-spacing:-.01em;
+  font-family:'Herr Von Muellerhoff','Cormorant Garamond',cursive; font-size:7rem; font-weight:400; font-style:normal;
+  color:var(--text); line-height:1.05; margin:0 0 26px; letter-spacing:-.01em;
 }
 .hero-rule{
   display:flex; align-items:center; justify-content:center; gap:14px;
@@ -193,9 +193,9 @@ body{
 /* ── Mobile (iPhone etc.) ── */
 @media (max-width: 480px){
   body{padding:0 14px 48px; font-size:16px;}
-  .hero{padding:32px 0 26px; margin-bottom:20px;}
+  .hero{padding:40px 0 34px; margin-bottom:28px;}
   .hero-eyebrow{font-size:.85rem; letter-spacing:.38em;}
-  .hero-title{font-size:3rem;}
+  .hero-title{font-size:4.8rem;}
   .hero-sub{font-size:.76rem;}
   .searchbar{padding:8px 0 12px;}
   .searchbar input[type=text]{font-size:16px; padding:13px 14px;}

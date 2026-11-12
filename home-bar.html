@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#B85741">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,600&family=Herr+Von+Muellerhoff&display=swap');
 
 :root{
   color-scheme:light;
@@ -27,6 +27,7 @@
   --c-agave:#4d7c6a; --c-brandy:#a0562a; --c-vermouth:#7a2646; --c-amari:#a8362b;
   --c-liqueurs:#7565A0; --c-bitters:#4a4f57; --c-autres:#3b6ea5; --c-maison:#a8880f;
   --serif:'Cormorant Garamond',Georgia,serif;
+  --script:'Herr Von Muellerhoff','Cormorant Garamond',cursive;
 }
 *{box-sizing:border-box;}
 [hidden]{display:none!important;}
@@ -39,14 +40,14 @@ body{
 button,input,select,textarea{font-family:inherit;}
 
 /* ── Hero (identique à la page Top 100) ── */
-.hero{text-align:center; padding:48px 0 30px; border-bottom:1px solid var(--border); margin-bottom:0;}
+.hero{text-align:center; padding:60px 0 40px; border-bottom:1px solid var(--border); margin-bottom:0;}
 .hero-eyebrow{
   font-family:var(--serif); font-size:1rem; font-weight:400;
-  letter-spacing:.55em; text-transform:uppercase; color:var(--terracotta); margin-bottom:4px;
+  letter-spacing:.55em; text-transform:uppercase; color:var(--terracotta); margin-bottom:14px;
 }
 .hero-title{
-  font-family:var(--serif); font-size:4.8rem; font-weight:300; font-style:italic;
-  color:var(--text); line-height:1.05; margin:0 0 16px; letter-spacing:-.01em;
+  font-family:var(--script); font-size:7rem; font-weight:400; font-style:normal;
+  color:var(--text); line-height:1.05; margin:0 0 26px; letter-spacing:-.01em;
 }
 .hero-rule{display:flex; align-items:center; justify-content:center; gap:14px; color:var(--terracotta); font-size:.5rem; margin-bottom:12px;}
 .hero-rule::before,.hero-rule::after{content:''; display:block; height:1px; width:52px; background:var(--border);}
@@ -86,17 +87,17 @@ button,input,select,textarea{font-family:inherit;}
 .jump .chip{font-size:.72rem; padding:6px 12px; letter-spacing:.06em;}
 
 /* ── Familles ── */
-main{margin-top:26px;}
+main{margin-top:34px;}
 .family{
   display:grid; grid-template-columns:190px minmax(0,1fr); gap:0 44px;
-  padding:34px 0 30px; border-top:1px solid var(--border); scroll-margin-top:96px;
+  padding:44px 0 38px; border-top:1px solid var(--border); scroll-margin-top:96px;
 }
 .side{position:sticky; top:96px; align-self:start;}
 h2.fam{
-  margin:0; font-family:var(--serif); font-style:italic; font-weight:300; color:var(--cat);
-  font-size:2.7rem; line-height:1.05; text-wrap:balance;
+  margin:0; font-family:var(--script); font-style:normal; font-weight:400; color:var(--cat);
+  font-size:4rem; line-height:1.1; text-wrap:balance;
 }
-.count{display:block; margin-top:10px; font-size:.72rem; letter-spacing:.2em; color:var(--text-dim); font-variant-numeric:tabular-nums;}
+.count{display:block; margin-top:14px; font-size:.72rem; letter-spacing:.2em; color:var(--text-dim); font-variant-numeric:tabular-nums;}
 .level{position:relative; width:1px; height:64px; margin:14px 0 12px 2px; background:var(--border);}
 .level::after{content:""; position:absolute; left:-1px; right:-1px; bottom:0; height:calc(var(--p,0)*100%); background:var(--cat); transition:height .35s ease;}
 .sub{margin:0; font-size:.82rem; line-height:1.55; color:var(--text-dim); max-width:28ch;}
@@ -166,7 +167,7 @@ label.pick input:checked{background:var(--cat); border-color:var(--cat);}
 
 /* ── Sauvegarde ── */
 .backup{margin-top:10px; border-top:1px solid var(--border); padding-top:26px;}
-.backup h2{margin:0 0 6px; font-family:var(--serif); font-style:italic; font-weight:300; font-size:2rem;}
+.backup h2{margin:0 0 6px; font-family:var(--script); font-style:normal; font-weight:400; font-size:3rem;}
 .backup p{margin:0 0 12px; font-size:.82rem; line-height:1.6; color:var(--text-dim);}
 .backup textarea{
   width:100%; min-height:96px; padding:10px 12px; font-size:16px; font-family:ui-monospace,Menlo,monospace;
@@ -194,11 +195,11 @@ label.pick input:checked{background:var(--cat); border-color:var(--cat);}
 }
 @media (max-width:480px){
   body{padding:0 14px 96px;}
-  .hero{padding:32px 0 24px;}
+  .hero{padding:40px 0 32px;}
   .hero-eyebrow{font-size:.85rem; letter-spacing:.38em;}
-  .hero-title{font-size:3rem;}
+  .hero-title{font-size:4.8rem;}
   .hero-sub{font-size:.76rem;}
-  h2.fam{font-size:2.3rem;}
+  h2.fam{font-size:3.4rem;}
   .name{font-size:1.05rem;}
   .note{font-size:.88rem;}
   .next-line{margin-left:30px;}

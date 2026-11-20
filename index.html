@@ -4,28 +4,38 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Mon top 100 cocktails — recherche par ingrédient</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20512%20512%22%3E%3Cdefs%3E%3CradialGradient%20id=%22b%22%20cx=%2250%25%22%20cy=%2238%25%22%20r=%2280%25%22%3E%3Cstop%20offset=%220%22%20stop-color=%22%238A3B28%22/%3E%3Cstop%20offset=%221%22%20stop-color=%22%233A1610%22/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect%20width=%22512%22%20height=%22512%22%20rx=%22110%22%20fill=%22url%28%23b%29%22/%3E%3Cg%20fill=%22none%22%20stroke=%22%23E8CE8C%22%20stroke-width=%2222%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22%3E%3Cpath%20d=%22M130%20140H382C386%20232%20330%20296%20256%20306C182%20296%20126%20232%20130%20140Z%22/%3E%3Cpath%20d=%22M256%20306V410M180%20414C220%20400%20292%20400%20332%20414%22/%3E%3C/g%3E%3Ccircle%20cx=%22236%22%20cy=%22236%22%20r=%2226%22%20fill=%22%23C42A44%22/%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=3">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=3">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v=3">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20512%20512%22%3E%3Cdefs%3E%3CradialGradient%20id=%22b%22%20cx=%2250%25%22%20cy=%2236%25%22%20r=%2285%25%22%3E%3Cstop%20offset=%220%22%20stop-color=%22%232E4496%22/%3E%3Cstop%20offset=%221%22%20stop-color=%22%23070D26%22/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect%20width=%22512%22%20height=%22512%22%20rx=%22110%22%20fill=%22url%28%23b%29%22/%3E%3Cg%20fill=%22none%22%20stroke=%22%23E8CE8C%22%20stroke-width=%2222%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22%3E%3Cpath%20d=%22M130%20140H382C386%20232%20330%20296%20256%20306C182%20296%20126%20232%20130%20140Z%22/%3E%3Cpath%20d=%22M256%20306V410M180%20414C220%20400%20292%20400%20332%20414%22/%3E%3C/g%3E%3Ccircle%20cx=%22236%22%20cy=%22236%22%20r=%2226%22%20fill=%22%23C42A44%22/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=4">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=4">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v=4">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Cocktails">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#B85741">
+<meta name="theme-color" content="#0A1330">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,600&family=Herr+Von+Muellerhoff&display=swap');
 
 :root{
-  --bg:#F5F0E6; --panel:#FDFAF4; --panel2:#EDE8DA; --border:#D4C9B4;
-  --text:#2A2018; --text-dim:#7E7060;
-  --terracotta:#B85741; --terracotta-pale:#EDD8D2;
-  --lilac:#7565A0; --lilac-pale:#C8C0DC;
-  --shadow:rgba(90,60,40,.07);
-  --gold:#B85741; --gold-soft:#B85741; --accent:#7565A0; --danger:#B85741;
+  color-scheme:dark;
+  --bg:#070D24; --panel:#101B42; --panel2:#0B1332; --border:rgba(150,165,225,.18);
+  --text:#F2EDE1; --text-dim:#9EA8CE;
+  --terracotta:#DDBB6E; --terracotta-pale:rgba(221,187,110,.18);
+  --lilac:#97A9F2; --lilac-pale:#2A3768;
+  --shadow:rgba(0,0,0,.4);
+  --gold:#DDBB6E; --gold-soft:#DDBB6E; --accent:#97A9F2; --danger:#E08A78;
+  --on-gold:#0A1330;
+}
+html{background:#070D24;}
+body::before{
+  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background:
+    radial-gradient(90% 45% at 50% -8%, rgba(60,86,190,.38) 0%, rgba(60,86,190,0) 70%),
+    radial-gradient(60% 40% at 100% 100%, rgba(40,60,140,.22) 0%, rgba(40,60,140,0) 70%),
+    linear-gradient(180deg,#0B1536 0%,#070D24 55%,#050A1B 100%);
 }
 *{box-sizing:border-box;}
 body{
-  margin:0; padding:0 20px 60px; background:var(--bg); color:var(--text);
+  margin:0; padding:0 20px 60px; background:transparent; color:var(--text);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   font-size:15px; line-height:1.5;
 }
@@ -42,7 +52,9 @@ body{
 }
 .hero-title{
   font-family:'Herr Von Muellerhoff','Cormorant Garamond',cursive; font-size:7rem; font-weight:400; font-style:normal;
-  color:var(--text); line-height:1.05; margin:0 0 26px; letter-spacing:-.01em;
+  color:#EBD08C; line-height:1.05;
+  background:linear-gradient(180deg,#FBEFC8 0%,#E6C77C 52%,#B98F48 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 2px 18px rgba(221,187,110,.25)); margin:0 0 26px; letter-spacing:-.01em;
 }
 .hero-rule{
   display:flex; align-items:center; justify-content:center; gap:14px;
@@ -63,29 +75,29 @@ body{
   color:var(--text-dim); padding:11px 18px; border-radius:999px; border:1px solid transparent; transition:all .12s;
 }
 .sitenav a:hover{color:var(--terracotta);}
-.sitenav a[aria-current="page"]{color:#fff; background:var(--terracotta); border-color:var(--terracotta); font-weight:600;}
+.sitenav a[aria-current="page"]{color:var(--on-gold); background:var(--terracotta); border-color:var(--terracotta); font-weight:600;}
 
 /* ── Search ── */
 .searchbar{
-  position:sticky; top:0; background:var(--bg); padding:10px 0 14px; z-index:5;
+  position:sticky; top:0; background:rgba(7,13,36,.86); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); padding:10px 0 14px; z-index:5;
   border-bottom:1px solid var(--border); margin-bottom:18px;
 }
 .searchbar input[type=text]{
   width:100%; padding:12px 16px; font-size:.95rem; border-radius:8px;
-  border:1.5px solid var(--border); background:var(--panel); color:var(--text);
+  border:1.5px solid var(--border); background:rgba(255,255,255,.045); color:var(--text);
   outline:none; transition:border-color .15s,box-shadow .15s;
 }
 .searchbar input[type=text]:focus{
-  border-color:var(--terracotta); box-shadow:0 0 0 3px var(--terracotta-pale);
+  border-color:var(--terracotta); box-shadow:0 0 0 3px rgba(221,187,110,.16);
 }
 .suggestions{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;}
 .chip{
   padding:5px 12px; border-radius:999px; border:1px solid var(--border);
-  background:var(--panel); color:var(--text-dim); font-size:.74rem; cursor:pointer;
+  background:rgba(255,255,255,.04); color:var(--text-dim); font-size:.74rem; cursor:pointer;
   user-select:none; transition:all .12s; letter-spacing:.02em; text-transform:capitalize;
 }
 .chip:hover{border-color:var(--terracotta); color:var(--terracotta);}
-.chip.active{background:var(--terracotta); color:#fff; border-color:var(--terracotta); font-weight:600;}
+.chip.active{background:var(--terracotta); color:var(--on-gold); border-color:var(--terracotta); font-weight:600;}
 
 .meta-row{
   display:flex; justify-content:space-between; align-items:baseline;
@@ -97,11 +109,13 @@ body{
 .results{display:flex; flex-direction:column; gap:8px;}
 .card{
   border:1px solid var(--border); border-radius:10px; padding:13px 16px;
-  background:var(--panel); display:flex; flex-direction:column; gap:5px;
-  box-shadow:0 1px 3px var(--shadow); transition:box-shadow .15s;
+  background:linear-gradient(155deg,rgba(34,52,116,.55) 0%,rgba(16,27,66,.82) 60%,rgba(11,19,50,.9) 100%);
+  display:flex; flex-direction:column; gap:5px;
+  box-shadow:0 8px 22px var(--shadow), inset 0 1px 0 rgba(255,255,255,.06); transition:box-shadow .15s, border-color .15s;
 }
-.card:hover{box-shadow:0 3px 10px var(--shadow);}
+.card:hover{box-shadow:0 10px 28px var(--shadow), inset 0 1px 0 rgba(255,255,255,.08); border-color:rgba(221,187,110,.35);}
 .card.top50{border-left:3px solid var(--terracotta);}
+.name{color:#FBF6EA;}
 .card-head{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;}
 .rank{color:var(--terracotta); font-weight:700; font-size:.78rem; min-width:28px; font-variant-numeric:tabular-nums;}
 .name{font-weight:600; font-size:1rem; letter-spacing:-.01em;}
@@ -125,7 +139,7 @@ body{
 .dosage-btn:hover{border-color:var(--terracotta); color:var(--terracotta);}
 .dosage-btn:disabled{opacity:.5; cursor:wait;}
 .dosage-panel{
-  background:var(--panel2); border-radius:8px; padding:10px 13px; margin-top:2px;
+  background:rgba(6,11,30,.55); border-radius:8px; padding:10px 13px; margin-top:2px;
   border:1px solid var(--border); animation:fadeIn .15s ease;
 }
 @keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
@@ -153,12 +167,12 @@ body{
 .de-row{display:flex; gap:5px; align-items:center;}
 .de-ing{
   flex:2; padding:4px 8px; border:1px solid var(--border);
-  border-radius:6px; background:var(--panel); color:var(--text); font-size:.8rem; outline:none;
+  border-radius:6px; background:rgba(255,255,255,.05); color:var(--text); font-size:.8rem; outline:none;
 }
 .de-ing:focus{border-color:var(--terracotta);}
 .de-qty{
   flex:1; padding:4px 8px; border:1px solid var(--border);
-  border-radius:6px; background:var(--panel); color:var(--terracotta); font-size:.8rem;
+  border-radius:6px; background:rgba(255,255,255,.05); color:var(--terracotta); font-size:.8rem;
   font-variant-numeric:tabular-nums; outline:none;
 }
 .de-qty:focus{border-color:var(--terracotta);}
@@ -176,13 +190,13 @@ body{
 .de-metas{display:flex; gap:6px; margin-bottom:8px;}
 .de-methode,.de-verre{
   flex:1; padding:4px 8px; border:1px solid var(--border);
-  border-radius:6px; background:var(--panel); color:var(--text); font-size:.76rem; outline:none;
+  border-radius:6px; background:rgba(255,255,255,.05); color:var(--text); font-size:.76rem; outline:none;
 }
 .de-methode:focus,.de-verre:focus{border-color:var(--terracotta);}
 .de-actions{display:flex; gap:8px;}
 .de-save{
   padding:5px 14px; border-radius:6px; border:none;
-  background:var(--terracotta); color:#fff; font-size:.74rem; cursor:pointer; transition:opacity .12s;
+  background:var(--terracotta); color:var(--on-gold); font-size:.74rem; cursor:pointer; transition:opacity .12s;
 }
 .de-save:hover{opacity:.85;}
 .de-cancel{
@@ -416,7 +430,11 @@ function spiritStyle(b){
     'Calvados':     'background:#D8E8CC;color:#487038;border-color:#D8E8CC',
     'Genièvre':     'background:#D8D5E0;color:#484870;border-color:#D8D5E0',
   };
-  return m[b] || '';
+  const st = m[b] || '';
+  const mm = st.match(/background:(#[0-9A-Fa-f]{6})/);
+  if(!mm) return st;
+  const h = mm[1], r = parseInt(h.slice(1,3),16), g = parseInt(h.slice(3,5),16), bl = parseInt(h.slice(5,7),16);
+  return `background:rgba(${r},${g},${bl},.13);color:${h};border-color:rgba(${r},${g},${bl},.32)`;
 }
 function capWords(s){
   return s.replace(/(^|[\s\-(\/])(\p{L})/gu, (m, sep, letter) => sep + letter.toUpperCase());
